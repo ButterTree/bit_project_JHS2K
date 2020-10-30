@@ -44,6 +44,8 @@ def insta_crawler():
             continue
 
     imgDir = 'D:/Downloaded/InstaIMG/'
+    if os.path.isdir(imgDir) is not True:
+        os.mkdir(imgDir)
     _, cnt = ic(tagAndUrls, imgDir, iteration)
     print("Total Images Saved : {}\n".format(cnt))
 
@@ -136,9 +138,13 @@ def insta_aligned_face_crawler():
 
     while flag != 0:
         imgDir = 'D:/Downloaded/InstaIMG/'
+        if os.path.isdir(imgDir) is not True:
+            os.mkdir(imgDir)
         fileNames, _ = ic(tagAndUrls, imgDir, iteration)
 
         crpFileDir = 'D:/Downloaded/InstaFace/'
+        if os.path.isdir(crpFileDir) is not True:
+            os.mkdir(crpFileDir)
         for res in imgRes:
             dir = '{}{}/'.format(crpFileDir, str(res))
             if os.path.isdir(dir) is not True:
@@ -245,12 +251,16 @@ def aligned_face_cropper():
             print("[ 0, 1 ] ONLY!!! Try Again.")
             continue
 
-    fileDir = "D:/Downloaded/InstaIMG/"
+    imgDir = "D:/Downloaded/InstaIMG/"
+    if os.path.isdir(imgDir) is not True:
+        os.mkdir(imgDir)
     fileNames = []
-    for name in os.listdir(fileDir):
-        fileNames.append(fileDir + name)
+    for name in os.listdir(imgDir):
+        fileNames.append(imgDir + name)
 
     crpFileDir = 'D:/Downloaded/InstaFace/'
+    if os.path.isdir(crpFileDir) is not True:
+        os.mkdir(crpFileDir)
     for res in imgRes:
         dir = '{}{}/'.format(crpFileDir, str(res))
         if os.path.isdir(dir) is not True:
