@@ -88,9 +88,6 @@ def gen_video():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])
 def let_me_shine():
-    def renderer(input_image, output_image, output_video):
-        return render_template('result.html', input_image_dir=input_image[7:], output_image_dir=output_image[7:], output_video_dir=output_video[7:])
-
     time_flag = time.strftime('%m%d-%H%M%S', time.localtime(time.time()))
     client_ip = request.remote_addr
 
@@ -107,11 +104,7 @@ def let_me_shine():
     input_image, output_image = image_crossover(client_ip, time_flag)
     output_video = image_animator(client_ip, time_flag, output_image)
 
-    renderer(input_image, output_image, output_video)
-
-    shutil.rmtree(os.path.dirname(input_image))
-    shutil.rmtree(os.path.dirname(output_image))
-    os.remove(output_video)
+    return renderer(input_image, output_image, output_video)
 
 
 # class ReceiveImageData(Resource):
