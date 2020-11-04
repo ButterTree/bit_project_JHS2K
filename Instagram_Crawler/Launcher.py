@@ -2,8 +2,6 @@ from Crawler.nVidiaFaceCrawler import get_fake_face as gff
 from Crawler.InstaImageCrawler import insta_image_crawler_main as ic
 from Crawler.AlignedFaceCropper import aligned_face_cropper as afc
 from Crawler.DummyPixelAppender import dummy_pixel_appender as dpa
-from Crawler.Before_After_Detector import before_after_detector as bfd
-from Crawler.FaceCropper import face_cropper as fc
 from Crawler.EyesCropper import eyes_cropper as ec
 from Crawler.ReNamer import file_renamer as fr
 import multiprocessing as mp
@@ -373,12 +371,10 @@ def main():
                                    '1 : nVidia Fake Face Crawler\n'
                                    '2 : Instagram #Tag Image Crawler\n'
                                    '3 : Automated Instagram #Tag Pre-Processed Image Crawler\n'
-                                   '4 : Instagram Eyelid Surgery Before-After Image Crawler\n'
-                                   '5 : Dlib Aligned Face Cropper\n'
-                                   '6 : openCV Face Cropper\n'
-                                   '7 : openCV Eyes Cropper\n'
-                                   '8 : Dummy Pixel Appender(= Image Squaring)\n'
-                                   '9 : Multiple File Re-Namer\n'
+                                   '4 : Dlib Aligned Face Cropper\n'
+                                   '5 : openCV Eyes Cropper\n'
+                                   '6 : Dummy Pixel Appender(= Image Squaring)\n'
+                                   '7 : Multiple File Re-Namer\n'
                                    '0 : Exit Launcher\n\n'
                                    '위 목록에 해당하는 번호만 입력해 주십시오 : ').replace(" ", "").split(",")
                 inputFlag = 1
@@ -399,16 +395,12 @@ def main():
             elif int(code) == 3:
                 insta_aligned_face_crawler()
             elif int(code) == 4:
-                before_after_detector()
-            elif int(code) == 5:
                 aligned_face_cropper()
-            elif int(code) == 6:
-                face_cropper()
-            elif int(code) == 7:
+            elif int(code) == 5:
                 eyes_cropper()
-            elif int(code) == 8:
+            elif int(code) == 6:
                 dummy_pixel_appender()
-            elif int(code) == 9:
+            elif int(code) == 7:
                 renamer()
             else:
                 runFlag = 0
