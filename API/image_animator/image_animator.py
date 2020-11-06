@@ -1,6 +1,6 @@
 # import sys
 # import time
-import os
+# import os
 import yaml
 from argparse import ArgumentParser
 from tqdm import tqdm
@@ -18,6 +18,7 @@ from image_animator.animate import normalize_kp
 from scipy.spatial import ConvexHull
 
 
+# Model이 사용한 모든 매개변수 값을 지니고 있는 checkpoint 파일을 불러와 적용하는 메소드.
 def load_checkpoints(config_path, checkpoint_path, cpu=False):
 
     with open(config_path) as f:
@@ -51,7 +52,9 @@ def load_checkpoints(config_path, checkpoint_path, cpu=False):
     return generator, kp_detector
 
 
+# Parameter로 주어진 것들을 가지고 Image를 Video화 시키는 작업을 수행하는 메소드이다.
 def make_animation(source_image, driving_video, generator, kp_detector, relative=True, adapt_movement_scale=True, cpu=False):
+    # 'source_image'는 원본 Image, 'driving_video'는 목표 Animation을 제공할 영상이고, 'cpu'는 CPU를 우선 사용할 것인지에 대한 Boolean 값이다.
     with torch.no_grad():
         predictions = []
         source = torch.tensor(source_image[np.newaxis].astype(np.float32)).permute(0, 3, 1, 2)
@@ -105,46 +108,53 @@ def image_animator(client_ip, time_flag, input_image):
     parser = ArgumentParser()
     # parser.add_argument("--config", required=True, help="path to config")
     parser.add_argument("--config", default=r'../image_animator/config/vox-adv-256.yaml', help="path to config")
+    # 사용할 기능의 모든 세부 동작들에 대한 설정값(= Parameter 값)들을 지닌 설정파일의 경로를 설정한다.
     parser.add_argument("--checkpoint", default=r'../image_animator/fom_checkpoints/vox-adv-cpk.pth.tar', help="path to checkpoint to restore")
-
+    # Model이 사용했던 모든 변수값을 저장해 둔 checkpoint 파일의 경로를 설정한다.
     # parser.add_argument("--source_image", default=r'../image_animator/source_image/{}_{}.png'.format(client_ip, time_flag), help="path to source image")
     parser.add_argument("--source_image", default=input_image, help="path to source image")
+    # 원본 Image를 지정한다.
     parser.add_argument("--driving_video", default=r'../image_animator/driving_video/source.mp4', help="path to driving video")
+    # Animation의 기준이 될 영상을 지정한다.
     parser.add_argument("--result_video", default=r'static/videos/{}_{}.mp4'.format(client_ip, time_flag), help="path to output")
- 
+    # 출력될 결과물 Video의 경로를 설정한다.
     parser.add_argument("--relative", dest="relative", action="store_true", help="use relative or absolute keypoint coordinates")
+    # Key-point의 죄푯값의 절대/상대성을 설정한다.
     parser.add_argument("--adapt_scale", dest="adapt_scale", action="store_true", help="adapt movement scale based on convex hull of keypoints")
-
+    # Key-point 값들의 Convex Hull에 기준한 Movement Scale의 Adaptive 여부를 설정한다.
     parser.add_argument("--find_best_frame", dest="find_best_frame", action="store_true", 
                         help="Generate from the frame that is the most alligned with source. (Only for faces, requires face_aligment lib)")
-
+    # Key-Point가 원본 Image의 것과 가장 일치하는 최적의 Frame들을 골라낼지의 여부를 설정한다.
     parser.add_argument("--best_frame", dest="best_frame", type=int, default=None,  
                         help="Set frame to start from.")
- 
+    # 최적의 Frame이 시작되는 부분을 수동으로 설정할 수 있다. 기본값은 None(없음)이다.
     parser.add_argument("--cpu", dest="cpu", action="store_true", help="cpu mode.")
+    # CPU를 우선적으로 연산에 사용할지 여부에 대해 설정한다.
 
-    parser.set_defaults(relative=False)
-    parser.set_defaults(adapt_scale=False)
-    parser.set_defaults(cpu=False)
+    parser.set_defaults(relative=False)  # Key-point의 죄푯값의 절대/상대성을 설정의 기본값을 설정한다.
+    parser.set_defaults(adapt_scale=False)  # "Adapt Movement Scale" 에 대한 기본값을 설정한다.
+    parser.set_defaults(cpu=False)  # CPU 우선 사용 여부에 대한 기본값을 설정한다.
 
-    opt = parser.parse_args()
+    opt = parser.parse_args()  # 앞서 Argument로 적재해 둔 값들을 Parsing해 가져온다.
 
-    source_image = imageio.imread(opt.source_image)
-    reader = imageio.get_reader(opt.driving_video)
-    fps = reader.get_meta_data()['fps']
-    driving_video = []
+    source_image = imageio.imread(opt.source_image)  # 원본 Image 파일을 읽어들인다.
+    reader = imageio.get_reader(opt.driving_video)  # 동작 기준 영상을 읽어들인다.
+    fps = reader.get_meta_data()['fps']  # 기준 영상의 Frame-Rate 값을 변수에 대입해 가지고 있는다.
+    driving_video = []  # 영상의 개별 프레임들을 지니고 있을 배열을 선언한다.
     try:
         for im in reader:
-            driving_video.append(im)
+            driving_video.append(im)  # 동작 기준 영상의 프레임들을 배열에 적재한다.
     except RuntimeError:
         pass
     reader.close()
 
-    source_image = resize(source_image, (256, 256))[..., :3]
-    driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]
+    source_image = resize(source_image, (256, 256))[..., :3]  # 원본 Image의 해상도를 256 * 256으로 Resizing한다.
+    driving_video = [resize(frame, (256, 256))[..., :3] for frame in driving_video]  # 동작 기준 영상의 해상도를 256 * 256으로 Resizing한다.
     generator, kp_detector = load_checkpoints(config_path=opt.config, checkpoint_path=opt.checkpoint, cpu=opt.cpu)
+    # Generator와 Detector를 Checkpoint로부터 CPU 우선 사용 여부에 대한 Parameter 값을 적용해 불러온다.
 
     if opt.find_best_frame or opt.best_frame is not None:
+        # 최적의 Frame 찾아내기 기능을 활성화할 것이 설정됐거나 그 특정 시작점이 주어진 경우, 해당하는 최적 Frame들을 뽑아내는 부분이다.
         i = opt.best_frame if opt.best_frame is not None else find_best_frame(source_image, driving_video, cpu=opt.cpu)
         print ("Best frame: " + str(i))
         driving_forward = driving_video[i:]
@@ -157,7 +167,7 @@ def image_animator(client_ip, time_flag, input_image):
     imageio.mimsave(opt.result_video, [img_as_ubyte(frame) for frame in predictions], fps=fps)
 
     # os.remove(opt.source_image)
-    return opt.result_video
+    return opt.result_video  # 결과물 영상을 호출측에 반환한다.
 
 
 if __name__ == "__main__":

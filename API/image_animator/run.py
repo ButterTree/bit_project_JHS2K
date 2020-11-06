@@ -20,13 +20,13 @@ from image_animator.animate import animate
 matplotlib.use('Agg')
 
 if __name__ == "__main__":
-    
     if sys.version_info[0] < 3:
         raise Exception("You must use Python 3 or higher. Recommended version is Python 3.7")
 
     parser = ArgumentParser()
     # parser.add_argument("--config", required=True, help="path to config")
     parser.add_argument("--config", default=r"config/vox-256.yaml", help="path to config")
+    # 사용할 기능의 모든 세부 동작들에 대한 설정값(= Parameter 값)들을 지닌 설정 파일이다.
     parser.add_argument("--mode", default="animate", choices=["train", "reconstruction", "animate"])
     parser.add_argument("--log_dir", default="log", help="path to log into")
     parser.add_argument("--checkpoint", default=r"fom_checkpoints/vox-cpk.pth.tar", help="path to checkpoint to restore")
