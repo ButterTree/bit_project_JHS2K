@@ -1,22 +1,19 @@
 import argparse
-import os
 import shutil
-# import time
 import sys
+import os
 from collections import OrderedDict
+from torchvision.utils import save_image
 
-# import imageio
-# import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-# from PIL import Image
+
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_maker import mask_maker
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.read_image import image_reader
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
-from torchvision.utils import save_image
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'  # GPU를 활용할 수 있다면 활용할 수 있도록 한다.
 

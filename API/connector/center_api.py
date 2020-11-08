@@ -1,16 +1,12 @@
 from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
 
-# from flask_restful import Resource, Api, reqparse
-from flask import Flask, after_this_request, render_template, request, jsonify
-# from werkzeug.utils import secure_filename
-# import shutil
+from flask import Flask, render_template, request
 import time
 import cv2
 import os
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
-# api = Api(app)
 
 
 @app.route("/")   # IP+포트번호만을 가지고 접속했을 때

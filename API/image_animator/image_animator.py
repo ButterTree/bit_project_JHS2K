@@ -1,6 +1,3 @@
-# import sys
-# import time
-# import os
 import yaml
 from argparse import ArgumentParser
 from tqdm import tqdm
