@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "camera_app",
-    "slug": "camera_app",
+    "name": "smiley-cam",
+    "slug": "smiley-cam",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,3 +1,1 @@
-# Camera test App
-
-iOS / Android App that takes photos and save it
+# React-Native Camera App v1
