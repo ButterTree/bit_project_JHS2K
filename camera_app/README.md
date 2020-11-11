@@ -1,5 +1,5 @@
 # React-Native Camera App v1
 
-This version was made by Jun.
+This version was made by Junn.
 
 Jinsu
