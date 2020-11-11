@@ -2,6 +2,8 @@ from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
 
 from flask import Flask, render_template, request
+import base64
+import json
 import time
 import cv2
 import os
@@ -38,7 +40,14 @@ def let_me_shine():
     # 'image_animator'는 입력받은 Image를 특정한 Source 영상의 모션과 결합해 동영상으로 만들어 주는 메소드이다.
     # 저장 파일명에 활용할 Client의 IP, 'time_flag'와 재료가 될 Image를 Parameter로 넘겨주고 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.
 
-    return render_template('result.html', input_image_dir=input_image[7:], output_image_dir=output_image[7:], output_video_dir=output_video[7:])
+    url_self = "http://121.138.83.1:45045/"
+    data = {'results': {'imgID_1': base64.b64encode(open(input_image, 'rb').read()).decode('utf-8'),
+                        'imgID_2': base64.b64encode(open(output_image, 'rb').read()).decode('utf-8'),
+                        'imgID_3': '{}{}'.format(url_self, output_video)}}
+    json_data = json.dumps(data)
+    # return render_template('result.html', input_image_dir=input_image[7:], output_image_dir=output_image[7:], output_video_dir=output_video[7:]), json_data
+
+    return json_data
     # 모든 Image 처리 과정이 완료되면, 'result.html'을 참조해 Page를 구성해 출력하고,
     # 각 scr를 받아들여 출력하는 부분에 해당되는 자료의 경로 및 파일명을 Parameter로 넘겨줘 Page에 출력할 수 있도록 한다.
 

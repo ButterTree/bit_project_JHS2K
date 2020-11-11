@@ -128,8 +128,8 @@ def image_animator(client_ip, time_flag, input_image):
     parser.add_argument("--cpu", dest="cpu", action="store_true", help="cpu mode.")
     # CPU를 우선적으로 연산에 사용할지 여부에 대해 설정한다.
 
-    parser.set_defaults(relative=False)  # Key-point의 죄푯값의 절대/상대성을 설정의 기본값을 설정한다.
-    parser.set_defaults(adapt_scale=False)  # "Adapt Movement Scale" 에 대한 기본값을 설정한다.
+    parser.set_defaults(relative=True)  # Key-point의 죄푯값의 절대/상대성을 설정의 기본값을 설정한다.
+    parser.set_defaults(adapt_scale=True)  # "Adapt Movement Scale" 에 대한 기본값을 설정한다.
     parser.set_defaults(cpu=False)  # CPU 우선 사용 여부에 대한 기본값을 설정한다.
 
     opt = parser.parse_args()  # 앞서 Argument로 적재해 둔 값들을 Parsing해 가져온다.
