@@ -229,7 +229,6 @@ export default class App extends React.Component {
         } else {
           await MediaLibrary.addAssetsToAlbumAsync([asset], album.id);
         }
-        setTimeout(() => null, 2000);
       } else {
         this.setState({ hasPermission: false });
       }
