@@ -2,20 +2,28 @@ import React from 'react';
 import {
   MaterialCommunityIcons,
   Ionicons,
-  MaterialIcons,
   AntDesign,
   Entypo,
   FontAwesome,
 } from '@expo/vector-icons';
-import { ActivityIndicator, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+  Image,
+} from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import styled from 'styled-components';
 import Loading from './Loading';
+import { imageTransfer } from './api';
 
 const API_KEY = '';
+let currentPhoto = '';
+let photos = [];
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,11 +31,6 @@ const ALBUM_NAME = 'Camera APP';
 
 const CenterView = styled.View`
   background-color: black;
-`;
-
-const Text = styled.Text`
-  color: white;
-  font-size: 22px;
 `;
 
 const IconBar = styled.View`
@@ -64,6 +67,7 @@ export default class App extends React.Component {
       image: null,
       isPreview: false,
       isLoading: true,
+      complete: false,
     };
     this.cameraRef = React.createRef();
   }
@@ -79,26 +83,10 @@ export default class App extends React.Component {
     const {
       status: picStatus,
     } = await ImagePicker.requestCameraRollPermissionsAsync();
-    console.log(picStatus);
     if (picStatus == 'granted') {
       this.setState({ image: true });
     } else {
       this.setState({ imgae: false });
-    }
-  };
-
-  getPhotos = async () => {
-    try {
-      const { edges } = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        quality: 1,
-        base64: true,
-        saveToPhoto: false,
-      });
-      console.log('pic', edges);
-    } catch (error) {
-      console.log('getPhoto', error);
     }
   };
 
@@ -110,11 +98,15 @@ export default class App extends React.Component {
           <Camera
             style={{
               width: width - 1,
-              height: height / 1.4,
+              height: height / 2.4,
               marginTop: 50,
             }}
             type={cameraType}
             ref={this.cameraRef}
+          />
+          <Image
+            style={{ width: 150, height: 150 }}
+            source={{ uri: photos[1] }}
           />
           {!isPreview && (
             <IconContainer>
@@ -135,11 +127,7 @@ export default class App extends React.Component {
               <IconBar>
                 <TouchableOpacity onPress={this.switchCameraType}>
                   <Ionicons
-                    name={
-                      cameraType === Camera.Constants.Type.front
-                        ? 'ios-reverse-camera'
-                        : 'ios-reverse-camera'
-                    }
+                    name={'ios-reverse-camera'}
                     color="white"
                     size={40}
                   />
@@ -149,7 +137,7 @@ export default class App extends React.Component {
           )}
           <IconContainer_after>
             <IconBar_after>
-              <TouchableOpacity onPress={this.submitBtn}>
+              <TouchableOpacity onPress={this.getTransferImage}>
                 <FontAwesome name="check-circle" color="black" size={40} />
               </TouchableOpacity>
             </IconBar_after>
@@ -164,7 +152,7 @@ export default class App extends React.Component {
     } else if (hasPermission === false) {
       return (
         <CenterView>
-          <Text>Don't have Permission for this</Text>
+          <Text>You have to allow Camera Permission</Text>
         </CenterView>
       );
     } else {
@@ -175,6 +163,21 @@ export default class App extends React.Component {
       );
     }
   }
+
+  getPhotos = async () => {
+    try {
+      const { edges } = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        quality: 1,
+        base64: false,
+        saveToPhoto: false,
+      });
+      console.log(`getPhotos: ${edges}`);
+    } catch (error) {
+      console.log(`getPhotos Error: ${error}`);
+    }
+  };
 
   switchCameraType = () => {
     const { cameraType } = this.state;
@@ -192,16 +195,17 @@ export default class App extends React.Component {
   takePhoto = async () => {
     try {
       if (this.cameraRef.current) {
-        const options = { quality: 0.5, base64: true };
+        const options = { quality: 1, base64: true };
         let photo = await this.cameraRef.current.takePictureAsync(options);
         const source = photo.uri;
         if (source) {
           await this.cameraRef.current.pausePreview();
           this.setState({ isPreview: true });
         }
-        console.log(photo);
+        const base64Photo = photo.base64;
+        currentPhoto = base64Photo; // 여기서 나오는 return 값은 [원본사진, 합성후 사진]
         if (photo.uri) {
-          this.savePhoto(photo.uri);
+          // this.savePhoto(photo.uri);
         }
       }
     } catch (error) {
@@ -226,26 +230,22 @@ export default class App extends React.Component {
           await MediaLibrary.addAssetsToAlbumAsync([asset], album.id);
         }
         setTimeout(() => null, 2000);
-        console.log(asset);
-        console.log(album);
       } else {
         this.setState({ hasPermission: false });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(`savePhotoError: ${error}`);
+    }
+  };
+
+  getTransferImage = async () => {
+    try {
+      photos = await imageTransfer(currentPhoto);
+
+      await this.cameraRef.current.resumePreview();
+      this.setState({ isPreview: false });
+    } catch (error) {
+      console.log(`getTransferImage Error: ${error}`);
+    }
   };
 }
-
-submitBtn = async (uri) => {
-  try {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    if (status === 'granted') {
-      const asset = await MediaLibrary.createAssetAsync(uri);
-      let album = await MediaLibrary.getAlbumAsync(ALBUM_NAME);
-      if (album === null) {
-        album = await MediaLibrary.createAlbumAsync(ALBUM_NAME);
-      } else {
-        await MediaLibrary.addAssetsToAlbumAsync([asset], album.id);
-      }
-    }
-  } catch (error) {}
-};
