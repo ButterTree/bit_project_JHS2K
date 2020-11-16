@@ -2,7 +2,7 @@ import React from 'react';
 import {
   MaterialCommunityIcons,
   Ionicons,
-  AntDesign,
+  MaterialIcons,
   Entypo,
   FontAwesome,
 } from '@expo/vector-icons';
@@ -12,11 +12,14 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  Alert,
+  BackHandler,
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import styled from 'styled-components';
 import Loading from './Loading';
 import { imageTransfer } from './api';
@@ -29,7 +32,7 @@ const { width, height } = Dimensions.get('window');
 const ALBUM_NAME = 'Camera APP';
 
 const CenterView = styled.View`
-  background-color: black;
+  background-color: white;
 `;
 
 const IconBar = styled.View`
@@ -57,6 +60,13 @@ const IconContainer_after = styled.View`
   background-color: white;
 `;
 
+const LoadingBar = styled.View`
+  width: 100%;
+  height: 100%;
+  background-colr: white;
+  justyfy-content: 'conter';
+`;
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -66,7 +76,9 @@ export default class App extends React.Component {
       image: null,
       isPreview: false,
       isLoading: true,
-      complete: false,
+      isAfterview: false,
+      imageSelected: false,
+      imageComeback: false,
     };
     this.cameraRef = React.createRef();
   }
@@ -89,50 +101,110 @@ export default class App extends React.Component {
     }
   };
 
+  getPhotos = async () => {
+    const { uri } = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+      base64: true,
+    });
+    if (!uri) {
+      this.setState({ hasPermission: true });
+    } else {
+      this.setState({
+        image: uri,
+        imageSelected: true,
+        imageComeback: true,
+      });
+    }
+  };
+
   render() {
-    const { hasPermission, cameraType, isPreview, isLoading } = this.state;
+    const {
+      hasPermission,
+      cameraType,
+      isPreview,
+      image,
+      imageSelected,
+      imageComeback,
+      isAfterview,
+      isLoading,
+    } = this.state;
     if (hasPermission === true) {
       return (
         <CenterView>
           <Camera
             style={{
               width: width - 1,
-              height: height / 2.4,
+              height: height / 1.4,
               marginTop: 50,
             }}
             type={cameraType}
             ref={this.cameraRef}
           />
-          <Image
-            style={{ width: 150, height: 150 }}
-            source={{ uri: photos[1] }}
-          />
-          {!isPreview && (
+
+          {imageSelected && imageComeback && (
+            <Image
+              style={{
+                width: width - 1,
+                height: height / 1.4,
+                marginTop: 50,
+                position: 'absolute',
+              }}
+              source={{ uri: image }}
+            />
+          )}
+          {isAfterview && (
+            <Image
+              style={{
+                width: width - 1,
+                height: height / 1.4,
+                marginTop: 50,
+                position: 'absolute',
+              }}
+              source={{ uri: photos[1] }}
+            />
+          )}
+          {!isPreview && !imageComeback && !isAfterview && !imageSelected && (
             <IconContainer>
               <IconBar>
                 <TouchableOpacity onPress={this.getPhotos}>
-                  <AntDesign name="picture" color="white" size={30} />
+                  <FontAwesome name="picture-o" color="black" size={30} />
                 </TouchableOpacity>
               </IconBar>
               <IconBar>
                 <TouchableOpacity onPress={this.takePhoto}>
                   <MaterialCommunityIcons
                     name="circle-slice-8"
-                    color="white"
+                    color="black"
                     size={100}
                   />
                 </TouchableOpacity>
               </IconBar>
               <IconBar>
                 <TouchableOpacity onPress={this.switchCameraType}>
-                  <Ionicons
-                    name={'ios-reverse-camera'}
-                    color="white"
+                  <MaterialCommunityIcons
+                    name={'camera-retake-outline'}
+                    color="black"
                     size={40}
                   />
                 </TouchableOpacity>
               </IconBar>
             </IconContainer>
+          )}
+          {isAfterview && !isPreview && (
+            <IconContainer_after>
+              <IconBar_after>
+                <TouchableOpacity onPress={this.saveResultPhoto}>
+                  <FontAwesome name="save" color="black" size={40} />
+                </TouchableOpacity>
+              </IconBar_after>
+
+              <IconBar_after>
+                <TouchableOpacity onPress={this.cancelPreviewBtn}>
+                  <Entypo name="circle-with-cross" color="black" size={40} />
+                </TouchableOpacity>
+              </IconBar_after>
+            </IconContainer_after>
           )}
           <IconContainer_after>
             <IconBar_after>
@@ -163,21 +235,6 @@ export default class App extends React.Component {
     }
   }
 
-  getPhotos = async () => {
-    try {
-      const { edges } = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        quality: 1,
-        base64: false,
-        saveToPhoto: false,
-      });
-      console.log(`getPhotos: ${edges}`);
-    } catch (error) {
-      console.log(`getPhotos Error: ${error}`);
-    }
-  };
-
   switchCameraType = () => {
     const { cameraType } = this.state;
     if (cameraType === Camera.Constants.Type.front) {
@@ -197,16 +254,17 @@ export default class App extends React.Component {
         const options = { quality: 1, base64: true };
         let photo = await this.cameraRef.current.takePictureAsync(options);
         const source = photo.uri;
+        console.log(source);
         if (source) {
           await this.cameraRef.current.pausePreview();
           this.setState({ isPreview: true });
         }
         const base64Photo = photo.base64;
         currentPhoto = base64Photo; // 여기서 나오는 return 값은 [원본사진, 합성후 사진]
-        if (photo.uri) {
-          // this.savePhoto(photo.uri);
-        }
       }
+      // if (photo.uri) {
+      //   this.savePhoto(photo.uri);
+      // }
     } catch (error) {
       alert(`error: ${error}`);
     }
@@ -214,7 +272,12 @@ export default class App extends React.Component {
 
   cancelPreviewBtn = async () => {
     await this.cameraRef.current.resumePreview();
-    this.setState({ isPreview: false });
+    this.setState({
+      isPreview: false,
+      imageSelected: false,
+      imageComeback: false,
+      isAfterview: false,
+    });
   };
 
   savePhoto = async (uri) => {
@@ -241,9 +304,34 @@ export default class App extends React.Component {
       photos = await imageTransfer(currentPhoto);
 
       await this.cameraRef.current.resumePreview();
-      this.setState({ isPreview: false });
+      this.setState({
+        isPreview: false,
+        isAfterview: true,
+        imageSelected: false,
+        imageComeback: false,
+        isSaved: true,
+      });
     } catch (error) {
       console.log(`getTransferImage Error: ${error}`);
+    }
+  };
+
+  saveResultPhoto = async () => {
+    try {
+      const base64Code = photos[1].split('data:image/png;base64,')[1];
+
+      const filename = FileSystem.documentDirectory + 'changed.png';
+      await FileSystem.writeAsStringAsync(filename, base64Code, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await MediaLibrary.saveToLibraryAsync(filename);
+      this.setState({
+        isSaved: true,
+        isAfterview: false,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 }
