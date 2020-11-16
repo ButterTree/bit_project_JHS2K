@@ -14,3 +14,9 @@ taichi-cpk.pth.tar
 vox-adv-cpk.pth.tar
 vox-cpk.pth.tar
 /*/*/static
+
+# API_for_Linux
+API_for_Linux/image_2_style_gan/__pycache__
+API_for_Linux/image_animator/__pycache__
+API_for_Linux/image_animator/modules/__pycache__
+API_for_Linux/image_animator/sync_batchnorm/__pycache

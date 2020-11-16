@@ -1,6 +1,5 @@
 from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
-
 from flask import Flask, render_template, request, redirect, url_for
 import requests as rq
 import base64
@@ -30,7 +29,7 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다.
 def let_me_shine():
-    url_base = "http://121.138.83.1:45045/let_me_shine/results/?uid="
+    url_base = "http://222.106.22.97:45045/let_me_shine/results/?uid="
     client_ip = request.remote_addr
     # 접속해 온 Client의 IP(v4) 주소를 기억해 둔다. 파일 이름 중복 혹은 혼선을 방지하기 위해 활용될 것이다.
     time_flag = time.strftime('%m%d-%H%M%S', time.localtime(time.time()))
@@ -40,15 +39,15 @@ def let_me_shine():
     # print(request.files['raw_img_file_web'])
     # if request.files['raw_img_file_web']:
     #     f = request.files['raw_img_file_web']
-    #     client_img_name = '/home/bitproject/Python/API/image_2_style_gan/img/{}.png'.format(client_ip)
-    #     file_name = '/home/bitproject/Python/API/image_2_style_gan/img/{}'.format(f.filename)
+    #     client_img_name = '/home/rhange/Python/API/image_2_style_gan/img/{}.png'.format(client_ip)
+    #     file_name = '/home/rhange/Python/API/image_2_style_gan/img/{}'.format(f.filename)
     #     f.save(file_name)
     # else:
     data = request.get_json(silent=True)
     # item = {'label': data.get('label'), 'text': data.get('text')}
 
-    file_name = '/home/bitproject/Python/API/image_2_style_gan/img/raw_{}_{}.jpg'.format(client_ip, time_flag)  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
-    client_img_name = '/home/bitproject/Python/API/image_2_style_gan/img/{}_{}.png'.format(client_ip, time_flag)  # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
+    file_name = '/home/rhange/Python/API/image_2_style_gan/img/raw_{}_{}.jpg'.format(client_ip, time_flag)  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
+    client_img_name = '/home/rhange/Python/API/image_2_style_gan/img/{}_{}.png'.format(client_ip, time_flag)  # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
     # f.save(file_name)  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
 
     with open(file_name, 'wb') as f:
@@ -83,5 +82,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Start")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run('222.106.22.97', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.

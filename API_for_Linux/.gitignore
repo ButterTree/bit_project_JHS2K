@@ -1,0 +1,5 @@
+# API_for_Linux
+image_2_style_gan/__pycache__
+image_animator/__pycache__
+image_animator/modules/__pycache__
+image_animator/sync_batchnorm/__pycache
