@@ -45,7 +45,7 @@
 
 - Flask
 
-- Linux (ubuntu 18.04)
+- Linux (ubuntu 18.04, CentOS 7)
 
 - ...
 
