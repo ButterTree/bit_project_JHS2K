@@ -29,7 +29,7 @@ def mask_maker(aligned_image_names, mask_dir):
         mask_loc = eyes_loc[eyes_loc[:, 1] < 500] - [[50, 40, 0, 0]]        # 눈이 있을 높이 내에서만 (입 인식 방지), 마스킹 잘 되도록 적절한 위치로 조정
 
         # Mask 생성
-        mask = Image.open('/home/bitproject/Python/API/image_2_style_gan/mask_origin/mask_circle_blur.jpg')                 # 이미지 파일과 동일한 디렉토리
+        mask = Image.open('../image_2_style_gan/mask_origin/mask_circle_blur.jpg')                 # 이미지 파일과 동일한 디렉토리
         resized_mask = mask.resize((mask_loc[0, 2] * 2, mask_loc[0, 2] * 2))        # 인식된 눈 사이즈 * 2
 
         back = Image.new("L", (1024, 1024))                                 # 검정색 1024 x 1024 배경 생성

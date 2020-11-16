@@ -21,7 +21,6 @@ import styled from 'styled-components';
 import Loading from './Loading';
 import { imageTransfer } from './api';
 
-const API_KEY = '';
 let currentPhoto = ''; // 찍은 사진 저장용
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
 

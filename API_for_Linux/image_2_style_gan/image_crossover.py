@@ -17,12 +17,12 @@ from torchvision.utils import save_image
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
-def image_crossover(client_ip, time_flag):
-    MEDIUM_IMAGE_DIR = '/home/bitproject/Python/API/image_2_style_gan/save_image/crossover/'
+def image_crossover(rand_uuid, client_img_name):
+    MEDIUM_IMAGE_DIR = '../image_2_style_gan/images/medium/'
     if os.path.isdir(MEDIUM_IMAGE_DIR) is not True:
         os.makedirs(MEDIUM_IMAGE_DIR, exist_ok=True)
 
-    FINAL_IMAGE_DIR = '/home/bitproject/Python/API/connector/static/images/'
+    FINAL_IMAGE_DIR = '../image_2_style_gan/images/final/'
     if os.path.isdir(FINAL_IMAGE_DIR) is not True:
         os.makedirs(FINAL_IMAGE_DIR, exist_ok=True)
 
@@ -37,10 +37,10 @@ def image_crossover(client_ip, time_flag):
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
     parser.add_argument('--batch_size', default=6, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=1024, type=int)
-    parser.add_argument('--src_im1', default="/home/bitproject/Python/API/image_2_style_gan/source_image/target/")
-    parser.add_argument('--src_im2', default="/home/bitproject/Python/API/image_2_style_gan/source_image/ingredient/")
-    parser.add_argument('--mask', default="/home/bitproject/Python/API/image_2_style_gan/source_image/mask/")
-    parser.add_argument('--weight_file', default="/home/bitproject/Python/API/image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
+    parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
+    parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
+    parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
+    parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
@@ -62,20 +62,22 @@ def image_crossover(client_ip, time_flag):
         target_name = args.src_im1 + os.listdir(args.src_im1)[0]
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
+        print(f"Aligned_image_names function: {e}")
+        os.remove(client_img_name)
         sys.exit(1)
 
     try:
         mask_name = args.mask + os.listdir(args.mask)[0]
     except Exception as e:
-        shutil.copyfile('/home/bitproject/Python/API/image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
+        shutil.copyfile('../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
         mask_name = args.mask + os.listdir(args.mask)[0]
 
-    FINAL_IMAGE_DIR = FINAL_IMAGE_DIR + client_ip + time_flag + '/'
+    FINAL_IMAGE_DIR = FINAL_IMAGE_DIR + str(rand_uuid) + '/'
     if os.path.isdir(FINAL_IMAGE_DIR) is not True:
         os.mkdir(FINAL_IMAGE_DIR)
 
     # file_names = []
-    final_name = FINAL_IMAGE_DIR + time_flag + '.png'
+    final_name = FINAL_IMAGE_DIR + str(rand_uuid) + '.png'
 
     g_all = nn.Sequential(OrderedDict([
     ('g_mapping', G_mapping()),
@@ -163,7 +165,7 @@ def image_crossover(client_ip, time_flag):
     #     dir = r'../image_2_style_gan/save_image/crossover/' + file
     #     os.remove(dir)
 
-    origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, time_flag)
+    origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
     # os.remove(ingredient_name)
     # os.replace(mask_name, '{}Used_{}_mask.png'.format(FINAL_IMAGE_DIR, time_flag))
