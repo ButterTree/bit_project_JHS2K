@@ -18,11 +18,11 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
 def image_crossover(rand_uuid, client_img_name):
-    MEDIUM_IMAGE_DIR = '../image_2_style_gan/images/medium/'
+    MEDIUM_IMAGE_DIR = r'../image_2_style_gan/images/medium/'
     if os.path.isdir(MEDIUM_IMAGE_DIR) is not True:
         os.makedirs(MEDIUM_IMAGE_DIR, exist_ok=True)
 
-    FINAL_IMAGE_DIR = '../image_2_style_gan/images/final/'
+    FINAL_IMAGE_DIR = r'../image_2_style_gan/images/final/'
     if os.path.isdir(FINAL_IMAGE_DIR) is not True:
         os.makedirs(FINAL_IMAGE_DIR, exist_ok=True)
 
@@ -37,10 +37,10 @@ def image_crossover(rand_uuid, client_img_name):
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
     parser.add_argument('--batch_size', default=6, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=1024, type=int)
-    parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
-    parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
-    parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
-    parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
+    parser.add_argument('--src_im1', default=r"../image_2_style_gan/source_image/target/")
+    parser.add_argument('--src_im2', default=r"../image_2_style_gan/images/medium/")
+    parser.add_argument('--mask', default=r"../image_2_style_gan/images/mask/")
+    parser.add_argument('--weight_file', default=r"../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
     parser.add_argument('--iteration', default=100, type=int)
 
     args = parser.parse_args()
@@ -50,6 +50,8 @@ def image_crossover(rand_uuid, client_img_name):
     #     raw_image_names = client_img_name
     # raw_image_names = r'../image_2_style_gan/img/'
     aligned_image_names = align_images(args.src_im2)
+    if os.path.isdir(args.mask) is not True:
+        os.makedirs(args.mask, exist_ok=True)
 
     try:
         if not aligned_image_names:
@@ -69,7 +71,7 @@ def image_crossover(rand_uuid, client_img_name):
     try:
         mask_name = args.mask + os.listdir(args.mask)[0]
     except Exception as e:
-        shutil.copyfile('../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
+        shutil.copyfile(r'../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
         mask_name = args.mask + os.listdir(args.mask)[0]
 
     FINAL_IMAGE_DIR = FINAL_IMAGE_DIR + str(rand_uuid) + '/'

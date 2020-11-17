@@ -23,15 +23,17 @@ def align_images(ALIGNED_IMAGES_DIR):
 
     # landmarks_model_path = unpack_bz2(get_file('shape_predictor_68_face_landmarks.dat.bz2',
     #                                            LANDMARKS_MODEL_URL, cache_subdir='temp'))
-    landmarks_model_path = '../image_2_style_gan/model/shape_predictor_68_face_landmarks.dat'
+    landmarks_model_path = r'../image_2_style_gan/model/shape_predictor_68_face_landmarks.dat'
     alinged_files = []
+    if os.path.isdir(os.path.dirname(landmarks_model_path)) is not True:
+        os.makedirs(os.path.dirname(landmarks_model_path), exist_ok=True)
 
-    RAW_IMAGES_DIR = '../image_2_style_gan/images/raw'
+    RAW_IMAGES_DIR = r'../image_2_style_gan/images/raw'
     if os.path.isdir(RAW_IMAGES_DIR) is not True:
-        os.mkdir(RAW_IMAGES_DIR)
+        os.makedirs(RAW_IMAGES_DIR, exist_ok=True)
 
     if os.path.isdir(ALIGNED_IMAGES_DIR) is not True:
-        os.mkdir(ALIGNED_IMAGES_DIR)
+        os.makedirs(ALIGNED_IMAGES_DIR, exist_ok=True)
 
     landmarks_detector = LandmarksDetector(landmarks_model_path)
     for img_name in os.listdir(RAW_IMAGES_DIR):

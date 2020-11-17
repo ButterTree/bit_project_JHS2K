@@ -1,11 +1,10 @@
+from image_2_style_gan.stylegan_layers import  G_mapping,G_synthesis,D_basic
 from collections import OrderedDict
 
 import torch
 import torch.nn as nn
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-
-from image_2_style_gan.stylegan_layers import  G_mapping,G_synthesis,D_basic
 
 
 resolution=1024
@@ -20,8 +19,6 @@ d_basic = D_basic(resolution=resolution)
 a=True
 
 
-
-
 tensorflow_dir= "weight_files/tensorflow/"
 pytorch_dir= "weight_files/pytorch/"
 weight_name="karras2019stylegan-ffhq-{}x{}".format(resolution, resolution)
@@ -30,7 +27,7 @@ if a:
     # this can be run to get the weights, but you need the reference implementation and weights
     import pickle, torch, collections
 
-    imega_2_style_gan.dnnlib.tflib.init_tf()
+    image_2_style_gan.dnnlib.tflib.init_tf()
     weights = pickle.load(open(tensorflow_dir+weight_name+".pkl",'rb'))
     weights_pt = [collections.OrderedDict([(k, torch.from_numpy(v.value().eval())) for k,v in w.trainables.items()]) for w in weights]
     torch.save(weights_pt, pytorch_dir+weight_name+".pt")

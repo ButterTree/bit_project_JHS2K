@@ -11,10 +11,11 @@ import shutil
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-@app.route("/", methods=['GET', 'POST'])   # IP+포트번호만을 가지고 접속했을 때
-def home():
-    # 'index.html'의 내용을 참조하여 Page를 구성해 출력한다.
-    return render_template('index.html')
+
+# @app.route("/", methods=['GET', 'POST'])   # IP+포트번호만을 가지고 접속했을 때
+# def home():
+#     # 'index.html'의 내용을 참조하여 Page를 구성해 출력한다.
+#     return render_template('index.html')
 
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
@@ -22,8 +23,12 @@ def data_return():
     global data
     if request.method == 'POST':
         data = request.get_json(silent=True)
-    if request.method == 'GET':
-        return data
+    elif request.method == 'GET':
+        data_buf = json.dumps(data)
+        data = ''
+        return data_buf
+    elif data == '':
+        data_return.close()
     return ''
 
 
@@ -40,7 +45,6 @@ def let_me_shine():
 
     """
     Web part
-    add
     print(request.files['raw_img_file_web'])
     if request.files['raw_img_file_web']:
         f = request.files['raw_img_file_web']
@@ -51,18 +55,22 @@ def let_me_shine():
     """
 
     try:
-        data = request.get_json(silent=True)
-        if not data['text']:
+        input_data = request.get_json(silent=True)
+        if not input_data['text']:
             print("Re-send image, please.")
             return "Re-send image, please."
         else:
             # item = {'label': data.get('label'), 'text': data.get('text')}
-            file_name = f'../image_2_style_gan/images/raw/raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
-            client_img_name = f'../image_2_style_gan/images/raw/{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
+            file_name = fr'../image_2_style_gan/images/raw/raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
+            client_img_name = fr'../image_2_style_gan/images/raw/{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
             # f.save(file_name)  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
+            if os.path.isdir(os.path.dirname(file_name)) is not True:
+                os.makedirs(os.path.dirname(file_name), exist_ok=True)
+            if os.path.isdir(os.path.dirname(client_img_name)) is not True:
+                os.makedirs(os.path.dirname(client_img_name), exist_ok=True)
 
             with open(file_name, 'wb') as f:
-                f.write(base64.b64decode(data['text']))
+                f.write(base64.b64decode(input_data['text']))
 
             cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
             cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 IP를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
@@ -75,15 +83,15 @@ def let_me_shine():
             # 'image_animator'는 입력받은 Image를 특정한 Source 영상의 모션과 결합해 동영상으로 만들어 주는 메소드이다.
             # 저장 파일명에 활용할 Client의 IP, 'time_flag'와 재료가 될 Image를 Parameter로 넘겨주고 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.
 
-            data = {'results': {'imgID_1': base64.b64encode(open(input_image, 'rb').read()).decode('utf-8'),
+            output_data = {'results': {'imgID_1': base64.b64encode(open(input_image, 'rb').read()).decode('utf-8'),
                                 'imgID_2': base64.b64encode(open(output_image, 'rb').read()).decode('utf-8')}, 'usrID': usr_ID}
             # ,'vidID_1': '{}{}'.format(url_self, output_video[38:])}}
-            json_data = json.dumps(data)
+            json_data = json.dumps(output_data)
 
             # return render_template('result.html', input_image_dir=input_image[7:], output_image_dir=output_image[7:], output_video_dir=output_video[7:]), json_data
             rq.post(url_base + '{}'.format(usr_ID), json=json_data)
 
-            shutil.rmtree(f'../image_2_style_gan/images/final/{rand_uuid}')
+            shutil.rmtree(fr'../image_2_style_gan/images/final/{rand_uuid}')
             return url_base + '{}'.format(usr_ID)
 
     except Exception as e:
