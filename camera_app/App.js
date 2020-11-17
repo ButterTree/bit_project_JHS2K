@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   MaterialCommunityIcons,
   Ionicons,
@@ -7,6 +7,9 @@ import {
   FontAwesome,
 } from '@expo/vector-icons';
 import {
+  Animated,
+  View,
+  Button,
   ActivityIndicator,
   Dimensions,
   TouchableOpacity,
@@ -21,7 +24,6 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import styled from 'styled-components';
-import Loading from './Loading';
 import { imageTransfer } from './api';
 
 let currentPhoto = ''; // 찍은 사진 저장용
