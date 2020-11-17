@@ -1,6 +1,6 @@
 from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import requests as rq
 import base64
 import json
