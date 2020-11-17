@@ -29,7 +29,7 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
-    url_base = "http://222.106.22.97:45045/let_me_shine/results/?uid="
+    url_base = "http://121.138.83.1:45045/let_me_shine/results/?uid="
     # client_ip = request.remote_addr
     # 접속해 온 Client의 IP(v4) 주소를 기억해 둔다. 파일 이름 중복 혹은 혼선을 방지하기 위해 활용될 것이다.
     # time_flag = time.strftime('%m%d-%H%M%S', time.localtime(time.time()))
@@ -40,7 +40,7 @@ def let_me_shine():
 
     """
     Web part
-
+    add
     print(request.files['raw_img_file_web'])
     if request.files['raw_img_file_web']:
         f = request.files['raw_img_file_web']
@@ -98,5 +98,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Start")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('222.106.22.97', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
