@@ -138,13 +138,28 @@ export default class App extends React.Component {
         <CenterView>
           <Camera
             style={{
+              alignItems: 'center',
               width: width - 1,
               height: height / 1.4,
               marginTop: 50,
             }}
             type={cameraType}
             ref={this.cameraRef}
-          />
+          >
+            <View
+              style={{
+                marginTop: 80,
+                width: 200,
+                height: 250,
+                borderRadius: 100 / 1.1,
+                borderWidth: 5,
+                opacity: 0.5,
+                borderColor: 'white',
+                backgroundColor: 'transparent',
+                position: 'absolute',
+              }}
+            />
+          </Camera>
 
           {imageSelected && imageComeback && (
             <Image
