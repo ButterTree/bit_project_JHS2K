@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   MaterialCommunityIcons,
   Ionicons,
   MaterialIcons,
   Entypo,
   FontAwesome,
+  AntDesign,
 } from '@expo/vector-icons';
 import {
+  Animated,
+  View,
+  Button,
   ActivityIndicator,
   Dimensions,
   TouchableOpacity,
@@ -21,7 +25,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import styled from 'styled-components';
-import Loading from './Loading';
+import * as Sharing from 'expo-sharing';
 import { imageTransfer } from './api';
 
 let currentPhoto = ''; // 찍은 사진 저장용
@@ -97,24 +101,7 @@ export default class App extends React.Component {
     if (picStatus == 'granted') {
       this.setState({ image: true });
     } else {
-      this.setState({ imgae: false });
-    }
-  };
-
-  getPhotos = async () => {
-    const { uri } = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: false,
-      quality: 1,
-      base64: true,
-    });
-    if (!uri) {
-      this.setState({ hasPermission: true });
-    } else {
-      this.setState({
-        image: uri,
-        imageSelected: true,
-        imageComeback: true,
-      });
+      this.setState({ image: false });
     }
   };
 
@@ -134,13 +121,28 @@ export default class App extends React.Component {
         <CenterView>
           <Camera
             style={{
+              alignItems: 'center',
               width: width - 1,
               height: height / 1.4,
               marginTop: 50,
             }}
             type={cameraType}
             ref={this.cameraRef}
-          />
+          >
+            <View
+              style={{
+                marginTop: 80,
+                width: 200,
+                height: 250,
+                borderRadius: 100 / 1.1,
+                borderWidth: 5,
+                opacity: 0.5,
+                borderColor: 'white',
+                backgroundColor: 'transparent',
+                position: 'absolute',
+              }}
+            />
+          </Camera>
 
           {imageSelected && imageComeback && (
             <Image
@@ -198,7 +200,11 @@ export default class App extends React.Component {
                   <FontAwesome name="save" color="black" size={40} />
                 </TouchableOpacity>
               </IconBar_after>
-
+              <IconBar_after>
+                <TouchableOpacity onPress={this.openShareDialog}>
+                  <Entypo name="share" color="black" size={40} />
+                </TouchableOpacity>
+              </IconBar_after>
               <IconBar_after>
                 <TouchableOpacity onPress={this.cancelPreviewBtn}>
                   <Entypo name="circle-with-cross" color="black" size={40} />
@@ -234,6 +240,24 @@ export default class App extends React.Component {
       );
     }
   }
+
+  getPhotos = async () => {
+    const photo = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+      base64: true,
+    });
+    if (!photo.uri) {
+      this.setState({ hasPermission: true });
+    } else {
+      this.setState({
+        image: photo.uri,
+        imageSelected: true,
+        imageComeback: true,
+      });
+      currentPhoto = photo.base64;
+    }
+  };
 
   switchCameraType = () => {
     const { cameraType } = this.state;
@@ -328,6 +352,24 @@ export default class App extends React.Component {
       await MediaLibrary.saveToLibraryAsync(filename);
       this.setState({
         isSaved: true,
+        isAfterview: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  openShareDialog = async () => {
+    try {
+      const base64Code = photos[1].split('data:image/png;base64,')[1];
+
+      const filename = FileSystem.documentDirectory + 'changed.png';
+      await FileSystem.writeAsStringAsync(filename, base64Code, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await Sharing.shareAsync(filename);
+      this.setState({
         isAfterview: false,
       });
     } catch (error) {
