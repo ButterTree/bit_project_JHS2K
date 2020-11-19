@@ -2,7 +2,7 @@
 
 ### Error Report
 #### 1.
-**npm start 시작시에 아래와 같은 에러가 뜨면**
+**npm start 시작시에 아래와 같은 에러가 뜨면** 
 - Error: ENOSPC: System limit for number of file watchers reached, 
 
 **콘솔에 다음과 같은 명령어 입력.**
