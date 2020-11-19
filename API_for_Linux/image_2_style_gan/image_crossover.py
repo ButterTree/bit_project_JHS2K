@@ -35,13 +35,13 @@ def image_crossover(rand_uuid, client_img_name):
     #         DIR += '/'
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=6, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--batch_size', default=5, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=1024, type=int)
     parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
     parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
     parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
     parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
-    parser.add_argument('--iteration', default=150, type=int)
+    parser.add_argument('--iteration', default=100, type=int)
 
     args = parser.parse_args()
     # if client_img_name == '':
@@ -169,7 +169,7 @@ def image_crossover(rand_uuid, client_img_name):
     os.replace(ingredient_name, origin_name)
     # os.remove(ingredient_name)
     # os.replace(mask_name, '{}Used_{}_mask.png'.format(FINAL_IMAGE_DIR, time_flag))
-    os.remove(mask_name)
+    os.remove(mask_name) # 마스크 파일 삭제
     # shutil.copyfile(target_name, '{}Used_{}_target.png'.format(FINAL_IMAGE_DIR, time_flag))
 
     print("Complete ---------------------------------------------------------------------------------------------")

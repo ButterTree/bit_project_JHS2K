@@ -83,7 +83,7 @@ def let_me_shine():
             # return render_template('result.html', input_image_dir=input_image[7:], output_image_dir=output_image[7:], output_video_dir=output_video[7:]), json_data
             rq.post(url_base + '{}'.format(usr_ID), json=json_data)
 
-            shutil.rmtree(f'../image_2_style_gan/images/final/{rand_uuid}')
+            shutil.rmtree(f'../image_2_style_gan/images/final/{rand_uuid}') # FINAL 삭제
             return url_base + '{}'.format(usr_ID)
 
     except Exception as e:
@@ -97,6 +97,6 @@ if __name__ == "__main__":
     # __name__ == "__main__" 구문의 의미하는 것은 우선 [Module을 Command Prompt 등을 통해 "직접 실행하는 경우"]라는 의미이다.
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
-    print("Server Start")  # 메시지를 출력해 Server의 작동 시작을 알린다.
+    print("Server Start!!")  # 메시지를 출력해 Server의 작동 시작을 알린다.
     app.run('222.106.22.97', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
