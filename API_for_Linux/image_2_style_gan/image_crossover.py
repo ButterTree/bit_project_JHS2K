@@ -35,13 +35,13 @@ def image_crossover(rand_uuid, client_img_name):
     #         DIR += '/'
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=5, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--batch_size', default=10, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=1024, type=int)
     parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
     parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
     parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
     parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
-    parser.add_argument('--iteration', default=100, type=int)
+    parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
     # if client_img_name == '':
