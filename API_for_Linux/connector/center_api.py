@@ -22,8 +22,12 @@ def data_return():
     global data
     if request.method == 'POST':
         data = request.get_json(silent=True)
-    if request.method == 'GET':
-        return data
+    elif request.method == 'GET':
+        data_buf = data
+        data = ''
+        return data_buf
+    elif data == '':
+        data_return.close()
     return ''
 
 
