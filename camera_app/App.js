@@ -105,23 +105,6 @@ export default class App extends React.Component {
     }
   };
 
-  getPhotos = async () => {
-    const { uri } = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: false,
-      quality: 1,
-      base64: true,
-    });
-    if (!uri) {
-      this.setState({ hasPermission: true });
-    } else {
-      this.setState({
-        image: uri,
-        imageSelected: true,
-        imageComeback: true,
-      });
-    }
-  };
-
   render() {
     const {
       hasPermission,
@@ -257,6 +240,24 @@ export default class App extends React.Component {
       );
     }
   }
+
+  getPhotos = async () => {
+    const photo = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      quality: 1,
+      base64: true,
+    });
+    if (!photo.uri) {
+      this.setState({ hasPermission: true });
+    } else {
+      this.setState({
+        image: photo.uri,
+        imageSelected: true,
+        imageComeback: true,
+      });
+      currentPhoto = photo.base64;
+    }
+  };
 
   switchCameraType = () => {
     const { cameraType } = this.state;
