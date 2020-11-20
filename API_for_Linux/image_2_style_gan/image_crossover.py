@@ -39,6 +39,8 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
+    if os.path.isdir(os.path.dirname(args.weight_file)) is not True:
+        os.makedirs(os.path.dirname(args.weight_file), exist_ok=True)
     aligned_image_names = align_images(RAW_DIR, args.src_im2)
     print(len(aligned_image_names))
 
