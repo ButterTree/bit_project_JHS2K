@@ -17,64 +17,54 @@ from torchvision.utils import save_image
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
-def image_crossover(rand_uuid, client_img_name):
-    MEDIUM_IMAGE_DIR = '../image_2_style_gan/images/medium/'
-    if os.path.isdir(MEDIUM_IMAGE_DIR) is not True:
-        os.makedirs(MEDIUM_IMAGE_DIR, exist_ok=True)
+def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
+    ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
+    os.mkdir(ALIGNED_IMAGE_DIR)
 
-    FINAL_IMAGE_DIR = '../image_2_style_gan/images/final/'
-    if os.path.isdir(FINAL_IMAGE_DIR) is not True:
-        os.makedirs(FINAL_IMAGE_DIR, exist_ok=True)
+    FINAL_IMAGE_DIR = f'{BASE_DIR}final/'
+    os.mkdir(FINAL_IMAGE_DIR)
 
-    # MEDIUM_IMAGE_DIR_ELEM = MEDIUM_IMAGE_DIR.split("/")
-    # DIR = MEDIUM_IMAGE_DIR_ELEM[0]
-    # for ELEM in MEDIUM_IMAGE_DIR_ELEM:
-    #     if ELEM != '' and os.path.isdir(DIR) is not True:
-    #         DIR += ELEM
-    #         os.mkdir(DIR)
-    #         DIR += '/'
+    MASK_DIR = f'{BASE_DIR}mask/'
+    os.mkdir(MASK_DIR)
+
+    model_resolution=1024
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=10, help='Batch size for generator and perceptual model', type=int)
-    parser.add_argument('--resolution', default=1024, type=int)
-    parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
-    parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
-    parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
-    parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
+    parser.add_argument('--batch_size', default=1, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--resolution', default=model_resolution, type=int)
+    parser.add_argument('--src_im1', default="../image_2_style_gan/source/target/")
+    parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
+    parser.add_argument('--mask', default=MASK_DIR)
+    parser.add_argument('--weight_file', default="../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{}x{}.pt".format(model_resolution), type=str)
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
-    # if client_img_name == '':
-    #     raw_image_names = os.listdir(r'../image_2_style_gan/img/')
-    # else:
-    #     raw_image_names = client_img_name
-    # raw_image_names = r'../image_2_style_gan/img/'
-    aligned_image_names = align_images(args.src_im2)
+    aligned_image_names = align_images(RAW_DIR, args.src_im2)
+    print(len(aligned_image_names))
 
     try:
         if not aligned_image_names:
-            print('\nNo raw-image detected. Process proceeds without alignment.')
-            aligned_image_names = [args.src_im2 + os.listdir(args.src_im2)[0]]
+            print('\nNo raw-image detected.. Abort process.')
+            shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
+            sys.exit(1)
 
-        mask_maker(aligned_image_names, args.mask)
+        aligned_image_name = args.src_im2 + os.listdir(args.src_im2)[0]
+        mask_maker(aligned_image_name, args.mask)
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
         target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
         print(f"Aligned_image_names function: {e}")
-        os.remove(client_img_name)
+        shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         sys.exit(1)
 
     try:
         mask_name = args.mask + os.listdir(args.mask)[0]
     except Exception as e:
-        shutil.copyfile('../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
+        shutil.copyfile('../image_2_style_gan/source/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
         mask_name = args.mask + os.listdir(args.mask)[0]
-
-    FINAL_IMAGE_DIR = FINAL_IMAGE_DIR + str(rand_uuid) + '/'
-    if os.path.isdir(FINAL_IMAGE_DIR) is not True:
-        os.mkdir(FINAL_IMAGE_DIR)
 
     # file_names = []
     final_name = FINAL_IMAGE_DIR + str(rand_uuid) + '.png'
@@ -137,40 +127,12 @@ def image_crossover(rand_uuid, client_img_name):
         loss_list.append(loss_np)
         if i % 10 == 0:
             print("iter{}: loss -- {},  loss0 --{},  loss1 --{}".format(i,loss_np,loss_0,loss_1))
-            # file_name = "{}_{}_{}.png".format(MEDIUM_IMAGE_DIR, client_ip, i)
-            # save_image(synth_img.clamp(0, 1), file_name)
-            # if i > 10:
-            #     file_names.append(file_name)
-            # np.save(r"../image_2_style_gan/latent_W/crossover_{}.npy".format(client_ip), dlatent.detach().cpu().numpy())
         elif i == (args.iteration - 1):
             save_image(synth_img.clamp(0, 1), final_name)
 
-    # gif_buffer = []
-    # durations = []
-
-    # gif_buffer.append(Image.open(ingredient_name))
-    # durations.append(3.00)
-    #
-    # for file in file_names:
-    #     gif_buffer.append(Image.open(file))
-    #     durations.append(0.04)
-    #
-    # gif_buffer.append((Image.open(final_name)))
-    # durations.append(3.00)
-
-    # imageio.mimsave('{}{}.gif'.format(FINAL_IMAGE_DIR, time_flag), gif_buffer, duration=durations)
-    # del gif_buffer
-
-    # for file in os.listdir(r'../image_2_style_gan/save_image/crossover/'):
-    #     dir = r'../image_2_style_gan/save_image/crossover/' + file
-    #     os.remove(dir)
-
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
-    # os.remove(ingredient_name)
-    # os.replace(mask_name, '{}Used_{}_mask.png'.format(FINAL_IMAGE_DIR, time_flag))
     os.remove(mask_name) # 마스크 파일 삭제
-    # shutil.copyfile(target_name, '{}Used_{}_target.png'.format(FINAL_IMAGE_DIR, time_flag))
 
     print("Complete ---------------------------------------------------------------------------------------------")
 
@@ -203,4 +165,14 @@ def caluclate_loss(synth_img,img,perceptual_net,img_p,blur_mask,MSE_Loss,upsampl
 
 
 if __name__ == "__main__":
-    image_crossover()
+    model_resolution=1024
+    parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
+    parser.add_argument('--batch_size', default=1, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--resolution', default=model_resolution, type=int)
+    parser.add_argument('--src_im1', default="../image_2_style_gan/source/target/")
+    parser.add_argument('--src_im2', default="../image_2_style_gan/ingredient/")
+    parser.add_argument('--mask', default="../image_2_style_gan/mask/)
+    parser.add_argument('--weight_file', default="../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{}x{}.pt".format(model_resolution), type=str)
+    parser.add_argument('--iteration', default=150, type=int)
+
+    args = parser.parse_args()

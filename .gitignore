@@ -1,9 +1,8 @@
 /*/venv
 shape_predictor_68_face_landmarks.dat
-karras2019stylegan-ffhq-1024x1024.pt
-karras2019stylegan-ffhq-1024x1024_d.pt
-karras2019stylegan-ffhq-1024x1024.pkl
-stylegan2-ffhq-config-f.pkl
+*.json
+*.pt
+*.pkl
 ffmpeg.exe
 bair-cpk.pth.tar
 fashion.pth.tar
@@ -13,4 +12,3 @@ taichi-adv-cpk.pth.tar
 taichi-cpk.pth.tar
 vox-adv-cpk.pth.tar
 vox-cpk.pth.tar
-/*/*/static
