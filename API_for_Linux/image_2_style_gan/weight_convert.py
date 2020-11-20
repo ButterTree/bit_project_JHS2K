@@ -1,11 +1,11 @@
 from collections import OrderedDict
-from image_2_style_gan import dnnlib
 import torch.nn as nn
 import torch
 import argparse
 import os
 
 from image_2_style_gan.stylegan_layers import  G_mapping,G_synthesis,D_basic
+from image_2_style_gan.dnnlib.tflib.tfutil import init_tf
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
@@ -25,11 +25,11 @@ def weight_convertor():
     d_basic = D_basic(resolution=resolution)
     a=True
 
-    tensorflow_dir= "image_2_style_gan/pkls/"
+    tensorflow_dir= "pkls/"
     if os.path.isdir(tensorflow_dir) is not True:
         os.makedirs(tensorflow_dir, exist_ok=True)
 
-    pytorch_dir= "image_2_style_gan/pytorch_pts/"
+    pytorch_dir= "pytorch_pts/"
     if os.path.isdir(pytorch_dir) is not True:
         os.makedirs(pytorch_dir, exist_ok=True)
 
@@ -39,7 +39,7 @@ def weight_convertor():
         # this can be run to get the weights, but you need the reference implementation and weights
         import pickle, torch, collections
 
-        dnnlib.tflib.init_tf()
+        init_tf()
         weights = pickle.load(open(tensorflow_dir+weight_name+".pkl",'rb'))
         weights_pt = [collections.OrderedDict([(k, torch.from_numpy(v.value().eval())) for k,v in w.trainables.items()]) for w in weights]
         torch.save(weights_pt, pytorch_dir+weight_name+".pt")
