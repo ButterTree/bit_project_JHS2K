@@ -1,10 +1,15 @@
+from skimage.exposure import match_histograms
+from collections import OrderedDict
+from PIL import Image
+import numpy as np
 import argparse
+import dlib
+import cv2
+import os
+
 
 def mask_maker(aligned_image_name, mask_dir):
 # def mask_maker(fileDir + fileName):
-    from PIL import Image
-    import cv2
-
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
@@ -51,11 +56,66 @@ def mask_maker(aligned_image_name, mask_dir):
         pass    # 눈이 인식되지 않을 시 pass
 
 
+def precision_eye_masks(aligned_image_name, mask_dir):
+    FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
+    # bias = [[-35, 0], [0, -30], [0, -30], [20, 0], [0, 5], [0, 5], [-20, 0], [0, -30], [0, -30], [35, 0], [0, 5], [0, 5]]
+    bias = [[-35, 0], [0, -35], [0, -35], [20, 0], [0, 10], [0, 10], [-20, 0], [0, -35], [0, -35], [35, 0], [0, 10], [0, 10]]
+
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
+
+    image = cv2.imread(aligned_image_name)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    rects = detector(gray, 1)
+
+    for (i, rect) in enumerate(rects):
+        shape = predictor(gray, rect)
+        coordinates = np.zeros((68, 2), dtype=int)
+
+        for i in range(0, 68):
+            coordinates[i] = (shape.part(i).x, shape.part(i).y)
+
+        mask_base = np.zeros((1024, 1024, 1))
+
+        for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
+            (j, k) = FACIAL_LANDMARKS_INDEXES[name]
+            mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*i):6+(6*i)], 255)
+
+        precision_mask = cv2.blur(mask_base,(20,20))
+        cv2.imwrite(mask_dir + 'mask.png', precision_mask)
+
+
+def target_preprocessor(aligned_image_name, target_dir):
+    # FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
+    # detector = dlib.get_frontal_face_detector()
+    # predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
+    origin_image = cv2.imread(aligned_image_name)
+    target_image = cv2.imread("../image_2_style_gan/source/target/" + os.listdir("../image_2_style_gan/source/target/")[0])
+
+    # rects = detector(gray, 1)
+
+    # for (i, rect) in enumerate(rects):
+    #     shape = predictor(gray, rect)
+    #     coordinates = np.zeros((68, 2), dtype=int)
+
+    #     for i in range(0, 68):
+    #         coordinates[i] = (shape.part(i).x, shape.part(i).y)
+
+    #     for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
+    #         (j, k) = FACIAL_LANDMARKS_INDEXES[name]
+    #         target_processed = cv2.fillConvexPoly(target_image, coordinates[j:k], 100)
+    
+    target_image = match_histograms(target_image, origin_image, multichannel=False)
+    cv2.imwrite(target_dir + 'target.png', target_image)
+
+    return target_dir + 'target.png'
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='MaskMaker')
-    parser.add_argument('--path', default="source_image/")
-    parser.add_argument('--filename', default="")
+    parser.add_argument('--path', default="source/for_mask/")
+    parser.add_argument('--filename', default="source/")
     
     args = parser.parse_args()
     
-    mask_maker(args.path, args.filename)
+    precision_eye_masks(args.path + os.listdir(args.path)[0], args.filename)

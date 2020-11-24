@@ -1,16 +1,20 @@
 import argparse
 import os
 import shutil
+import cv2
 import sys
+import numpy as np
 from collections import OrderedDict
+from skimage.io import imread, imsave
+from skimage.exposure import match_histograms
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
-from image_2_style_gan.mask_maker import mask_maker
+from image_2_style_gan.mask_maker import mask_maker, precision_eye_masks, target_preprocessor
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
-from image_2_style_gan.read_image import image_reader
+from image_2_style_gan.read_image import image_reader_color, image_reader_gray
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
 
@@ -20,6 +24,9 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
     os.mkdir(ALIGNED_IMAGE_DIR)
+
+    TARGET_IMAGE_DIR = f'{BASE_DIR}target/'
+    os.mkdir(TARGET_IMAGE_DIR)
 
     FINAL_IMAGE_DIR = f'{BASE_DIR}final/'
     os.mkdir(FINAL_IMAGE_DIR)
@@ -32,29 +39,39 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
     parser.add_argument('--batch_size', default=1, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=model_resolution, type=int)
-    parser.add_argument('--src_im1', default="../image_2_style_gan/source/target/")
+    parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
     parser.add_argument('--mask', default=MASK_DIR)
-    parser.add_argument('--weight_file', default="../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{}x{}.pt".format(model_resolution), type=str)
-    parser.add_argument('--iteration', default=150, type=int)
+    parser.add_argument('--weight_file', default=f"../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{model_resolution}x{model_resolution}.pt", type=str)
+    parser.add_argument('--iteration', default=100, type=int)
 
+    
     args = parser.parse_args()
     if os.path.isdir(os.path.dirname(args.weight_file)) is not True:
         os.makedirs(os.path.dirname(args.weight_file), exist_ok=True)
     aligned_image_names = align_images(RAW_DIR, args.src_im2)
-    print(len(aligned_image_names))
 
     try:
         if not aligned_image_names:
-            print('\nNo raw-image detected.. Abort process.')
+            print('\nFailed Face Alignment. Abort process.')
             shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
             sys.exit(1)
 
         aligned_image_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        mask_maker(aligned_image_name, args.mask)
+        precision_eye_masks(aligned_image_name, args.mask)
+        # mask_maker(aligned_image_name, args.mask)
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+        # target_name = target_preprocessor(aligned_image_name, TARGET_IMAGE_DIR)
+        try:
+            target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+        except Exception as e:
+            shutil.copyfile('../image_2_style_gan/source/target/target.png', '{}target.png'.format(args.src_im1))
+            target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+        # target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+        # f = cv2.imread(target_name)
+        # gray = cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)
+        # cv2.imwrite(target_name, gray)
 
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
@@ -71,30 +88,28 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     # file_names = []
     final_name = FINAL_IMAGE_DIR + str(rand_uuid) + '.png'
 
-    g_all = nn.Sequential(OrderedDict([
-    ('g_mapping', G_mapping()),
-    #('truncation', Truncation(avg_latent)),
-    ('g_synthesis', G_synthesis(resolution=args.resolution))
-    ]))
+    g_all = nn.Sequential(OrderedDict([('g_mapping', G_mapping()),# ('truncation', Truncation(avg_latent)),
+    ('g_synthesis', G_synthesis(resolution=args.resolution))]))
 
     g_all.load_state_dict(torch.load(args.weight_file, map_location=device))
     g_all.eval()
     g_all.to(device)
     g_mapping,g_synthesis=g_all[0],g_all[1]
 
-    img_0=image_reader(target_name) #(1,3,1024,1024) -1~1
+    img_0=image_reader_color(target_name) #(1,3,1024,1024) -1~1
     img_0=img_0.to(device)
 
-    img_1=image_reader(ingredient_name)
+    img_1=image_reader_color(ingredient_name)
     img_1=img_1.to(device) #(1,3,1024,1024)
 
-    blur_mask0=image_reader(mask_name).to(device)
+    blur_mask0=image_reader_gray(mask_name).to(device)
     blur_mask0=blur_mask0[:,0,:,:].unsqueeze(0)
     blur_mask1=blur_mask0.clone()
     blur_mask1=1-blur_mask1
+    blur_mask2=torch.ones(size=(1,1,model_resolution,model_resolution)).to(device)
 
     MSE_Loss=nn.MSELoss(reduction="mean")
-    upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='bilinear')
+    upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='nearest')
 
     img_p0=img_0.clone() #resize for perceptual net
     img_p0=upsample2d(img_p0)
@@ -111,12 +126,13 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     loss_list = []
 
     print("Start ---------------------------------------------------------------------------------------")
-    for i in range(args.iteration):
+    for i in range(args.iteration):  # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
-        synth_img = (synth_img + 1.0) / 2.0
+        synth_img=(synth_img + 1) / 2
+
         loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask0,MSE_Loss,upsample2d)
-        loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask1,MSE_Loss,upsample2d)
+        loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask0,MSE_Loss,upsample2d)
         loss=loss_wl0+loss_wl1
         loss.backward()
 
@@ -128,9 +144,20 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
 
         loss_list.append(loss_np)
         if i % 10 == 0:
-            print("iter{}: loss -- {},  loss0 --{},  loss1 --{}".format(i,loss_np,loss_0,loss_1))
+            print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i,loss_np,loss_0,loss_1))
+            # print("iter{}: loss --{},  loss0 --{}".format(i,loss_np,loss_0))
         elif i == (args.iteration - 1):
-            save_image(synth_img.clamp(0, 1), final_name)
+            # compare_result = (synth_img*blur_mask0).detach().cpu().numpy()
+            # compare_origin = (img_1*blur_mask0).detach().cpu().numpy()
+            # matched = match_histograms(compare_result, compare_origin, multichannel=True)
+            # save_image((img_1*blur_mask1).detach().cpu() + matched, final_name)
+            save_image(img_1*blur_mask1 + synth_img*blur_mask0, final_name)
+            # save_image(synth_img.clamp(0, 1), final_name)
+
+    # compare_origin = imread(ingredient_name).astype(np.uint8)
+    # compare_result = imread(final_name).astype(np.uint8)
+    # matched = match_histograms(compare_result, compare_origin, multichannel=True).astype(np.uint8)
+    # imsave(final_name, matched)
 
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
@@ -173,8 +200,8 @@ if __name__ == "__main__":
     parser.add_argument('--resolution', default=model_resolution, type=int)
     parser.add_argument('--src_im1', default="../image_2_style_gan/source/target/")
     parser.add_argument('--src_im2', default="../image_2_style_gan/ingredient/")
-    parser.add_argument('--mask', default="../image_2_style_gan/mask/)
-    parser.add_argument('--weight_file', default="../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{}x{}.pt".format(model_resolution), type=str)
+    parser.add_argument('--mask', default="../image_2_style_gan/mask/")
+    parser.add_argument('--weight_file', default="../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{}x{}.pt".format(model_resolution, model_resolution), type=str)
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()

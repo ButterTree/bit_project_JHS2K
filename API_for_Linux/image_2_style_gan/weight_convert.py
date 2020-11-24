@@ -33,7 +33,8 @@ def weight_convertor():
     if os.path.isdir(pytorch_dir) is not True:
         os.makedirs(pytorch_dir, exist_ok=True)
 
-    weight_name="karras2019stylegan-ffhq-{}x{}".format(resolution, resolution)
+    # weight_name="karras2019stylegan-ffhq-{}x{}".format(resolution, resolution)
+    weight_name="karras2019stylegan-ffhq-1024x1024"
 
     if a:
         # this can be run to get the weights, but you need the reference implementation and weights
