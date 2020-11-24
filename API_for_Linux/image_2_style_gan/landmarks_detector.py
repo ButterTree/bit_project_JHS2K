@@ -16,3 +16,4 @@ class LandmarksDetector:
         for detection in dets:
             face_landmarks = [(item.x, item.y) for item in self.shape_predictor(img, detection).parts()]
             yield face_landmarks
+    
