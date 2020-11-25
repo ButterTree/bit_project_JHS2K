@@ -23,11 +23,13 @@ import SaveBtn from './Buttons/MainScreenBtns/SaveShareCancel/SaveBtn';
 import ShareBtn from './Buttons/MainScreenBtns/SaveShareCancel/ShareBtn';
 import Cancel from './Buttons/MainScreenBtns/TransferCancelBtn/CancelBtn';
 import TransferBtn from './Buttons/MainScreenBtns/TransferCancelBtn/TransferBtn';
+import ChangeFemale from './Buttons/MainScreenBtns/ChangeFemale';
 import { imageTransfer } from './api';
 import ProgressBar from './Screen/progressBar';
 
 let currentPhoto = ''; // 찍은 사진 저장용
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
+let gender = 'female';
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,11 +40,20 @@ const CenterView = styled.View`
 
 const IconContainer = styled.View`
   width: 100%;
+  height: 100%;
+  flex: 1;
   flex-direction: row;
-  padding-bottom: 120px;
   justify-content: space-around;
-  margin-top: 30px;
   align-items: center;
+`;
+
+const FemaleMale = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 15px;
+  position: absolute;
+  bottom: 175px;
 `;
 
 export default function App() {
@@ -54,7 +65,6 @@ export default function App() {
   const [imageSelected, setImageSelected] = useState(false);
   const [imageComeback, setImageComeback] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const cameraRef = useRef();
 
   useEffect(() => {
@@ -115,12 +125,22 @@ export default function App() {
       setImageComeback(true);
     }
     currentPhoto = photo.base64;
+    gender = 'female';
+  };
+
+  const changeToMale = () => {
+    if (gender === 'female') {
+      gender = 'male';
+    } else {
+      gender = 'female';
+    }
+    console.log(gender);
   };
 
   const getTransferImage = async () => {
     try {
       setIsLoading(true);
-      photos = await imageTransfer(currentPhoto);
+      photos = await imageTransfer(currentPhoto, gender);
       setIsLoading(false);
 
       await cameraRef.current.resumePreview();
@@ -133,6 +153,8 @@ export default function App() {
       setIsPreview(false);
       setImageSelected(false);
       setImageComeback(false);
+
+      gender = 'female';
     } catch (error) {
       console.log(`getTransferImage Error: ${error}`);
     }
@@ -209,7 +231,7 @@ export default function App() {
           style={{
             alignItems: 'center',
             width: width - 1,
-            height: height / 1.4,
+            height: height / 1.35,
             marginTop: 50,
           }}
           type={cameraType}
@@ -217,23 +239,32 @@ export default function App() {
         >
           <FaceLine />
         </Camera>
+        <FemaleMale>
+          <ChangeFemale onPress={changeToMale} />
+        </FemaleMale>
+
         {imageSelected && imageComeback && (
-          <Image
-            style={{
-              width: width - 1,
-              height: height / 1.4,
-              marginTop: 50,
-              position: 'absolute',
-            }}
-            source={{ uri: image }}
-          />
+          <>
+            <Image
+              style={{
+                width: width - 1,
+                height: height / 1.35,
+                marginTop: 50,
+                position: 'absolute',
+              }}
+              source={{ uri: image }}
+            />
+            <FemaleMale>
+              <ChangeFemale onPress={changeToMale} />
+            </FemaleMale>
+          </>
         )}
 
         {isAfterview && (
           <Image
             style={{
               width: width - 1,
-              height: height / 1.4,
+              height: height / 1.35,
               marginTop: 50,
               position: 'absolute',
             }}
@@ -255,10 +286,12 @@ export default function App() {
             <Cancel onPress={cancelPreviewBtn} />
           </IconContainer>
         )}
-        <IconContainer>
-          <TransferBtn onPress={getTransferImage} />
-          <Cancel onPress={cancelPreviewBtn} />
-        </IconContainer>
+        {(imageSelected || isPreview) && (
+          <IconContainer>
+            <TransferBtn onPress={getTransferImage} />
+            <Cancel onPress={cancelPreviewBtn} />
+          </IconContainer>
+        )}
       </CenterView>
     );
   } else if (hasPermission === false) {
