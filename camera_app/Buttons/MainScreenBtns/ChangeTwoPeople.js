@@ -1,10 +1,10 @@
 /** @format */
 
 import React, { useState } from 'react';
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import ToggleButton from 'react-native-toggle-element';
 
-const ChangeFemale = ({ onPress }) => {
+const ChangeTwoPeople = ({ onPress }) => {
 	const [toggleValue, setToggleValue] = useState(false);
 	return (
 		<ToggleButton
@@ -12,10 +12,10 @@ const ChangeFemale = ({ onPress }) => {
 			value={toggleValue}
 			onToggle={(newState) => setToggleValue(newState)}
 			thumbActiveComponent={
-				<SimpleLineIcons name='symbol-male' color='cyan' size={25} />
+				<MaterialIcons name='person-outline' color='cyan' size={25} />
 			}
 			thumbInActiveComponent={
-				<SimpleLineIcons name='symbol-female' color='red' size={25} />
+				<MaterialIcons name='people-outline' color='red' size={25} />
 			}
 			thumbButton={{
 				width: 40,
@@ -36,4 +36,4 @@ const ChangeFemale = ({ onPress }) => {
 		/>
 	);
 };
-export default ChangeFemale;
+export default ChangeTwoPeople;
