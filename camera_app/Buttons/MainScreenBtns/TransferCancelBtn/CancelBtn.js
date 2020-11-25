@@ -4,7 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 
 const CancelBtn = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
-    <Entypo name="circle-with-cross" color="black" size={40} />
+    <Entypo name="circle-with-cross" color="black" size={60} />
   </TouchableOpacity>
 );
 

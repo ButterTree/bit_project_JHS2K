@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 
-const URL = 'http://222.106.22.97:45055/let_me_shine';
+const URL = 'http://222.106.22.110:45045/let_me_shine';
 
 let tempResult = [];
 
@@ -33,7 +33,7 @@ const getResultURL = async (url) => {
   }
 };
 
-export const imageTransfer = async (photo) => {
+export const imageTransfer = async (photo, sex) => {
   try {
     console.log('[1] Post Start!');
     const config = {
@@ -45,7 +45,7 @@ export const imageTransfer = async (photo) => {
     };
 
     await axios
-      .post(URL, { label: 'Image', text: photo }, config) // 해당 URL로 POST
+      .post(URL, { label: 'Image', origin: photo, gender: sex }, config) // 해당 URL로 POST
       .then((res) => getResultURL(res.data))
       // POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
       // 이를 getResultURL 함수로 보낸다.

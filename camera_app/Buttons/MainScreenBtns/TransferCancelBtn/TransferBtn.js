@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const TransferBtn = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
-    <FontAwesome name="check-circle" color="black" size={40} />
+    <FontAwesome name="check-circle" color="black" size={60} />
   </TouchableOpacity>
 );
 
