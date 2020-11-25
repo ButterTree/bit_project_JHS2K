@@ -1,14 +1,12 @@
 {
   "expo": {
-    "name": "Change-your-eyes",
-    "slug": "change-your-eyes",
-    "platforms": ["ios", "android", "web"],
+    "name": "smiley-cam",
+    "slug": "smiley-cam",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "primaryColor": "#ffffff",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/1111.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,19 +18,13 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "bit.doublefoldeyes",
-      "versionCode": 1
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "androidStatusBar": {
-      "barStyle": "dark-content",
-      "backgroundColor": "#FFFFFF"
-    },
-    "androidNavigationBar": {
-      "barStyle": "dark-content",
-      "backgroundColor": "#FFFFFF"
     }
   }
 }
