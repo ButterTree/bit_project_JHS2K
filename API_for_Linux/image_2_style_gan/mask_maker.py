@@ -1,8 +1,7 @@
-from skimage.exposure import match_histograms
+from skimage.exposure import match_histograms, equalize_adapthist
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
-import matplotlib
 import argparse
 import dlib
 import cv2
@@ -60,7 +59,7 @@ def mask_maker(aligned_image_name, mask_dir):
 def precision_eye_masks(aligned_image_name, mask_dir):
     FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
     # bias = [[-35, 0], [0, -30], [0, -30], [20, 0], [0, 5], [0, 5], [-20, 0], [0, -30], [0, -30], [35, 0], [0, 5], [0, 5]]
-    bias = [[-35, 0], [-10, -35], [0, -35], [20, 0], [0, 10], [0, 10], [-20, 0], [0, -35], [10, -35], [35, 0], [0, 10], [0, 10]]
+    bias = [[-40, 0], [-30, -27], [25, -27], [25, 0], [0, 10], [0, 10], [-20, 0], [-25, -27], [30, -27], [40, 0], [0, 10], [0, 10]]
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
@@ -78,13 +77,18 @@ def precision_eye_masks(aligned_image_name, mask_dir):
             coordinates[i] = (shape.part(i).x, shape.part(i).y)
 
         mask_base = np.zeros((1024, 1024, 1))
+        eyes_base = np.zeros((1024, 1024, 1))
 
         for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
             (j, k) = FACIAL_LANDMARKS_INDEXES[name]
-            mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*i):6+(6*i)], 255)
+            eyes = cv2.fillConvexPoly(eyes_base, coordinates[j:k], 255)
+            mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*i):6+(6*i)], 255)        
 
-        precision_mask = cv2.blur(mask_base,(20,20))
+        precision_mask = cv2.blur(mask_base,(15,18))
         cv2.imwrite(mask_dir + 'mask.png', precision_mask)
+        cv2.imwrite(mask_dir + 'mask_net.png', eyes)
+    
+    return mask_dir + 'mask.png', mask_dir + 'mask_net.png'
 
 
 def target_preprocessor(aligned_image_name, target_dir):
@@ -95,26 +99,45 @@ def target_preprocessor(aligned_image_name, target_dir):
     origin_image = cv2.imread(aligned_image_name)
     target_image = cv2.imread("../image_2_style_gan/source/target/" + os.listdir("../image_2_style_gan/source/target/")[0])
 
-    gray = cv2.cvtColor(target_image, cv2.COLOR_BGR2GRAY)
-    rects = detector(gray, 1)
+    if np.shape(target_image)[2] == 1:
+        gray = target_image
+        target_image = cv2.merge((target_image, target_image, target_image))
+    else :
+        gray = cv2.cvtColor(target_image, cv2.COLOR_BGR2GRAY)
 
+    rects = detector(gray, 1)
+    # cv2.imwrite('../image_2_style_gan/source/target_grayed.png', gray)
     for (i, rect) in enumerate(rects):
         shape = predictor(gray, rect)
         coordinates = np.zeros((68, 2), dtype=int)
 
         for i in range(0, 68):
             coordinates[i] = (shape.part(i).x, shape.part(i).y)
+        
+        mask_base = np.zeros((1024, 1024, 1))
 
         for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
             (j, k) = FACIAL_LANDMARKS_INDEXES[name]
-            target_processed = cv2.fillConvexPoly(target_image, coordinates[j:k], 100)
-    
-    target_image = match_histograms(target_image, origin_image, multichannel=True)
-    plt.imshow(target_image)
-    plt.show
+            mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k], 1)
+            mask_continv = 1 - mask_base
+            # mask_base = cv2.merge((mask_base, mask_base, mask_base))
+            # mmask_continv = cv2.merge((mask_continv, mask_continv, mask_continv))
+
+    extrcd_img = origin_image[shape.part(37).y - 20 : shape.part(41).y + 20, shape.part(36).x - 20 : shape.part(39).x + 5] + 20
+    if np.max(extrcd_img) > 255:
+        extrcd_img = (extrcd_img/np.max(extrcd_img))*255
+
+    cv2.imwrite('../image_2_style_gan/source/target_ref_color.png', extrcd_img)
+    eyes_origin = target_image * mask_base
+    cv2.imwrite('../image_2_style_gan/source/target_eyes.png', eyes_origin)
+    target_image = match_histograms(target_image * mask_continv, extrcd_img, multichannel=True)/255
+    target_image = equalize_adapthist(target_image, clip_limit=0.01)*255 + eyes_origin
+    # target_image = target_image*255 + eyes_origin
     cv2.imwrite(target_dir + 'target.png', target_image)
+    cv2.imwrite('../image_2_style_gan/source/target_histadj.png', target_image)
 
     return target_dir + 'target.png'
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='MaskMaker')
