@@ -2,7 +2,6 @@ from skimage.exposure import match_histograms
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
-import matplotlib
 import argparse
 import dlib
 import cv2
@@ -88,30 +87,28 @@ def precision_eye_masks(aligned_image_name, mask_dir):
 
 
 def target_preprocessor(aligned_image_name, target_dir):
-    FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
+    # FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
+    # detector = dlib.get_frontal_face_detector()
+    # predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
     
-    origin_image = cv2.imread(aligned_image_name)
+    # origin_image = cv2.imread(aligned_image_name)
     target_image = cv2.imread("../image_2_style_gan/source/target/" + os.listdir("../image_2_style_gan/source/target/")[0])
 
-    gray = cv2.cvtColor(target_image, cv2.COLOR_BGR2GRAY)
-    rects = detector(gray, 1)
+    # gray = cv2.cvtColor(target_image, cv2.COLOR_BGR2GRAY)
+    # rects = detector(gray, 1)
 
-    for (i, rect) in enumerate(rects):
-        shape = predictor(gray, rect)
-        coordinates = np.zeros((68, 2), dtype=int)
+    # for (i, rect) in enumerate(rects):
+    #     shape = predictor(gray, rect)
+    #     coordinates = np.zeros((68, 2), dtype=int)
 
-        for i in range(0, 68):
-            coordinates[i] = (shape.part(i).x, shape.part(i).y)
+    #     for i in range(0, 68):
+    #         coordinates[i] = (shape.part(i).x, shape.part(i).y)
 
-        for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
-            (j, k) = FACIAL_LANDMARKS_INDEXES[name]
-            target_processed = cv2.fillConvexPoly(target_image, coordinates[j:k], 100)
+    #     for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
+    #         (j, k) = FACIAL_LANDMARKS_INDEXES[name]
+    #         target_processed = cv2.fillConvexPoly(target_image, coordinates[j:k], 100)
     
-    target_image = match_histograms(target_image, origin_image, multichannel=True)
-    plt.imshow(target_image)
-    plt.show
+    # target_image = match_histograms(target_image, origin_image, multichannel=True)
     cv2.imwrite(target_dir + 'target.png', target_image)
 
     return target_dir + 'target.png'
