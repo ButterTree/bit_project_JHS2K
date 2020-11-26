@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 
-const SwitchCameraBtn = ({ onPress }) => (
+const SwitchCamera = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
     <MaterialCommunityIcons
       name="camera-retake-outline"
@@ -12,4 +12,4 @@ const SwitchCameraBtn = ({ onPress }) => (
   </TouchableOpacity>
 );
 
-export default SwitchCameraBtn;
+export default SwitchCamera;

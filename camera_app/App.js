@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useState, useRef, useEffect } from 'react';
 import {
   ActivityIndicator,
@@ -15,17 +13,18 @@ import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn';
-import TakePhotoBtn from './Buttons/MainScreenBtns/TakePhotoBtn';
-import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn';
-import FaceLine from './Screen/FaceLine';
-import SaveBtn from './Buttons/MainScreenBtns/SaveShareCancel/SaveBtn';
-import ShareBtn from './Buttons/MainScreenBtns/SaveShareCancel/ShareBtn';
-import Cancel from './Buttons/MainScreenBtns/TransferCancelBtn/CancelBtn';
-import TransferBtn from './Buttons/MainScreenBtns/TransferCancelBtn/TransferBtn';
-import ChangeFemale from './Buttons/MainScreenBtns/ChangeFemale';
 import { imageTransfer } from './api';
 import ProgressBar from './Screen/progressBar';
+import FaceLine from './Screen/FaceLine';
+import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn';
+import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn';
+import TakePhotoBtn from './Buttons/MainScreenBtns/TakePhotoBtn';
+import SaveBtn from './Buttons/SaveShareCancelBtns/SaveBtn';
+import ShareBtn from './Buttons/SaveShareCancelBtns/ShareBtn';
+import CancelBtn from './Buttons/TransferCancelBtns/CancelBtn';
+import TransferBtn from './Buttons/TransferCancelBtns/TransferBtn';
+import ChangeFemaleBtn from './Buttons/ChangeBtns/ChangeFemaleBtn';
+import ChangeTwoPeopleBtn from './Buttons/ChangeBtns/ChangeTwoPeopleBtn';
 
 let currentPhoto = ''; // 찍은 사진 저장용
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
@@ -47,13 +46,13 @@ const IconContainer = styled.View`
   align-items: center;
 `;
 
-const FemaleMale = styled.View`
+const ChangeFunctionContainer = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  margin-left: 15px;
   position: absolute;
-  bottom: 175px;
+  bottom: 190px;
+  justify-content: space-around;
 `;
 
 export default function App() {
@@ -65,6 +64,7 @@ export default function App() {
   const [imageSelected, setImageSelected] = useState(false);
   const [imageComeback, setImageComeback] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTwoPeople, setIsTwoPeople] = useState(false);
   const cameraRef = useRef();
 
   useEffect(() => {
@@ -100,8 +100,8 @@ export default function App() {
           await cameraRef.current.pausePreview();
           setIsPreview(true);
         }
-        const base64Photo = photo.base64;
-        currentPhoto = base64Photo; // 여기서 나오는 return 값은 [원본사진, 합성후 사진]
+
+        currentPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
       }
       // if (photo.uri) {
       //   this.savePhoto(photo.uri);
@@ -135,6 +135,14 @@ export default function App() {
       gender = 'female';
     }
     console.log(gender);
+  };
+
+  const changeToTwoPeople = () => {
+    if (isTwoPeople) {
+      setIsTwoPeople(false);
+    } else {
+      setIsTwoPeople(true);
+    }
   };
 
   const getTransferImage = async () => {
@@ -231,7 +239,7 @@ export default function App() {
           style={{
             alignItems: 'center',
             width: width - 1,
-            height: height / 1.35,
+            height: height / 1.4,
             marginTop: 50,
           }}
           type={cameraType}
@@ -239,23 +247,23 @@ export default function App() {
         >
           <FaceLine />
         </Camera>
-        <FemaleMale>
-          <ChangeFemale onPress={changeToMale} />
-        </FemaleMale>
-
+        <ChangeFunctionContainer>
+          {!isTwoPeople && <ChangeFemaleBtn onPress={changeToMale} />}
+          <ChangeTwoPeopleBtn onPress={changeToTwoPeople} />
+        </ChangeFunctionContainer>
         {imageSelected && imageComeback && (
           <>
             <Image
               style={{
                 width: width - 1,
-                height: height / 1.35,
+                height: height / 1.4,
                 marginTop: 50,
                 position: 'absolute',
               }}
               source={{ uri: image }}
             />
             <FemaleMale>
-              <ChangeFemale onPress={changeToMale} />
+              <ChangeFemaleBtn onPress={changeToMale} />
             </FemaleMale>
           </>
         )}
@@ -264,7 +272,7 @@ export default function App() {
           <Image
             style={{
               width: width - 1,
-              height: height / 1.35,
+              height: height / 1.4,
               marginTop: 50,
               position: 'absolute',
             }}
@@ -283,13 +291,13 @@ export default function App() {
           <IconContainer>
             <SaveBtn onPress={saveResultPhoto} />
             <ShareBtn onPress={openShareDialog} />
-            <Cancel onPress={cancelPreviewBtn} />
+            <CancelBtn onPress={cancelPreviewBtn} />
           </IconContainer>
         )}
         {(imageSelected || isPreview) && (
           <IconContainer>
             <TransferBtn onPress={getTransferImage} />
-            <Cancel onPress={cancelPreviewBtn} />
+            <CancelBtn onPress={cancelPreviewBtn} />
           </IconContainer>
         )}
       </CenterView>
