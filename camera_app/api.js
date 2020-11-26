@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://222.106.22.97:45045/let_me_shine";
+const URL = "http://34.122.152.51:45045/let_me_shine";
 
 let tempResult = [];
 
