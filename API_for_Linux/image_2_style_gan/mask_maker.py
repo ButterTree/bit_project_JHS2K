@@ -92,11 +92,11 @@ def precision_eye_masks(aligned_image_name, mask_dir):
 
 
 def target_preprocessor(aligned_image_name, target_dir):
-    FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
+    # FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
+    # detector = dlib.get_frontal_face_detector()
+    # predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
     
-    origin_image = cv2.imread(aligned_image_name)
+    # origin_image = cv2.imread(aligned_image_name)
     target_image = cv2.imread("../image_2_style_gan/source/target/" + os.listdir("../image_2_style_gan/source/target/")[0])
 
     if np.shape(target_image)[2] == 1:
