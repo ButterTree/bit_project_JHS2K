@@ -339,7 +339,7 @@ class G_synthesis(nn.Module):
         use_instance_norm   = True,         # Enable instance normalization?
         dtype               = torch.float32,  # Data type to use for activations and outputs.
         fused_scale         = 'auto',       # True = fused convolution + scaling, False = separate ops, 'auto' = decide automatically.
-        blur_filter         = [1,2,1],      # Low-pass filter to apply when resampling activations. None = no filtering.
+        blur_filter         = [1,1,1],      # Low-pass filter to apply when resampling activations. None = no filtering.
         structure           = 'auto',       # 'fixed' = no progressive growing, 'linear' = human-readable, 'recursive' = efficient, 'auto' = select automatically.
         is_template_graph   = False,        # True = template graph constructed by the Network class, False = actual evaluation.
         force_clean_graph   = False,        # True = construct a clean graph that looks nice in TensorBoard, False = default behavior.

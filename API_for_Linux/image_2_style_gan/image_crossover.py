@@ -22,12 +22,19 @@ from torchvision.utils import save_image
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
-def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
+def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender):    
     ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
     os.mkdir(ALIGNED_IMAGE_DIR)
-
+    
     TARGET_IMAGE_DIR = f'{BASE_DIR}target/'
     os.mkdir(TARGET_IMAGE_DIR)
+    
+    if process_selection == 0 and gender == 'female':
+        TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/female/'
+    elif process_selection == 0 and gender == 'male':
+        TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/male/'
+    else:
+        TARGET_SOURCE_DIR = f'{BASE_DIR}raw_target/aligned/'
 
     FINAL_IMAGE_DIR = f'{BASE_DIR}final/'
     os.mkdir(FINAL_IMAGE_DIR)
@@ -38,13 +45,13 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     model_resolution=1024
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=6, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--batch_size', default=10, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=model_resolution, type=int)
     parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
     parser.add_argument('--mask', default=MASK_DIR)
     parser.add_argument('--weight_file', default=f"../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{model_resolution}x{model_resolution}.pt", type=str)
-    parser.add_argument('--iteration', default=100, type=int)
+    parser.add_argument('--iteration', default=150, type=int)
 
     
     args = parser.parse_args()
@@ -63,16 +70,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
         # mask_maker(aligned_image_name, args.mask)
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        target_name = target_preprocessor(aligned_image_name, TARGET_IMAGE_DIR)
-        # try:
-        #     target_name = args.src_im1 + os.listdir(args.src_im1)[0]
-        # except Exception as e:
-        #     shutil.copyfile('../image_2_style_gan/source/target/target_high_res.png', '{}target.png'.format(args.src_im1))
-        #     target_name = args.src_im1 + os.listdir(args.src_im1)[0]
-        # target_name = args.src_im1 + os.listdir(args.src_im1)[0]
-        # f = cv2.imread(target_name)
-        # gray = cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)
-        # cv2.imwrite(target_name, gray)
+        target_name = target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection)
 
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
@@ -109,7 +107,6 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
     blur_mask1=1-blur_mask1
     blur_mask2=image_reader_gray(net_mask_name).to(device)
     blur_mask3=blur_mask0-blur_mask2
-    save_image(blur_mask3, '../image_2_style_gan/source/mask_composite.png')
 
     MSE_Loss=nn.MSELoss(reduction="mean")
     upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='nearest')
@@ -148,8 +145,8 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name):
         loss_list.append(loss_np)
 
         if i % 10 == 0:
-            print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i,loss_np,loss_0,loss_1))
-            # print("iter{}: loss --{},  loss0 --{}".format(i,loss_np,loss_0))
+            print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i, loss_np, loss_0, loss_1))
+            # print("iter{}: loss --{},  loss0 --{}".format(i, loss_np, loss_0))
         elif i == (args.iteration - 1):
             # compare_result = (synth_img*blur_mask0).detach().cpu().numpy()
             # compare_origin = (img_1*blur_mask0).detach().cpu().numpy()

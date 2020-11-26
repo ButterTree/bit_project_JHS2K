@@ -32,28 +32,28 @@ const getResultURL = async (url) => {
 };
 
 export const imageTransfer = async (photo) => {
-	try {
-		console.log("[1] Post Start!");
-		const config = {
-			// 보내는 파일의 타입 설정
-			headers: {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
-		};
+  try {
+    console.log('[1] Post Start!');
+    const config = {
+      // 보내는 파일의 타입 설정
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    };
 
-		await axios
-			.post(URL, { label: "Image", text: photo }, config) // 해당 URL로 POST
-			.then((res) => getResultURL(res.data))
-			// POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
-			// 이를 getResultURL 함수로 보낸다.
-			.catch((err) => console.log(`Post axios error: ${err}`));
+    await axios
+      .post(URL, { label: 'Image', origin: photo }, config) // 해당 URL로 POST
+      .then((res) => getResultURL(res.data))
+      // POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
+      // 이를 getResultURL 함수로 보낸다.
+      .catch((err) => console.log(`Post axios error: ${err}`));
 
-		console.log("[1] Post End!");
-	} catch (e) {
-		console.log(`imageTransfer Error: ${e}`);
-	} finally {
-		const result = tempResult;
-		return result;
-	}
+    console.log('[1] Post End!');
+  } catch (e) {
+    console.log(`imageTransfer Error: ${e}`);
+  } finally {
+    const result = tempResult;
+    return result;
+  }
 };

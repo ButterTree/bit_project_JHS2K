@@ -1,5 +1,6 @@
 from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
+from image_2_style_gan.align_images import align_images
 from flask import Flask, render_template, request
 import requests as rq
 import torch
@@ -32,10 +33,11 @@ def let_me_shine():
     url_base = "http://222.106.22.97:45045/let_me_shine/results/?uid="
     rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
+    process_selection = 0
 
     try:
         data = request.get_json(silent=True)
-        if not data['text']:
+        if not data['origin']:
             print("Received Blank(0-Byte) File. Re-send image, please.")
             return "Re-send image, please."
         else:
@@ -50,14 +52,31 @@ def let_me_shine():
             file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
             client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
 
+            gender = data['gender']
+
             with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                f.write(base64.b64decode(data['text']))
+                f.write(base64.b64decode(data['origin']))
 
             cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
             cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
             os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
 
-            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name)
+            if data['custom']:
+                process_selection = 1
+                custom_target_name = f'{BASE_DIR}raw_target/'
+                os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
+                os.mkdir(f'{custom_target_name}un_aligned/')
+
+                with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
+                    f.write(base64.b64decode(data['custom']))
+
+                cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
+                cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
+                os.remove(f'{custom_target_name}c_target.jpg')
+
+                align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
+
+            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender)
             torch.cuda.empty_cache()
             # 'image_crossover'는 변경 요청 대상 Image에서 눈 부분만 Target처럼 바꿔주는 메소드이다.
             # 저장 파일명에 활용할 Client의 UUID를 Parameter로 넘겨주고, 처리 전의 원본 Image와 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.
