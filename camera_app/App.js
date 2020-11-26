@@ -25,8 +25,13 @@ import CancelBtn from './Buttons/TransferCancelBtns/CancelBtn';
 import TransferBtn from './Buttons/TransferCancelBtns/TransferBtn';
 import ChangeFemaleBtn from './Buttons/ChangeBtns/ChangeFemaleBtn';
 import ChangeTwoPeopleBtn from './Buttons/ChangeBtns/ChangeTwoPeopleBtn';
+import NextBtn from './Buttons/ChangeBtns/Change2ndCameraBtn';
 
-let currentPhoto = ''; // 찍은 사진 저장용
+// 보내는 이미지
+let firstPhoto = ''; // 처음 찍은 사진 저장용
+let secondPhoto = ''; // 두번째 찍은 사진 저장용
+
+// 받는 결과 이미지
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
 let gender = 'female';
 
@@ -65,6 +70,7 @@ export default function App() {
   const [imageComeback, setImageComeback] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTwoPeople, setIsTwoPeople] = useState(false);
+  const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
   const cameraRef = useRef();
 
   useEffect(() => {
@@ -79,9 +85,9 @@ export default function App() {
   }, []);
 
   const switchCameraType = () => {
-    if (isPreview) {
-      return;
-    }
+    // if (isPreview) {
+    //   return;
+    // }
     setCameraType((cameraType) =>
       cameraType === Camera.Constants.Type.front
         ? Camera.Constants.Type.back
@@ -95,14 +101,28 @@ export default function App() {
         const options = { quality: 1, base64: true };
         let photo = await cameraRef.current.takePictureAsync(options);
         const source = photo.uri;
-        console.log(source);
+
         if (source) {
           await cameraRef.current.pausePreview();
           setIsPreview(true);
         }
 
-        currentPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
+        if (!isTwoPeople) {
+          firstPhoto = photo.base64;
+        } else {
+          if (!firstPhoto) {
+            firstPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
+          } else {
+            secondPhoto = photo.base64;
+            setIsTwoPhotoComplete(true);
+          }
+        }
       }
+
+      console.log(
+        'firstPhoto:' + firstPhoto.substring(0, 20),
+        'secondPhoto: ' + secondPhoto.substring(0, 20)
+      );
       // if (photo.uri) {
       //   this.savePhoto(photo.uri);
       // }
@@ -124,8 +144,23 @@ export default function App() {
       setImageSelected(true);
       setImageComeback(true);
     }
-    currentPhoto = photo.base64;
-    gender = 'female';
+
+    if (!isTwoPeople) {
+      firstPhoto = photo.base64;
+      gender = 'female'; // 성별 default 값인 여성으로 초기화
+    } else {
+      if (!firstPhoto) {
+        firstPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
+      } else {
+        secondPhoto = photo.base64;
+        setIsTwoPhotoComplete(true);
+      }
+    }
+
+    console.log(
+      'firstPhoto:' + firstPhoto.substring(0, 20),
+      'secondPhoto:' + secondPhoto.substring(0, 20)
+    );
   };
 
   const changeToMale = () => {
@@ -138,23 +173,24 @@ export default function App() {
   };
 
   const changeToTwoPeople = () => {
-    if (isTwoPeople) {
-      setIsTwoPeople(false);
-    } else {
-      setIsTwoPeople(true);
-    }
+    isTwoPeople ? setIsTwoPeople(false) : setIsTwoPeople(true);
+    console.log(isTwoPeople);
   };
 
   const getTransferImage = async () => {
     try {
       setIsLoading(true);
-      photos = await imageTransfer(currentPhoto, gender);
+      photos = await imageTransfer(firstPhoto, secondPhoto, gender);
       setIsLoading(false);
 
       await cameraRef.current.resumePreview();
 
       if (!photos) {
         setIsAfterview(false);
+        setIsTwoPeople(false);
+        setIsTwoPhotoComplete(false);
+        firstPhoto = '';
+        secondPhoto = '';
       } else {
         setIsAfterview(true);
       }
@@ -168,12 +204,35 @@ export default function App() {
     }
   };
 
+  const cameraAgain = async () => {
+    if (isPreview) {
+      await cameraRef.current.resumePreview();
+      setIsPreview(false);
+      console.log(isTwoPeople, isTwoPhotoComplete);
+    }
+
+    if (imageSelected) {
+      setImageSelected(false);
+      setImageComeback(false);
+    }
+  };
+
   const cancelPreviewBtn = async () => {
     await cameraRef.current.resumePreview();
+
     setIsPreview(false);
     setImageSelected(false);
     setImageComeback(false);
     setIsAfterview(false);
+    setIsTwoPeople(false);
+    setIsTwoPhotoComplete(false);
+
+    if (firstPhoto !== '') firstPhoto = '';
+    if (secondPhoto !== '') secondPhoto = '';
+    console.log(
+      firstPhoto ? firstPhoto.substring(0, 10) : 'firstPhoto is Empty!',
+      secondPhoto ? secondPhoto.substring(0, 10) : 'secondPhoto is Empty!'
+    );
   };
 
   savePhoto = async (uri) => {
@@ -201,11 +260,18 @@ export default function App() {
       const base64Code = photos[1].split('data:image/png;base64,')[1];
 
       const filename = FileSystem.documentDirectory + 'changed.png';
+
       await FileSystem.writeAsStringAsync(filename, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
+
       await MediaLibrary.saveToLibraryAsync(filename);
+
       setIsAfterview(false);
+      setIsTwoPeople(false);
+      setIsTwoPhotoComplete(false);
+      firstPhoto = '';
+      secondPhoto = '';
     } catch (error) {
       console.log(error);
     }
@@ -216,12 +282,18 @@ export default function App() {
       const base64Code = photos[1].split('data:image/png;base64,')[1];
 
       const filename = FileSystem.documentDirectory + 'changed.png';
+
       await FileSystem.writeAsStringAsync(filename, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
       await Sharing.shareAsync(filename);
+
       setIsAfterview(false);
+      setIsTwoPeople(false);
+      setIsTwoPhotoComplete(false);
+      firstPhoto = '';
+      secondPhoto = '';
     } catch (error) {
       console.log(error);
     }
@@ -262,9 +334,9 @@ export default function App() {
               }}
               source={{ uri: image }}
             />
-            <FemaleMale>
-              <ChangeFemaleBtn onPress={changeToMale} />
-            </FemaleMale>
+            <ChangeFunctionContainer>
+              {!isTwoPeople && <ChangeFemaleBtn onPress={changeToMale} />}
+            </ChangeFunctionContainer>
           </>
         )}
 
@@ -296,7 +368,13 @@ export default function App() {
         )}
         {(imageSelected || isPreview) && (
           <IconContainer>
-            <TransferBtn onPress={getTransferImage} />
+            {!isTwoPeople ||
+            isTwoPhotoComplete ||
+            (!isPreview && !(imageSelected && imageComeback)) ? (
+              <TransferBtn onPress={getTransferImage} />
+            ) : (
+              <NextBtn onPress={cameraAgain} />
+            )}
             <CancelBtn onPress={cancelPreviewBtn} />
           </IconContainer>
         )}
