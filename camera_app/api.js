@@ -43,7 +43,7 @@ export const imageTransfer = async (photo) => {
     };
 
     await axios
-      .post(URL, { label: 'Image', text: photo }, config) // 해당 URL로 POST
+      .post(URL, { label: 'Image', origin: photo }, config) // 해당 URL로 POST
       .then((res) => getResultURL(res.data))
       // POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
       // 이를 getResultURL 함수로 보낸다.

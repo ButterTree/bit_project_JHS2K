@@ -91,13 +91,13 @@ def precision_eye_masks(aligned_image_name, mask_dir):
     return mask_dir + 'mask.png', mask_dir + 'mask_net.png'
 
 
-def target_preprocessor(aligned_image_name, target_dir):
+def target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection):
     FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
     
     origin_image = cv2.imread(aligned_image_name)
-    target_image = cv2.imread("../image_2_style_gan/source/target/" + os.listdir("../image_2_style_gan/source/target/")[0])
+    target_image = cv2.imread(TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[0])
 
     if np.shape(target_image)[2] == 1:
         gray = target_image
@@ -122,21 +122,26 @@ def target_preprocessor(aligned_image_name, target_dir):
             mask_continv = 1 - mask_base
             # mask_base = cv2.merge((mask_base, mask_base, mask_base))
             # mmask_continv = cv2.merge((mask_continv, mask_continv, mask_continv))
-
-    extrcd_img = origin_image[shape.part(37).y - 20 : shape.part(41).y + 20, shape.part(36).x - 20 : shape.part(39).x + 5] + 20
-    if np.max(extrcd_img) > 255:
-        extrcd_img = (extrcd_img/np.max(extrcd_img))*255
-
-    cv2.imwrite('../image_2_style_gan/source/target_ref_color.png', extrcd_img)
+    
     eyes_origin = target_image * mask_base
-    cv2.imwrite('../image_2_style_gan/source/target_eyes.png', eyes_origin)
-    target_image = match_histograms(target_image * mask_continv, extrcd_img, multichannel=True)/255
-    target_image = equalize_adapthist(target_image, clip_limit=0.01)*255 + eyes_origin
-    # target_image = target_image*255 + eyes_origin
-    cv2.imwrite(target_dir + 'target.png', target_image)
-    cv2.imwrite('../image_2_style_gan/source/target_histadj.png', target_image)
 
-    return target_dir + 'target.png'
+    origin_ref_part = origin_image[shape.part(37).y - 20 : shape.part(41).y + 20, shape.part(36).x - 20 : shape.part(39).x + 5]
+    target_ref_part = target_image[shape.part(37).y - 20 : shape.part(41).y + 20, shape.part(36).x - 20 : shape.part(39).x + 5]
+    
+    # if np.max(origin_ref_part) > 255:
+    #     origin_ref_part = ((origin_ref_part/np.max(origin_ref_part))*255).astype(np.uint8)
+    
+    print(np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)))
+
+    if np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)) > 100:
+        target_image = match_histograms(target_image * mask_continv, extrcd_img, multichannel=True)/255
+        target_image = (equalize_adapthist(target_image, clip_limit=0.007)*255 + 25) + eyes_origin
+    else:
+        target_image = target_image + eyes_origin
+
+    cv2.imwrite(TARGET_IMAGE_DIR + 'target.png', target_image)
+
+    return TARGET_IMAGE_DIR + 'target.png'
 
 
 if __name__ == "__main__":
