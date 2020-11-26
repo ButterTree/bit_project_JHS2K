@@ -2,10 +2,10 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-const SaveBtn = ({ onPress }) => (
+const Transfer = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
-    <FontAwesome name="save" color="black" size={40} />
+    <FontAwesome name="check-circle" color="black" size={60} />
   </TouchableOpacity>
 );
 
-export default SaveBtn;
+export default Transfer;
