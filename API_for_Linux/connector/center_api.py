@@ -112,5 +112,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('222.106.22.110', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run('222.106.22.97', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
