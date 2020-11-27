@@ -4977,11 +4977,6 @@ react-native-iphone-x-helper@^1.0.3, react-native-iphone-x-helper@^1.3.0:
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
   integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
 
-react-native-multi-toggle-switch@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-multi-toggle-switch/-/react-native-multi-toggle-switch-1.1.1.tgz#15b502c523a72adb51f75ce6c77a40793b2e0f71"
-  integrity sha1-FbUCxSOnKttR91zmx3pAeTsuD3E=
-
 react-native-safe-area-context@3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.4.tgz#9b7f883a5ae8da6218d17467a350434005893602"
