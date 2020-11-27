@@ -26,6 +26,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
     "react-native-document-picker": "^4.1.0",
     "react-native-gesture-handler": "^1.7.0",
+    "react-native-loop-text": "^1.0.2",
     "react-native-multi-toggle-switch": "^1.1.1",
     "react-native-screens": "^2.10.1",
     "react-native-toggle-element": "^1.0.1",

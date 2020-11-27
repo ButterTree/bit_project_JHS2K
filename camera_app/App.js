@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -14,7 +14,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { imageTransfer } from './api';
-import ProgressBar from './Screen/progressBar';
+import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
 import FaceLine from './Screen/FaceLine';
 import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn';
 import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn';
@@ -28,30 +28,31 @@ import ChangeTwoPeopleBtn from './Buttons/ChangeBtns/ChangeTwoPeopleBtn';
 import NextBtn from './Buttons/ChangeBtns/Change2ndCameraBtn';
 
 // 보내는 이미지
-let firstPhoto = ''; // 처음 찍은 사진 저장용
-let secondPhoto = ''; // 두번째 찍은 사진 저장용
+let firstPhoto = ""; // 처음 찍은 사진 저장용
+let secondPhoto = ""; // 두번째 찍은 사진 저장용
 
 // 받는 결과 이미지
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
-let gender = 'female';
+let gender = "female";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const CenterView = styled.View`
-  flex: 1;
-  background-color: white;
+	flex: 1;
+	background-color: white;
 `;
 
 const IconContainer = styled.View`
+  flex: 1;
   width: 100%;
   height: 100%;
-  flex: 1;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
 `;
 
 const ChangeFunctionContainer = styled.View`
+  flex: 1;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -302,7 +303,7 @@ export default function App() {
   if (hasPermission === true) {
     return isLoading ? (
       <>
-        <ProgressBar />
+        <ProgressBarMain />
         <ActivityIndicator />
       </>
     ) : (
