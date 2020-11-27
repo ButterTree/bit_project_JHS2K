@@ -98,7 +98,7 @@ def target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR,
     predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
     
     origin_image = cv2.imread(aligned_image_name)
-    random_target_image = random.randint(0, (len(TARGET_SOURCE_DIR)+1))
+    random_target_image = random.randint(0, (len(TARGET_SOURCE_DIR)))
     target_image = cv2.imread(TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image])
     print(os.listdir(TARGET_SOURCE_DIR)[random_target_image])
 
