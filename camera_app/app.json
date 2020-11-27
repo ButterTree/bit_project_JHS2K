@@ -1,9 +1,9 @@
 {
 	"expo": {
-		"name": "Change-your-eyes v1.1",
+		"name": "Change-your-eyes",
 		"slug": "change-your-eyes",
 		"platforms": ["ios", "android", "web"],
-		"version": "1.1.0",
+		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"primaryColor": "#ffffff",
