@@ -7,7 +7,7 @@ import {
 	Alert,
 } from "react-native";
 import { Camera } from "expo-camera";
-import * as FaceDetector from "expo-face-detector";
+// import * as FaceDetector from "expo-face-detector";
 import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
@@ -80,10 +80,10 @@ export default function App() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isTwoPeople, setIsTwoPeople] = useState(false);
 	const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
-	const [leftEyeOpen, setLeftEyeOpen] = useState(false); // 왼쪽 눈 열려있을 확률
-	const [rightEyeOpen, setRightEyeOpen] = useState(false); // 오른쪽 눈 열려있을 확률
-	const [yawAngle, setYawAngle] = useState(false); // 얼굴의 요 각도
-	const [bounds, setBounds] = useState(false); // 얼굴 사각형 위치, 크기
+	// const [leftEyeOpen, setLeftEyeOpen] = useState(false); // 왼쪽 눈 열려있을 확률
+	// const [rightEyeOpen, setRightEyeOpen] = useState(false); // 오른쪽 눈 열려있을 확률
+	// const [yawAngle, setYawAngle] = useState(false); // 얼굴의 요 각도
+	// const [bounds, setBounds] = useState(false); // 얼굴 사각형 위치, 크기
 	const cameraRef = useRef();
 
 	useEffect(() => {
@@ -98,9 +98,6 @@ export default function App() {
 	}, []);
 
 	const switchCameraType = () => {
-		// if (isPreview) {
-		//   return;
-		// }
 		setCameraType((cameraType) =>
 			cameraType === Camera.Constants.Type.front
 				? Camera.Constants.Type.back
@@ -132,10 +129,10 @@ export default function App() {
 				}
 			}
 
-			console.log(
-				"firstPhoto:" + firstPhoto.substring(0, 20),
-				"secondPhoto: " + secondPhoto.substring(0, 20)
-			);
+			// console.log(
+			// 	"firstPhoto:" + firstPhoto.substring(0, 20),
+			// 	"secondPhoto: " + secondPhoto.substring(0, 20)
+			// );
 			// if (photo.uri) {
 			//   this.savePhoto(photo.uri);
 			// }
@@ -170,10 +167,10 @@ export default function App() {
 			}
 		}
 
-		console.log(
-			"firstPhoto:" + firstPhoto.substring(0, 20),
-			"secondPhoto:" + secondPhoto.substring(0, 20)
-		);
+		// console.log(
+		// 	"firstPhoto:" + firstPhoto.substring(0, 20),
+		// 	"secondPhoto:" + secondPhoto.substring(0, 20)
+		// );
 	};
 
 	const changeToMale = () => {
@@ -182,12 +179,12 @@ export default function App() {
 		} else {
 			gender = "female";
 		}
-		console.log(gender);
+		// console.log(gender);
 	};
 
 	const changeToTwoPeople = () => {
 		isTwoPeople ? setIsTwoPeople(false) : setIsTwoPeople(true);
-		console.log(isTwoPeople);
+		// console.log(isTwoPeople);
 	};
 
 	const getTransferImage = async () => {
@@ -208,6 +205,7 @@ export default function App() {
 			} else {
 				setIsAfterview(true);
 			}
+
 			setIsPreview(false);
 			setImageSelected(false);
 			setImageComeback(false);
@@ -222,7 +220,7 @@ export default function App() {
 		if (isPreview) {
 			await cameraRef.current.resumePreview();
 			setIsPreview(false);
-			console.log(isTwoPeople, isTwoPhotoComplete);
+			// console.log(isTwoPeople, isTwoPhotoComplete);
 		}
 
 		if (imageSelected) {
@@ -241,35 +239,34 @@ export default function App() {
 		setIsTwoPeople(false);
 		setIsTwoPhotoComplete(false);
 		gender = "female"; // 취소 버튼 누르면 성별 '여자'로 초기화
-
-		if (firstPhoto !== "") firstPhoto = "";
-		if (secondPhoto !== "") secondPhoto = "";
-		console.log(
-			firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
-			secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
-		);
+		firstPhoto = "";
+		secondPhoto = "";
+		// console.log(
+		// 	firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
+		// 	secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
+		// );
 	};
 
-	const savePhoto = async (uri) => {
-		try {
-			const { status } = await Permissions.askAsync(
-				Permissions.CAMERA_ROLL
-			);
-			if (status === "granted") {
-				const asset = await MediaLibrary.createAssetAsync(uri);
-				let album = await MediaLibrary.getAlbumAsync(ALBUM_NAME);
-				if (album === null) {
-					album = await MediaLibrary.createAlbumAsync(ALBUM_NAME);
-				} else {
-					await MediaLibrary.addAssetsToAlbumAsync([asset], album.id);
-				}
-			} else {
-				setHasPermission(false);
-			}
-		} catch (error) {
-			console.log(`savePhotoError: ${error}`);
-		}
-	};
+	// const savePhoto = async (uri) => {
+	// 	try {
+	// 		const { status } = await Permissions.askAsync(
+	// 			Permissions.CAMERA_ROLL
+	// 		);
+	// 		if (status === "granted") {
+	// 			const asset = await MediaLibrary.createAssetAsync(uri);
+	// 			let album = await MediaLibrary.getAlbumAsync(ALBUM_NAME);
+	// 			if (album === null) {
+	// 				album = await MediaLibrary.createAlbumAsync(ALBUM_NAME);
+	// 			} else {
+	// 				await MediaLibrary.addAssetsToAlbumAsync([asset], album.id);
+	// 			}
+	// 		} else {
+	// 			setHasPermission(false);
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(`savePhotoError: ${error}`);
+	// 	}
+	// };
 
 	const saveResultPhoto = async () => {
 		try {
@@ -316,34 +313,31 @@ export default function App() {
 		}
 	};
 
-	const onFacesDetected = ({ faces }) => {
-		const face = faces[0];
-		if (face) {
-			if (face.leftEyeOpenProbability >= 0.9) {
-				// setLeftEyeOpen(true);
-				// setModalVisible(false);
-			} else {
-				// displayModal();
-				// alert('정면을 바라보고 눈을 바르게 뜨세요.');
-				// setModalVisible(true);
-				// popup();
-			}
-			if (face.RightEyeOpenProbability >= 0.8) {
-				// setModalVisible(false);
-				// setRightEyeOpen(true);
-			} else {
-				// alert('오른쪽눈을 뜨세요');
-				// setModalVisible(true);
-			}
-		}
-	};
+	// const onFacesDetected = ({ faces }) => {
+	// 	const face = faces[0];
+	// 	if (face) {
+	// 		if (face.leftEyeOpenProbability >= 0.9) {
+	// 			// setLeftEyeOpen(true);
+	// 			// setModalVisible(false);
+	// 		} else {
+	// 			// displayModal();
+	// 			// alert('정면을 바라보고 눈을 바르게 뜨세요.');
+	// 			// setModalVisible(true);
+	// 			// popup();
+	// 		}
+	// 		if (face.RightEyeOpenProbability >= 0.8) {
+	// 			// setModalVisible(false);
+	// 			// setRightEyeOpen(true);
+	// 		} else {
+	// 			// alert('오른쪽눈을 뜨세요');
+	// 			// setModalVisible(true);
+	// 		}
+	// 	}
+	// };
 
 	if (hasPermission === true) {
 		return isLoading ? (
-			<>
-				<ProgressBarMain />
-				{/* <ActivityIndicator /> */}
-			</>
+			<ProgressBarMain />
 		) : (
 			<CenterView>
 				<Camera
@@ -351,28 +345,26 @@ export default function App() {
 						alignItems: "center",
 						width: width,
 						height: height / 1.2,
-						// marginTop: "10%",
 					}}
 					type={cameraType}
-					onFacesDetected={
-						(leftEyeOpen ? null : onFacesDetected,
-						rightEyeOpen ? null : onFacesDetected,
-						yawAngle ? null : onFacesDetected,
-						bounds ? null : onFacesDetected)
-					}
-					faceDetectorSettings={{
-						// mode: FaceDetector.Constants.Mode.fast,
-						detectLandmarks: FaceDetector.Constants.Landmarks.all,
-						runClassifications:
-							FaceDetector.Constants.Classifications.all,
-						minDetectionInterval: 3000,
-						// tracking: true,
-					}}
 					ref={cameraRef}
+					// onFacesDetected={
+					// 	(leftEyeOpen ? null : onFacesDetected,
+					// 	rightEyeOpen ? null : onFacesDetected,
+					// 	yawAngle ? null : onFacesDetected,
+					// 	bounds ? null : onFacesDetected)
+					// }
+					// faceDetectorSettings={{
+					// 	// mode: FaceDetector.Constants.Mode.fast,
+					// 	detectLandmarks: FaceDetector.Constants.Landmarks.all,
+					// 	runClassifications:
+					// 		FaceDetector.Constants.Classifications.all,
+					// 	minDetectionInterval: 3000,
+					// 	// tracking: true,
+					// }}
 				>
 					<FaceLine />
-					{!isTwoPeople && <OnePersonPopup />}
-					{isTwoPeople && <TwoPeoplePopup />}
+					{!isTwoPeople ? <OnePersonPopup /> : <TwoPeoplePopup />}
 					<ChangeFunctionContainer>
 						<ChangeButtonContainer>
 							{!isTwoPeople && (
