@@ -137,7 +137,7 @@ def target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR,
     print(np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)))
 
     if np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)) > 100:
-        target_image = match_histograms(target_image * mask_continv, extrcd_img, multichannel=True)/255
+        target_image = match_histograms(target_image * mask_continv, origin_ref_part, multichannel=True)/255
         target_image = (equalize_adapthist(target_image, clip_limit=0.007)*255 + 25) + eyes_origin
     else:
         target_image = target_image + eyes_origin

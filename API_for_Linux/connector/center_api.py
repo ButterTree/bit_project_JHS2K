@@ -30,7 +30,9 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
-    url_base = "http://222.106.22.110:45045/let_me_shine/results/?uid="
+    URL_IP = '222.106.22.97'
+    URL_PORT = '45045'
+    url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
     rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
     process_selection = 0
