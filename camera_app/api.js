@@ -1,34 +1,34 @@
-import axios from 'axios';
+import axios from "axios";
 
-const URL = 'http://121.138.83.1:45045/let_me_shine';
+const URL = "http://121.138.83.1:45045/let_me_shine";
 
 let tempResult = [];
 
 const getResults = (imgObj) => {
-  console.log('[3] Image Transfer Start!');
+	console.log("[3] Image Transfer Start!");
 
-  const origin = `data:image/png;base64,${imgObj.imgID_1}`;
-  const after = `data:image/png;base64,${imgObj.imgID_2}`;
+	const origin = `data:image/png;base64,${imgObj.imgID_1}`;
+	const after = `data:image/png;base64,${imgObj.imgID_2}`;
 
-  console.log('[3] Image Trasfer Complete!');
-  tempResult = [origin, after];
+	console.log("[3] Image Trasfer Complete!");
+	tempResult = [origin, after];
 };
 
 const getResultURL = async (url) => {
-  try {
-    console.log('[2] Get Start!');
+	try {
+		console.log("[2] Get Start!");
 
-    await axios
-      .get(url) // get으로 해당 url에 접근
-      .then((res) => getResults(res.data.results))
-      // 모델에서 계산이 완료된 결과 사진(base64 형태로 되어 있음)과 영상(mp4)을
-      // getResults 함수로 보낸다.
-      .catch((err) => console.log(`Get axios error: ${err}`));
+		await axios
+			.get(url) // get으로 해당 url에 접근
+			.then((res) => getResults(res.data.results))
+			// 모델에서 계산이 완료된 결과 사진(base64 형태로 되어 있음)과 영상(mp4)을
+			// getResults 함수로 보낸다.
+			.catch((err) => console.log(`Get axios error: ${err}`));
 
-    console.log('[2] Get End!');
-  } catch (e) {
-    console.log(`getResultURL Error: ${e}`);
-  }
+		console.log("[2] Get End!");
+	} catch (e) {
+		console.log(`getResultURL Error: ${e}`);
+	}
 };
 
 export const imageTransfer = async (photo) => {

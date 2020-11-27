@@ -6,6 +6,7 @@ import argparse
 import dlib
 import cv2
 import os
+import random
 
 
 # def mask_maker(aligned_image_name, mask_dir):
@@ -97,7 +98,25 @@ def precision_eye_masks(aligned_image_name, mask_dir):
         cv2.imwrite(mask_dir + 'mask_eyes.png', eyes_base)
         cv2.imwrite(mask_dir + 'mask_lids.png', lids_base)
 
+<<<<<<< HEAD
     return mask_dir + 'mask.png', mask_dir + 'mask_eyes.png', mask_dir + 'mask_lids.png'
+=======
+def target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection):
+    FACIAL_LANDMARKS_INDEXES = OrderedDict([("Right_Eye", (36, 42)), ("Left_Eye", (42, 48))])
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor('../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat')
+    
+    origin_image = cv2.imread(aligned_image_name)
+    random_target_image = random.randint(0, (len(TARGET_SOURCE_DIR)))
+    target_image = cv2.imread(TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image])
+    print(os.listdir(TARGET_SOURCE_DIR)[random_target_image])
+
+    if np.shape(target_image)[2] == 1:
+        gray = target_image
+        target_image = cv2.merge((target_image, target_image, target_image))
+    else :
+        gray = cv2.cvtColor(target_image, cv2.COLOR_BGR2GRAY)
+>>>>>>> upstream/model_only_eyes
 
 
 # def target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection):
@@ -143,6 +162,7 @@ def precision_eye_masks(aligned_image_name, mask_dir):
 #     hist_mean = np.mean(origin_ref_part) - np.mean(target_ref_part)
 #     print(hist_mean)
 
+<<<<<<< HEAD
 #     if np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)) > 2:
 #         # target_image = match_histograms(target_image * mask_continv, origin_ref_part, multichannel=True)/255
 #         # target_image = equalize_adapthist(target_image, clip_limit=0.008)*255 + eyes_origin
@@ -150,6 +170,13 @@ def precision_eye_masks(aligned_image_name, mask_dir):
 #     else:
 #         target_image = target_image + eyes_origin
 #     # target_image = target_image + eyes_origin
+=======
+    if np.abs(np.mean(origin_ref_part) - np.mean(target_ref_part)) > 100:
+        target_image = match_histograms(target_image * mask_continv, origin_ref_part, multichannel=True)/255
+        target_image = (equalize_adapthist(target_image, clip_limit=0.007)*255 + 25) + eyes_origin
+    else:
+        target_image = target_image + eyes_origin
+>>>>>>> upstream/model_only_eyes
 
 #     cv2.imwrite(TARGET_IMAGE_DIR + 'target.png', target_image)
 
