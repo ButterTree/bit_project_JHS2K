@@ -51,8 +51,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
     parser.add_argument('--mask', default=MASK_DIR)
     parser.add_argument('--weight_file', default=f"../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{model_resolution}x{model_resolution}.pt", type=str)
-    parser.add_argument('--iteration', default=150, type=int)
-
+    parser.add_argument('--iteration', default=100, type=int)
     
     args = parser.parse_args()
     if os.path.isdir(os.path.dirname(args.weight_file)) is not True:
@@ -66,11 +65,12 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
             sys.exit(1)
 
         aligned_image_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        mask_name, net_mask_name = precision_eye_masks(aligned_image_name, args.mask)
+        mask_name, eyes_mask_name, lids_mask_name = precision_eye_masks(aligned_image_name, args.mask)
         # mask_maker(aligned_image_name, args.mask)
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        target_name = target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection)
+        # target_name = target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection)
+        target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[0]
 
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
@@ -101,12 +101,12 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     img_1=image_reader_color(ingredient_name)
     img_1=img_1.to(device) #(1,3,1024,1024)
 
-    blur_mask0=image_reader_gray(mask_name).to(device)
-    blur_mask0=blur_mask0[:,0,:,:].unsqueeze(0)
-    blur_mask1=blur_mask0.clone()
-    blur_mask1=1-blur_mask1
-    blur_mask2=image_reader_gray(net_mask_name).to(device)
-    blur_mask3=blur_mask0-blur_mask2
+    blur_mask0_1=image_reader_gray(mask_name).to(device)
+    blur_mask0_2=image_reader_gray(eyes_mask_name).to(device)
+    blur_mask0_3=image_reader_gray(lids_mask_name).to(device)
+    blur_mask1=1-blur_mask0_1
+    blur_mask_eyes=blur_mask0_1-blur_mask0_2
+    blur_mask_lids=blur_mask0_1-torch.clamp(blur_mask0_3-blur_mask0_2, 0, 1)
 
     MSE_Loss=nn.MSELoss(reduction="mean")
     upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='nearest')
@@ -129,10 +129,10 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     for i in range(args.iteration):  # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
-        synth_img=(synth_img + random.uniform(1.0, 1.3)) / 2
+        synth_img=(synth_img + 1) / 2  # random.uniform(1.0, 1.3)
 
-        loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask3,MSE_Loss,upsample2d)
-        loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask2,MSE_Loss,upsample2d)
+        loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask_eyes,MSE_Loss,upsample2d)
+        loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask_lids,MSE_Loss,upsample2d)
         loss=loss_wl0 + loss_wl1
         loss.backward()
 
@@ -152,13 +152,13 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
             # compare_origin = (img_1*blur_mask0).detach().cpu().numpy()
             # matched = match_histograms(compare_result, compare_origin, multichannel=True)
             # save_image((img_1*blur_mask1).detach().cpu() + matched, final_name)
-            save_image(img_1*blur_mask1 + synth_img*blur_mask0, final_name)
+            save_image(img_1*blur_mask1 + synth_img*blur_mask0_1, final_name)
             # save_image(synth_img.clamp(0, 1), final_name)
 
-    # compare_origin = imread(ingredient_name).astype(np.uint8)
-    # compare_result = imread(final_name).astype(np.uint8)
-    # matched = match_histograms(compare_result, compare_origin, multichannel=True).astype(np.uint8)
-    # imsave(final_name, matched)
+    compare_origin = imread(ingredient_name).astype(np.uint8)
+    compare_result = imread(final_name).astype(np.uint8)
+    matched = match_histograms(compare_result, compare_origin, multichannel=True).astype(np.uint8)
+    imsave(final_name, matched)
 
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
