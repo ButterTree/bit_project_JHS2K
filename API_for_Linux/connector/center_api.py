@@ -52,7 +52,8 @@ def let_me_shine():
             file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
             client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
 
-            gender = data['gender']
+            # gender = data['gender']
+            gender = 'male'
 
             with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
                 f.write(base64.b64decode(data['origin']))
@@ -61,20 +62,23 @@ def let_me_shine():
             cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
             os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
 
-            if data['custom']:
-                process_selection = 1
-                custom_target_name = f'{BASE_DIR}raw_target/'
-                os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
-                os.mkdir(f'{custom_target_name}un_aligned/')
+            try:
+                if data['custom']:
+                    process_selection = 1
+                    custom_target_name = f'{BASE_DIR}raw_target/'
+                    os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
+                    os.mkdir(f'{custom_target_name}un_aligned/')
 
-                with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                    f.write(base64.b64decode(data['custom']))
+                    with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
+                        f.write(base64.b64decode(data['custom']))
 
-                cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
-                cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
-                os.remove(f'{custom_target_name}c_target.jpg')
+                    cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
+                    cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
+                    os.remove(f'{custom_target_name}c_target.jpg')
 
-                align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
+                    align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
+            except Exception as e:
+                pass
 
             input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender)
             torch.cuda.empty_cache()

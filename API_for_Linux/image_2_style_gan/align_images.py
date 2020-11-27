@@ -29,9 +29,7 @@ def align_images(RAW_IMAGE_DIR, ALIGNED_IMAGE_DIR):
     landmarks_detector = LandmarksDetector(landmarks_model_path)
     alinged_files = []
 
-    print(os.listdir(RAW_IMAGE_DIR))
     for img_name in os.listdir(RAW_IMAGE_DIR):
-        print(img_name)
         if img_name == '':
             return
         raw_img_path = os.path.join(RAW_IMAGE_DIR, img_name)

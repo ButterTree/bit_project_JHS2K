@@ -1,4 +1,6 @@
+from skimage.exposure import equalize_adapthist
 import dlib
+import cv2
 
 
 class LandmarksDetector:
@@ -10,8 +12,9 @@ class LandmarksDetector:
         self.shape_predictor = dlib.shape_predictor(predictor_model_path)
 
     def get_landmarks(self, image):
-        img = dlib.load_rgb_image(image)
-        dets = self.detector(img, 1)
+        img = cv2.imread(image)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        dets = self.detector(gray, 1)
 
         for detection in dets:
             face_landmarks = [(item.x, item.y) for item in self.shape_predictor(img, detection).parts()]
