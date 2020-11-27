@@ -2,7 +2,8 @@ import axios from "axios";
 import { Alert } from "react-native";
 import { SERVER_IP, SERVER_PORT } from "./API_SERVER_ADDRESS";
 
-const URL = `http://${SERVER_IP}:${SERVER_PORT}//let_me_shine`;
+// const URL = `http://${SERVER_IP}:${SERVER_PORT}//let_me_shine`;
+const URL = "http://222.106.22.97:45045/let_me_shine";
 
 let tempResult = [];
 
