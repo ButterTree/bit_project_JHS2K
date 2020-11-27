@@ -202,6 +202,7 @@ export default function App() {
 				setIsAfterview(false);
 				setIsTwoPeople(false);
 				setIsTwoPhotoComplete(false);
+
 				firstPhoto = "";
 				secondPhoto = "";
 			} else {
@@ -239,6 +240,7 @@ export default function App() {
 		setIsAfterview(false);
 		setIsTwoPeople(false);
 		setIsTwoPhotoComplete(false);
+		gender = "female"; // 취소 버튼 누르면 성별 '여자'로 초기화
 
 		if (firstPhoto !== "") firstPhoto = "";
 		if (secondPhoto !== "") secondPhoto = "";
