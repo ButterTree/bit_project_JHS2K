@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -28,18 +28,18 @@ import ChangeTwoPeopleBtn from './Buttons/ChangeBtns/ChangeTwoPeopleBtn';
 import NextBtn from './Buttons/ChangeBtns/Change2ndCameraBtn';
 
 // 보내는 이미지
-let firstPhoto = ''; // 처음 찍은 사진 저장용
-let secondPhoto = ''; // 두번째 찍은 사진 저장용
+let firstPhoto = ""; // 처음 찍은 사진 저장용
+let secondPhoto = ""; // 두번째 찍은 사진 저장용
 
 // 받는 결과 이미지
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
-let gender = 'female';
+let gender = "female";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const CenterView = styled.View`
-  flex: 1;
-  background-color: white;
+	flex: 1;
+	background-color: white;
 `;
 
 const IconContainer = styled.View`
