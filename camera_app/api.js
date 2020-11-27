@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Alert } from 'react-native';
 
-const URL = 'http://121.138.83.1:45045/let_me_shine';
+const URL = 'http://222.106.22.97:45045/let_me_shine';
 
 let tempResult = [];
 

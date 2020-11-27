@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef, useEffect } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import ProgresLoading from './progresLoading';
+import ProgressLoading from './progressLoading';
+import Texts from './Texts';
 
 const Progress = ({ step, steps, height }) => {
   const [width, setWidth] = useState(0);
@@ -22,16 +23,7 @@ const Progress = ({ step, steps, height }) => {
 
   return (
     <>
-      <Text
-        style={{
-          textAlign: 'center',
-          fontSize: 15,
-          fontWeight: 'bold',
-          marginBottom: 8,
-        }}
-      >
-        {step}/{steps}
-      </Text>
+      <Texts />
       <View
         onLayout={(e) => {
           const newWidth = e.nativeEvent.layout.width;
@@ -61,6 +53,18 @@ const Progress = ({ step, steps, height }) => {
             ],
           }}
         />
+        {/* <Text
+          style={{
+            fontSize: 15,
+            justifyContent: 'center',
+            fontWeight: 'bold',
+            color: 'black',
+            opacity: 0.8,
+            position: 'absolute',
+          }}
+        >
+          Loading...
+        </Text> */}
       </View>
     </>
   );
@@ -71,7 +75,7 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((index + 10) % (100 + 10));
+      setIndex((index + 4) % (100 + 4));
     }, 1000);
 
     return () => {
@@ -80,7 +84,7 @@ export default function App() {
   }, [index]);
   return (
     <View style={styles.container}>
-      <ProgresLoading />
+      <ProgressLoading />
       <StatusBar hidden />
       <Progress step={index} steps={100} height={30} />
     </View>
@@ -92,6 +96,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    padding: 20,
+    padding: (20, 60),
   },
 });

@@ -14,7 +14,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { imageTransfer } from './api';
-import ProgressBar from './Screen/progressBar';
+import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
 import FaceLine from './Screen/FaceLine';
 import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn';
 import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn';
@@ -43,15 +43,16 @@ const CenterView = styled.View`
 `;
 
 const IconContainer = styled.View`
+  flex: 1;
   width: 100%;
   height: 100%;
-  flex: 1;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
 `;
 
 const ChangeFunctionContainer = styled.View`
+  flex: 1;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -302,7 +303,7 @@ export default function App() {
   if (hasPermission === true) {
     return isLoading ? (
       <>
-        <ProgressBar />
+        <ProgressBarMain />
         <ActivityIndicator />
       </>
     ) : (
