@@ -43,7 +43,7 @@ def align_images(RAW_IMAGE_DIR, ALIGNED_IMAGE_DIR):
 
 
 if __name__ == "__main__":
-    RAW_IMAGE_DIR = '../image_2_style_gan/test/'
-    ALIGNED_IMAGE_DIR = '../image_2_style_gan/aligned/'
+    RAW_IMAGE_DIR = '../image_2_style_gan/images/raw/'
+    ALIGNED_IMAGE_DIR = '../image_2_style_gan/images/aligned/'
     
     align_images(RAW_IMAGE_DIR, ALIGNED_IMAGE_DIR)
