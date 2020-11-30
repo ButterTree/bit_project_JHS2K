@@ -13,8 +13,8 @@ import shutil
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-URL_IP = '222.106.22.97'
-URL_PORT = '45065'
+URL_IP = '222.106.22.110'
+URL_PORT = '45045'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
@@ -30,6 +30,25 @@ def data_return():
     return ''
 
 
+def make_dir(rand_uuid):
+    BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
+        if os.path.isdir(BASE_DIR) is not True:
+            os.makedirs(BASE_DIR, exist_ok=True)
+        RAW_DIR = f'{BASE_DIR}raw/'
+        os.mkdir(RAW_DIR)
+    return BASE_DIR, RAW_DIR
+
+
+def make_original_file_for_uuid(RAW_DIR, rand_uuid):
+    file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg' 
+    client_img_name = f'{RAW_DIR}{rand_uuid}.png'
+    return file_name, client_img_name
+
+def save_image(file_name, data):
+    with open(file_name, 'wb') as f:
+        f.write(base64.b64decode(data))
+
+
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
@@ -39,47 +58,33 @@ def let_me_shine():
 
     try:
         data = request.get_json(silent=True)
-        if not data['origin']:
-            print("Received Blank(0-Byte) File. Re-send image, please.")
-            return "Re-send image, please."
+        if not data['origin']: return "Re-send image, please."
         else:
-            # item = {'label': data.get('label'), 'text': data.get('text')}
-            BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
-            if os.path.isdir(BASE_DIR) is not True:
-                os.makedirs(BASE_DIR, exist_ok=True)
-            
-            RAW_DIR = f'{BASE_DIR}raw/'
-            os.mkdir(RAW_DIR)
-
-            file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
-            client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
-
             gender = data['gender']
-
-            with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                f.write(base64.b64decode(data['origin']))
-
-            cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
+            BASE_DIR, RAW_DIR = make_dir(rand_uuid)
+            file_name, client_img_name = make_original_file_for_uuid(RAW_DIR, rand_uuid)
+            saved_file_name = save_image(file_name, data['origin'])
+            
+            cnv_buffer = cv2.imread(saved_file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
             cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
-            os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
+            os.remove(saved_file_name)  # 기존의 원본 Image 파일은 삭제한다.
 
-            try:
-                if data['custom']:
-                    process_selection = 1
-                    custom_target_name = f'{BASE_DIR}raw_target/'
-                    os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
-                    os.mkdir(f'{custom_target_name}un_aligned/')
+            ################### 이미지 변환하고 저장하고 하는걸 한번에 해오자.######################
+            if data['custom']:
+                process_selection = 1
+                custom_target_name = f'{BASE_DIR}raw_target/'
+                os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
+                os.mkdir(f'{custom_target_name}un_aligned/')
+                                            
+                with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
+                    f.write(base64.b64decode(data['custom']))
 
-                    with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                        f.write(base64.b64decode(data['custom']))
+                cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
+                cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
+                os.remove(f'{custom_target_name}c_target.jpg')
 
-                    cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
-                    cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
-                    os.remove(f'{custom_target_name}c_target.jpg')
+                align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
 
-                    align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
-            except Exception as e:
-                pass
 
             input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender)
             torch.cuda.empty_cache()
