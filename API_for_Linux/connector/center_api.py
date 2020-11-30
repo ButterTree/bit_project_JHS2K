@@ -13,6 +13,8 @@ import shutil
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
+URL_IP = '222.106.22.97'
+URL_PORT = '45065'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
@@ -30,8 +32,6 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
-    URL_IP = '222.106.22.97'
-    URL_PORT = '45045'
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
     rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
@@ -54,8 +54,7 @@ def let_me_shine():
             file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
             client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
 
-            # gender = data['gender']
-            gender = 'male'
+            gender = data['gender']
 
             with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
                 f.write(base64.b64decode(data['origin']))
@@ -112,5 +111,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('222.106.22.97', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run(URL_IP, port=URL_PORT, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.

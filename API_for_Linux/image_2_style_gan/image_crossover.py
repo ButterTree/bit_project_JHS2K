@@ -13,14 +13,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
-from image_2_style_gan.mask_maker import mask_maker, precision_eye_masks, target_preprocessor
+from image_2_style_gan.mask_maker import precision_eye_masks
 from image_2_style_gan.read_image import image_reader_color, image_reader_gray
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-
 
 def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender):    
     ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
