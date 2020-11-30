@@ -70,7 +70,8 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender):
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
         # target_name = target_preprocessor(aligned_image_name, TARGET_SOURCE_DIR, TARGET_IMAGE_DIR, process_selection)
-        target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[0]
+        random_target_image_index = random.randint(0, len(os.listdir(TARGET_SOURCE_DIR)))
+        target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]
 
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")

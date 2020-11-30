@@ -8,10 +8,10 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+debug.log
 
 # macOS
 .DS_Store
 
-.prettierrc
 package-lock.json
-yarn-lock.json
+*.lock
