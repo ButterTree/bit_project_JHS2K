@@ -11,7 +11,7 @@
 # App Screen
 -----------------
 <div>
-  <img width="200" src="https://user-images.githubusercontent.com/68880055/100563298-6c4e8080-3301-11eb-912c-140439610543.png">
-  <img width="200" src="https://user-images.githubusercontent.com/68880055/100563288-66f13600-3301-11eb-9a3f-74ef64fedbe1.PNG">
-  <img width="200" src="https://user-images.githubusercontent.com/68880055/100563300-6e184400-3301-11eb-92bf-ecbef2694b1d.PNG">
+  <img width="300" src="https://user-images.githubusercontent.com/68880055/100563298-6c4e8080-3301-11eb-912c-140439610543.png">
+  <img width="300" src="https://user-images.githubusercontent.com/68880055/100563288-66f13600-3301-11eb-9a3f-74ef64fedbe1.PNG">
+  <img width="300" src="https://user-images.githubusercontent.com/68880055/100563300-6e184400-3301-11eb-92bf-ecbef2694b1d.PNG">
 </div>
