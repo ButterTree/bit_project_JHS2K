@@ -81,7 +81,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     try:
         mask_name = args.mask + os.listdir(args.mask)[0]
     except Exception as e:
-        shutil.copyfile('../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
+        shutil.copyfile('../image_2_style_gan/source/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
         mask_name = args.mask + os.listdir(args.mask)[0]
 
     # file_names = []
@@ -110,7 +110,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     blur_mask1=1-blur_mask1
 
     MSE_Loss=nn.MSELoss(reduction="mean")
-    upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='bilinear')
+    upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='bilinear', align_corners=True)
 
     img_p0=img_0.clone() #resize for perceptual net
     img_p0=upsample2d(img_p0)
