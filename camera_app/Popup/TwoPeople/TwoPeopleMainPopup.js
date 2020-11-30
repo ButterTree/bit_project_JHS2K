@@ -7,22 +7,12 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
-  Image,
 } from 'react-native';
-import styled from 'styled-components';
-
-const TipContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: -10%;
-  margin-bottom: 3%;
-`;
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-const onePopup = () => {
+const twoPopup = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -38,35 +28,15 @@ const onePopup = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {`1. 정면을 바라보고 눈을 바르게 뜨세요.
-2. 아래 버튼으로 성별을 바꿀 수 있어요.
+              {`1. 첫번째는 본인이나 원본 사진을 선택!
+2. 두번째는 합성할 사진을 선택! 🌷
 `}
             </Text>
-            <TipContainer>
-              <Image
-                source={require('../Buttons/ChangeBtns/Gender/woman.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  // marginTop: -10,
-                  // resizeMode: 'contain',
-                }}
-              />
-              <Image
-                source={require('../Buttons/ChangeBtns/Gender/man.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  // marginTop: -10,
-                  // resizeMode: 'contain',
-                }}
-              />
-            </TipContainer>
 
             <TouchableHighlight
               style={{
                 ...styles.openButton,
-                backgroundColor: '#f7eeb0',
+                backgroundColor: '#f1e8ff',
               }}
               onPress={() => {
                 setModalVisible(false);
@@ -96,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 10,
   },
   LeftView: {
     flex: 1,
@@ -124,7 +94,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   openButton: {
-    backgroundColor: '#b9d3ed',
+    backgroundColor: '#e0f5da',
     borderRadius: 20,
     padding: 10,
     elevation: 2,
@@ -136,10 +106,10 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+    // marginBottom: 15,
+    textAlign: 'left',
     lineHeight: 25,
   },
 });
 
-export default onePopup;
+export default twoPopup;
