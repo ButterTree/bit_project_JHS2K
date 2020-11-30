@@ -1,6 +1,7 @@
 from image_2_style_gan.image_crossover import image_crossover
 from image_animator.image_animator import image_animator
 from image_2_style_gan.align_images import align_images
+from image_2_style_gan.image_processing import *
 from flask import Flask, render_template, request
 import requests as rq
 import torch
@@ -14,7 +15,8 @@ import shutil
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
 URL_IP = '222.106.22.110'
-URL_PORT = '45065'
+URL_PORT = '45045'
+
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
@@ -28,21 +30,7 @@ def data_return():
     elif data == '':
         data_return.close()
     return ''
-
-
-
-def make_dir():
-    rand_uuid = uuid.uuid4()
-
-    BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
-    RAW_DIR = f'{BASE_DIR}raw/'
-
-    if os.path.isdir(BASE_DIR) is not True:
-        os.makedirs(BASE_DIR, exist_ok=True)
-        os.mkdir(RAW_DIR)
-    return BASE_DIR, RAW_DIR
-
-
+    
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
@@ -57,6 +45,7 @@ def let_me_shine():
             print("Received Blank(0-Byte) File. Re-send image, please.")
             return "Re-send image, please."
         else:
+
             BASE_DIR, RAW_DIR = make_dir()
 
             file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
@@ -67,23 +56,27 @@ def let_me_shine():
             with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
                 f.write(base64.b64decode(data['origin']))
 
-            cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
-            cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
-            os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
+            client_img_name = jpg_to_png(file_name, client_img_name)
+            # cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
+            # cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
+            # os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
 
             try:
                 if data['custom']:
                     process_selection = 1
-                    custom_target_name = f'{BASE_DIR}raw_target/'
-                    os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
-                    os.mkdir(f'{custom_target_name}un_aligned/')
+
+                    custom_target_name = make_dir()
+                    # custom_target_name = f'{BASE_DIR}raw_target/'
+                    # os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
+                    # os.mkdir(f'{custom_target_name}un_aligned/')
 
                     with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
                         f.write(base64.b64decode(data['custom']))
 
-                    cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
-                    cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
-                    os.remove(f'{custom_target_name}c_target.jpg')
+                    custom_target_name = jpg_to_png(custom_target_name)
+                    # cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
+                    # cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
+                    # os.remove(f'{custom_target_name}c_target.jpg')
 
                     align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
             except Exception as e:
