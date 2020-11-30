@@ -5,7 +5,6 @@ import {
   Image,
   Dimensions,
   Alert,
-  View,
 } from 'react-native';
 import { Camera } from 'expo-camera';
 // import * as FaceDetector from "expo-face-detector";
