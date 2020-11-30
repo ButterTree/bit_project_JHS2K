@@ -13,7 +13,7 @@ import shutil
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-URL_IP = '222.106.22.97'
+URL_IP = '222.106.22.110'
 URL_PORT = '45065'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
@@ -30,6 +30,20 @@ def data_return():
     return ''
 
 
+
+def make_dir():
+    rand_uuid = uuid.uuid4()
+
+    BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
+    RAW_DIR = f'{BASE_DIR}raw/'
+
+    if os.path.isdir(BASE_DIR) is not True:
+        os.makedirs(BASE_DIR, exist_ok=True)
+        os.mkdir(RAW_DIR)
+    return BASE_DIR, RAW_DIR
+
+
+
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
@@ -43,13 +57,7 @@ def let_me_shine():
             print("Received Blank(0-Byte) File. Re-send image, please.")
             return "Re-send image, please."
         else:
-            # item = {'label': data.get('label'), 'text': data.get('text')}
-            BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
-            if os.path.isdir(BASE_DIR) is not True:
-                os.makedirs(BASE_DIR, exist_ok=True)
-            
-            RAW_DIR = f'{BASE_DIR}raw/'
-            os.mkdir(RAW_DIR)
+            BASE_DIR, RAW_DIR = make_dir()
 
             file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
             client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
