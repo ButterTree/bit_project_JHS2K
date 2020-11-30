@@ -47,7 +47,6 @@ const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
   flex: 1;
   background-color: white;
-  margin-top: 10%;
 `;
 
 const IconContainer = styled.View`
