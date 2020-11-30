@@ -1,7 +1,10 @@
 import argparse
+import random
 import os
 import shutil
+import cv2
 import sys
+import numpy as np
 from collections import OrderedDict
 
 import torch
@@ -9,61 +12,70 @@ import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_maker import mask_maker
-from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.read_image import image_reader
+from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
-def image_crossover(rand_uuid, client_img_name):
-    MEDIUM_IMAGE_DIR = '../image_2_style_gan/images/medium/'
-    if os.path.isdir(MEDIUM_IMAGE_DIR) is not True:
-        os.makedirs(MEDIUM_IMAGE_DIR, exist_ok=True)
+def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender):
+    ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
+    os.mkdir(ALIGNED_IMAGE_DIR)
+    
+    TARGET_IMAGE_DIR = f'{BASE_DIR}target/'
+    os.mkdir(TARGET_IMAGE_DIR)
+    
+    if process_selection == 0 and gender == 'female':
+        TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/female/'
+    elif process_selection == 0 and gender == 'male':
+        TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/male/'
+    else:
+        TARGET_SOURCE_DIR = f'{BASE_DIR}raw_target/aligned/'
 
-    FINAL_IMAGE_DIR = '../image_2_style_gan/images/final/'
-    if os.path.isdir(FINAL_IMAGE_DIR) is not True:
-        os.makedirs(FINAL_IMAGE_DIR, exist_ok=True)
+    FINAL_IMAGE_DIR = f'{BASE_DIR}final/'
+    os.mkdir(FINAL_IMAGE_DIR)
 
-    # MEDIUM_IMAGE_DIR_ELEM = MEDIUM_IMAGE_DIR.split("/")
-    # DIR = MEDIUM_IMAGE_DIR_ELEM[0]
-    # for ELEM in MEDIUM_IMAGE_DIR_ELEM:
-    #     if ELEM != '' and os.path.isdir(DIR) is not True:
-    #         DIR += ELEM
-    #         os.mkdir(DIR)
-    #         DIR += '/'
+    MASK_DIR = f'{BASE_DIR}mask/'
+    os.mkdir(MASK_DIR)
+
+    model_resolution=1024
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
     parser.add_argument('--batch_size', default=10, help='Batch size for generator and perceptual model', type=int)
-    parser.add_argument('--resolution', default=1024, type=int)
-    parser.add_argument('--src_im1', default="../image_2_style_gan/source_image/target/")
-    parser.add_argument('--src_im2', default="../image_2_style_gan/images/medium/")
-    parser.add_argument('--mask', default="../image_2_style_gan/images/mask/")
+    parser.add_argument('--resolution', default=model_resolution, type=int)
+    parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
+    parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
+    parser.add_argument('--mask', default=MASK_DIR)
     parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
-    # if client_img_name == '':
-    #     raw_image_names = os.listdir(r'../image_2_style_gan/img/')
-    # else:
-    #     raw_image_names = client_img_name
-    # raw_image_names = r'../image_2_style_gan/img/'
-    aligned_image_names = align_images(args.src_im2)
+
+    if os.path.isdir(os.path.dirname(args.weight_file)) is not True:
+        os.makedirs(os.path.dirname(args.weight_file), exist_ok=True)
+    aligned_image_names = align_images(RAW_DIR, args.src_im2)
 
     try:
         if not aligned_image_names:
             print('\nNo raw-image detected. Process proceeds without alignment.')
-            aligned_image_names = [args.src_im2 + os.listdir(args.src_im2)[0]]
+            shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
+            sys.exit(1)
 
-        mask_maker(aligned_image_names, args.mask)
+        aligned_image_name = [args.src_im2 + os.listdir(args.src_im2)[0]]
+        mask_maker(aligned_image_name, args.mask)
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
-        target_name = args.src_im1 + os.listdir(args.src_im1)[0]
+        
+        random_target_image_index = random.randint(0, len(os.listdir(TARGET_SOURCE_DIR))-1)
+        target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]
+        print(os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]) # Image file 이름 확인
+
     except IndexError as e:
         print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
         print(f"Aligned_image_names function: {e}")
-        os.remove(client_img_name)
+        shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         sys.exit(1)
 
     try:
@@ -71,10 +83,6 @@ def image_crossover(rand_uuid, client_img_name):
     except Exception as e:
         shutil.copyfile('../image_2_style_gan/source_image/ref_mask/ref_mask.png', '{}ref_mask.png'.format(args.mask))
         mask_name = args.mask + os.listdir(args.mask)[0]
-
-    FINAL_IMAGE_DIR = FINAL_IMAGE_DIR + str(rand_uuid) + '/'
-    if os.path.isdir(FINAL_IMAGE_DIR) is not True:
-        os.mkdir(FINAL_IMAGE_DIR)
 
     # file_names = []
     final_name = FINAL_IMAGE_DIR + str(rand_uuid) + '.png'
@@ -123,6 +131,7 @@ def image_crossover(rand_uuid, client_img_name):
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
         synth_img = (synth_img + 1.0) / 2.0
+
         loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask0,MSE_Loss,upsample2d)
         loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask1,MSE_Loss,upsample2d)
         loss=loss_wl0+loss_wl1
@@ -135,6 +144,7 @@ def image_crossover(rand_uuid, client_img_name):
         loss_1=loss_wl1.detach().cpu().numpy()
 
         loss_list.append(loss_np)
+
         if i % 10 == 0:
             print("iter{}: loss -- {},  loss0 --{},  loss1 --{}".format(i,loss_np,loss_0,loss_1))
             # file_name = "{}_{}_{}.png".format(MEDIUM_IMAGE_DIR, client_ip, i)
