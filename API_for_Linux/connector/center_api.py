@@ -30,7 +30,7 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
-    URL_IP = '222.106.22.97'
+    URL_IP = '121.138.83.1'
     URL_PORT = '45045'
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
     rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
@@ -82,7 +82,7 @@ def let_me_shine():
             except Exception as e:
                 pass
 
-            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender)
+            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
             torch.cuda.empty_cache()
             # 'image_crossover'는 변경 요청 대상 Image에서 눈 부분만 Target처럼 바꿔주는 메소드이다.
             # 저장 파일명에 활용할 Client의 UUID를 Parameter로 넘겨주고, 처리 전의 원본 Image와 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.
@@ -112,5 +112,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('222.106.22.110', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.

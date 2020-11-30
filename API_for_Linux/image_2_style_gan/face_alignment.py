@@ -33,7 +33,7 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     # Choose oriented crop rectangle.
     x = eye_to_eye - np.flipud(eye_to_mouth) * [-1, 1]
     x /= np.hypot(*x)
-    x *= max(np.hypot(*eye_to_eye) * 2.0, np.hypot(*eye_to_mouth) * 1.8)
+    x *= max(np.hypot(*eye_to_eye) * 2.5, np.hypot(*eye_to_mouth) * 2.25)
     y = np.flipud(x) * [-1, 1]
     c = eye_avg + eye_to_mouth * 0.1
     quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
@@ -48,7 +48,7 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     # Shrink.
     shrink = int(np.floor(qsize / output_size * 0.5))
     if shrink > 1:
-        rsize = (int(np.rint(float(img.size[0]) / shrink)), int(np.rint(float(img.size[1]) / shrink)))
+        rsize = (int(np.rint(float(img.size[0]) / shrink)), int(np.rint(float(img.size[1]) / shr ink)))
         img = img.resize(rsize, PIL.Image.ANTIALIAS)
         quad /= shrink
         qsize /= shrink
