@@ -41,6 +41,10 @@
 
 - HTML / CSS / JS
 
+- React-Native
+
+  - expo
+
 - API
 
 - Flask
