@@ -43,8 +43,6 @@ let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 �
 let gender = 'female';
 
 const { width, height } = Dimensions.get('window');
-console.log(width);
-console.log(height);
 
 const CenterView = styled.View`
   flex: 1;
