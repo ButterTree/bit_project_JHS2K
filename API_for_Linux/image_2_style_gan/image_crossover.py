@@ -2,6 +2,7 @@ import argparse
 import random
 import os
 import shutil
+import uuid
 import cv2
 import sys
 import numpy as np
@@ -21,7 +22,7 @@ from torchvision.utils import save_image
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
-def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selection, gender):    
+def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender):
     ALIGNED_IMAGE_DIR = f'{BASE_DIR}aligned/'
     os.mkdir(ALIGNED_IMAGE_DIR)
     
