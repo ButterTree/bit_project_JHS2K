@@ -41,15 +41,21 @@
 
 - HTML / CSS / JS
 
+- React-Native
+  
+  - expo
+  - expo-camera
+
 - API
-
-- Flask
-
+  
+  - Flask
+  - Docker
+  - nvidia-cuda
+  
 - Linux (ubuntu 18.04, CentOS 7)
 
-- ...
+- Naver GPU Cloud
 
-  
 
 ## 🔶프로젝트 기간
 
