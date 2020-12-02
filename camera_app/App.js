@@ -43,6 +43,8 @@ let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 �
 let gender = 'female';
 
 const { width, height } = Dimensions.get('window');
+console.log(width);
+console.log(height);
 
 const CenterView = styled.View`
   flex: 1;
@@ -82,7 +84,7 @@ const PicLightContainer = styled.View`
   padding: 0 3%;
   margin: 0;
   position: absolute;
-  top: 3%;
+  top: 5%;
 `;
 
 export default function App() {
@@ -96,6 +98,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTwoPeople, setIsTwoPeople] = useState(false);
   const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
+  const [isHeightOver, setIsHeightOver] = useState(false);
   // const [leftEyeOpen, setLeftEyeOpen] = useState(false); // 왼쪽 눈 열려있을 확률
   // const [rightEyeOpen, setRightEyeOpen] = useState(false); // 오른쪽 눈 열려있을 확률
   // const [yawAngle, setYawAngle] = useState(false); // 얼굴의 요 각도
@@ -250,21 +253,21 @@ export default function App() {
   const cancelPreviewBtn = async () => {
     if (isPreview) {
       await cameraRef.current.resumePreview();
-    }
 
-    setIsPreview(false);
-    setImageSelected(false);
-    setImageComeback(false);
-    setIsAfterview(false);
-    setIsTwoPeople(false);
-    setIsTwoPhotoComplete(false);
-    gender = 'female'; // 취소 버튼 누르면 성별 '여자'로 초기화
-    firstPhoto = '';
-    secondPhoto = '';
-    // console.log(
-    // 	firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
-    // 	secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
-    // );
+      setIsPreview(false);
+      setImageSelected(false);
+      setImageComeback(false);
+      setIsAfterview(false);
+      setIsTwoPeople(false);
+      setIsTwoPhotoComplete(false);
+      gender = 'female'; // 취소 버튼 누르면 성별 '여자'로 초기화
+      firstPhoto = '';
+      secondPhoto = '';
+      // console.log(
+      // 	firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
+      // 	secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
+      // );
+    }
   };
 
   // const savePhoto = async (uri) => {
@@ -362,11 +365,21 @@ export default function App() {
       <CenterView>
         {!imageSelected && !imageComeback && !isAfterview && (
           <Camera
-            style={{
-              alignItems: 'center',
-              width: width,
-              height: height / 1.4,
-            }}
+            style={
+              height >= 790
+                ? {
+                    alignItems: 'center',
+                    width: width,
+                    height: width / 0.75,
+                    marginTop: 50,
+                  }
+                : {
+                    alignItems: 'center',
+                    width: width,
+                    height: width / 0.75,
+                    marginTop: 0,
+                  }
+            }
             type={cameraType}
             ref={cameraRef}
             // onFacesDetected={
@@ -416,10 +429,19 @@ export default function App() {
         {imageSelected && imageComeback && (
           <>
             <Image
-              style={{
-                width: width,
-                height: height / 1.4,
-              }}
+              style={
+                height >= 790
+                  ? {
+                      width: width,
+                      height: width / 0.75,
+                      marginTop: 50,
+                    }
+                  : {
+                      width: width,
+                      height: width / 0.75,
+                      marginTop: 0,
+                    }
+              }
               source={{ uri: image }}
             />
             <ChangeFunctionContainer>
@@ -430,10 +452,19 @@ export default function App() {
 
         {isAfterview && (
           <Image
-            style={{
-              width: width,
-              height: height / 1.4,
-            }}
+            style={
+              height >= 790
+                ? {
+                    width: width,
+                    height: width,
+                    marginTop: 100,
+                  }
+                : {
+                    width: width,
+                    height: width,
+                    marginTop: 0,
+                  }
+            }
             source={{ uri: photos[1] }}
           />
         )}
