@@ -5,7 +5,9 @@ import {
 	Image,
 	Dimensions,
 	Alert,
+	ImageBackground,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Camera } from "expo-camera";
 // import * as FaceDetector from "expo-face-detector";
 import styled from "styled-components";
@@ -17,6 +19,8 @@ import * as Sharing from "expo-sharing";
 import { imageTransfer } from "./api";
 import ProgressBarMain from "./Screen/ProgressBar/progressBarMain";
 import FaceLine from "./Screen/FaceLine";
+import OnceSkipHowToPageBtn from "./Buttons/MainScreenBtns/SkipHowToPage/OnceSkipHowToPageBtn";
+import ForeverSkipHowToPageBtn from "./Buttons/MainScreenBtns/SkipHowToPage/ForeverSkipHowToPageBtn";
 import GetPhotoBtn from "./Buttons/MainScreenBtns/GetPhotoBtn";
 import SwitchCameraBtn from "./Buttons/MainScreenBtns/SwitchCameraBtn";
 import TakePhotoBtn from "./Buttons/MainScreenBtns/TakePhotoBtn";
@@ -25,17 +29,14 @@ import ShareBtn from "./Buttons/SaveShareCancelBtns/ShareBtn";
 import CancelBtn from "./Buttons/TransferCancelBtns/CancelBtn";
 import TransferBtn from "./Buttons/TransferCancelBtns/TransferBtn";
 import ChangeFemaleBtn from "./Buttons/ChangeBtns/ChangeFemaleBtn";
-
-import ChangeTwoPeopleBtn from "./Buttons/ChangeBtns/twoPeopleBtn/twoPeoplePresenter";
-
-import {
-	useTwoPeoPleToggle,
-	useTwoPeople,
-} from "./Buttons/ChangeBtns/twoPeopleBtn/twoPeopleContainer";
-
+import ChangeTwoPeopleBtn from "./Buttons/ChangeBtns/ChangeTwoPeopleBtn";
 import NextBtn from "./Buttons/ChangeBtns/Change2ndCameraBtn";
 import OnePersonPopup from "./Popup/OnePersonPopup";
-import TwoPeoplePopup from "./Popup/TwoPeoplePopup";
+import TwoPeopleMainPopup from "./Popup/TwoPeople/TwoPeopleMainPopup";
+import FirstPicLightOff from "./Popup/TwoPeople/FirstPicLightOff";
+import FirstPicLightOn from "./Popup/TwoPeople/FirstPicLightOn";
+import SecondPicLightOff from "./Popup/TwoPeople/SecondPicLightOff";
+import SecondPicLightOn from "./Popup/TwoPeople/SecondPicLightOn";
 
 // 보내는 이미지
 let firstPhoto = ""; // 처음 찍은 사진 저장용
@@ -55,17 +56,19 @@ const CenterView = styled.View`
 const IconContainer = styled.View`
 	flex: 1;
 	width: 100%;
-	height: 80%;
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: center;
 `;
 
 const ChangeFunctionContainer = styled.View`
+	flex: 1;
 	width: 100%;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-around;
+	position: absolute;
+	bottom: 0;
 `;
 
 const ChangeButtonContainer = styled.View`
@@ -74,6 +77,24 @@ const ChangeButtonContainer = styled.View`
 	flex-direction: row;
 	justify-content: space-around;
 	align-items: center;
+`;
+
+const HowToPage = styled.View`
+	width: 100%;
+	height: 100%;
+	position: absolute;
+`;
+
+const PicLightContainer = styled.View`
+	width: 100%;
+	flex: 1;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 3%;
+	margin: 0;
+	position: absolute;
+	top: 3%;
 `;
 
 export default function App() {
@@ -85,15 +106,14 @@ export default function App() {
 	const [imageSelected, setImageSelected] = useState(false);
 	const [imageComeback, setImageComeback] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isTwoPeople, setIsTwoPeople] = useState(false);
 	const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
+	const [isOnceSkipHowToPage, setIsOnceSkipHowToPage] = useState(false);
+	const [isForeverSkipHowToPage, setIsForeverSkipHowToPage] = useState(false);
 	// const [leftEyeOpen, setLeftEyeOpen] = useState(false); // 왼쪽 눈 열려있을 확률
 	// const [rightEyeOpen, setRightEyeOpen] = useState(false); // 오른쪽 눈 열려있을 확률
 	// const [yawAngle, setYawAngle] = useState(false); // 얼굴의 요 각도
 	// const [bounds, setBounds] = useState(false); // 얼굴 사각형 위치, 크기
-
-	const { isTwoPeople, onPressTwoPeople } = useTwoPeople(false);
-	const { toggleValue, onToggleTwoPeople } = useTwoPeoPleToggle(false);
-
 	const cameraRef = useRef();
 
 	useEffect(() => {
@@ -104,8 +124,25 @@ export default function App() {
 				picStatus,
 			} = await ImagePicker.requestCameraRollPermissionsAsync();
 			setImage(picStatus === "granted");
+			const howToStatus = await AsyncStorage.getItem("show_howTo");
+			if (howToStatus !== null ? !JSON.parse(howToStatus) : false) {
+				setIsForeverSkipHowToPage(true);
+			}
 		})();
 	}, []);
+
+	const OnceSkipHowToPage = () => {
+		setIsOnceSkipHowToPage(true);
+	};
+
+	const ForeverSkipHowToPage = async () => {
+		try {
+			await AsyncStorage.setItem("show_howTo", JSON.stringify(false));
+		} catch (e) {
+			console.log(`setItemError: ${e}`);
+		}
+		setIsForeverSkipHowToPage(true);
+	};
 
 	const switchCameraType = () => {
 		setCameraType((cameraType) =>
@@ -171,6 +208,7 @@ export default function App() {
 		} else {
 			if (!firstPhoto) {
 				firstPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
+				setIsTwoPeople(true);
 			} else {
 				secondPhoto = photo.base64;
 				setIsTwoPhotoComplete(true);
@@ -193,6 +231,7 @@ export default function App() {
 	};
 
 	const changeToTwoPeople = () => {
+		isTwoPeople ? setIsTwoPeople(false) : setIsTwoPeople(true);
 		// console.log(isTwoPeople);
 	};
 
@@ -202,11 +241,13 @@ export default function App() {
 			photos = await imageTransfer(firstPhoto, secondPhoto, gender);
 			setIsLoading(false);
 
-			await cameraRef.current.resumePreview();
+			if (isPreview) {
+				await cameraRef.current.resumePreview();
+			}
 
 			if (!photos) {
 				setIsAfterview(false);
-				onPressTwoPeople(false);
+				setIsTwoPeople(false);
 				setIsTwoPhotoComplete(false);
 
 				firstPhoto = "";
@@ -225,6 +266,22 @@ export default function App() {
 		}
 	};
 
+	const cancelPreviewBtn = async () => {
+		if (isPreview) {
+			await cameraRef.current.resumePreview();
+		}
+
+		setIsPreview(false);
+		setImageSelected(false);
+		setImageComeback(false);
+		setIsAfterview(false);
+		setIsTwoPeople(false);
+		setIsTwoPhotoComplete(false);
+		gender = "female"; // 취소 버튼 누르면 성별 '여자'로 초기화
+		firstPhoto = "";
+		secondPhoto = "";
+	};
+
 	const cameraAgain = async () => {
 		if (isPreview) {
 			await cameraRef.current.resumePreview();
@@ -236,23 +293,10 @@ export default function App() {
 			setImageSelected(false);
 			setImageComeback(false);
 		}
-	};
 
-	const cancelPreviewBtn = async () => {
-		await cameraRef.current.resumePreview();
-
-		setIsPreview(false);
-		setImageSelected(false);
-		setImageComeback(false);
-		setIsAfterview(false);
-		setIsTwoPhotoComplete(false);
-		gender = "female"; // 취소 버튼 누르면 성별 '여자'로 초기화
-		firstPhoto = "";
-		secondPhoto = "";
-		// console.log(
-		// 	firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
-		// 	secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
-		// );
+		if (firstPhoto !== "") {
+			setIsTwoPeople(true);
+		}
 	};
 
 	// const savePhoto = async (uri) => {
@@ -275,7 +319,6 @@ export default function App() {
 	// 		console.log(`savePhotoError: ${error}`);
 	// 	}
 	// };
-
 	const saveResultPhoto = async () => {
 		try {
 			Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
@@ -290,7 +333,7 @@ export default function App() {
 			await MediaLibrary.saveToLibraryAsync(filename);
 
 			setIsAfterview(false);
-			onPressTwoPeople(false);
+			setIsTwoPeople(false);
 			setIsTwoPhotoComplete(false);
 			firstPhoto = "";
 			secondPhoto = "";
@@ -312,7 +355,7 @@ export default function App() {
 			await Sharing.shareAsync(filename);
 
 			setIsAfterview(false);
-			onPressTwoPeople(false);
+			setIsTwoPeople(false);
 			setIsTwoPhotoComplete(false);
 			firstPhoto = "";
 			secondPhoto = "";
@@ -321,82 +364,99 @@ export default function App() {
 		}
 	};
 
-	// const onFacesDetected = ({ faces }) => {
-	// 	const face = faces[0];
-	// 	if (face) {
-	// 		if (face.leftEyeOpenProbability >= 0.9) {
-	// 			// setLeftEyeOpen(true);
-	// 			// setModalVisible(false);
-	// 		} else {
-	// 			// displayModal();
-	// 			// alert('정면을 바라보고 눈을 바르게 뜨세요.');
-	// 			// setModalVisible(true);
-	// 			// popup();
-	// 		}
-	// 		if (face.RightEyeOpenProbability >= 0.8) {
-	// 			// setModalVisible(false);
-	// 			// setRightEyeOpen(true);
-	// 		} else {
-	// 			// alert('오른쪽눈을 뜨세요');
-	// 			// setModalVisible(true);
-	// 		}
-	// 	}
-	// };
-
 	if (hasPermission === true) {
 		return isLoading ? (
 			<ProgressBarMain />
 		) : (
 			<CenterView>
-				<Camera
-					style={{
-						alignItems: "center",
-						width: width,
-						height: height / 1.2,
-					}}
-					type={cameraType}
-					ref={cameraRef}
-					// onFacesDetected={
-					// 	(leftEyeOpen ? null : onFacesDetected,
-					// 	rightEyeOpen ? null : onFacesDetected,
-					// 	yawAngle ? null : onFacesDetected,
-					// 	bounds ? null : onFacesDetected)
-					// }
-					// faceDetectorSettings={{
-					// 	// mode: FaceDetector.Constants.Mode.fast,
-					// 	detectLandmarks: FaceDetector.Constants.Landmarks.all,
-					// 	runClassifications:
-					// 		FaceDetector.Constants.Classifications.all,
-					// 	minDetectionInterval: 3000,
-					// 	// tracking: true,
-					// }}
-				>
-					<FaceLine />
-					{!isTwoPeople ? <OnePersonPopup /> : <TwoPeoplePopup />}
-					<ChangeFunctionContainer>
-						<ChangeButtonContainer>
-							{!isTwoPeople && (
-								<ChangeFemaleBtn onPress={changeToMale} />
-							)}
-						</ChangeButtonContainer>
-						<ChangeButtonContainer>
-							<ChangeTwoPeopleBtn
-								value={toggleValue}
-								onToggle={onToggleTwoPeople}
-								onPress={onPressTwoPeople}
-							/>
-						</ChangeButtonContainer>
-						<ChangeButtonContainer></ChangeButtonContainer>
-					</ChangeFunctionContainer>
-				</Camera>
+				{!imageSelected && !imageComeback && !isAfterview && (
+					<Camera
+						style={
+							height >= 790
+								? {
+										alignItems: "center",
+										width: width,
+										height: width / 0.75,
+										marginTop: 50,
+								  }
+								: {
+										alignItems: "center",
+										width: width,
+										height: width / 0.75,
+										marginTop: 0,
+								  }
+						}
+						type={cameraType}
+						ref={cameraRef}
+						// onFacesDetected={
+						// 	(leftEyeOpen ? null : onFacesDetected,
+						// 	rightEyeOpen ? null : onFacesDetected,
+						// 	yawAngle ? null : onFacesDetected,
+						// 	bounds ? null : onFacesDetected)
+						// }
+						// faceDetectorSettings={{
+						// 	// mode: FaceDetector.Constants.Mode.fast,
+						// 	detectLandmarks: FaceDetector.Constants.Landmarks.all,
+						// 	runClassifications:
+						// 		FaceDetector.Constants.Classifications.all,
+						// 	minDetectionInterval: 3000,
+						// 	// tracking: true,
+						// }}
+					>
+						<FaceLine />
+						{!isTwoPeople ? (
+							<OnePersonPopup />
+						) : (
+							<TwoPeopleMainPopup />
+						)}
+						{!isTwoPeople ? (
+							<></>
+						) : !firstPhoto ? (
+							<PicLightContainer>
+								<FirstPicLightOn />
+								<SecondPicLightOff />
+							</PicLightContainer>
+						) : (
+							<PicLightContainer>
+								<FirstPicLightOff />
+								<SecondPicLightOn />
+							</PicLightContainer>
+						)}
+
+						<ChangeFunctionContainer>
+							<ChangeButtonContainer>
+								{!isTwoPeople && (
+									<ChangeFemaleBtn onPress={changeToMale} />
+								)}
+							</ChangeButtonContainer>
+							<ChangeButtonContainer>
+								{
+									<ChangeTwoPeopleBtn
+										onPress={changeToTwoPeople}
+									/>
+								}
+							</ChangeButtonContainer>
+							<ChangeButtonContainer></ChangeButtonContainer>
+						</ChangeFunctionContainer>
+					</Camera>
+				)}
+
 				{imageSelected && imageComeback && (
 					<>
 						<Image
-							style={{
-								width: width,
-								height: height / 1.2,
-								position: "absolute",
-							}}
+							style={
+								height >= 790
+									? {
+											width: width,
+											height: width / 0.75,
+											marginTop: 50,
+									  }
+									: {
+											width: width,
+											height: width / 0.75,
+											marginTop: 0,
+									  }
+							}
 							source={{ uri: image }}
 						/>
 						<ChangeFunctionContainer>
@@ -409,11 +469,19 @@ export default function App() {
 
 				{isAfterview && (
 					<Image
-						style={{
-							width: width,
-							height: height / 1.2,
-							position: "absolute",
-						}}
+						style={
+							height >= 790
+								? {
+										width: width,
+										height: width,
+										marginTop: 100,
+								  }
+								: {
+										width: width,
+										height: width,
+										marginTop: 0,
+								  }
+						}
 						source={{ uri: photos[1] }}
 					/>
 				)}
@@ -446,6 +514,24 @@ export default function App() {
 						)}
 						<CancelBtn onPress={cancelPreviewBtn} />
 					</IconContainer>
+				)}
+				{!isOnceSkipHowToPage && !isForeverSkipHowToPage && (
+					<HowToPage>
+						<ImageBackground
+							source={require("./assets/app_intro.png")}
+							style={{
+								width: "100%",
+								height: "100%",
+								// resizeMode: 'cover',
+								// position: 'absolute',
+							}}
+						>
+							<ForeverSkipHowToPageBtn
+								onPress={ForeverSkipHowToPage}
+							/>
+							<OnceSkipHowToPageBtn onPress={OnceSkipHowToPage} />
+						</ImageBackground>
+					</HowToPage>
 				)}
 			</CenterView>
 		);
