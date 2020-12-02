@@ -44,7 +44,7 @@ const Popup = () => {
 						</Text>
 						<TipContainer>
 							<Image
-								source={require("../Buttons/ChangeBtns/Gender/woman.png")}
+								source={require("../Buttons/images/woman.png")}
 								style={{
 									width: 40,
 									height: 40,
@@ -53,7 +53,7 @@ const Popup = () => {
 								}}
 							/>
 							<Image
-								source={require("../Buttons/ChangeBtns/Gender/man.png")}
+								source={require("../Buttons/images/man.png")}
 								style={{
 									width: 40,
 									height: 40,
