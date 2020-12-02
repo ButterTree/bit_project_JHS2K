@@ -14,8 +14,8 @@ from data_check.data_checker import post_get_checker
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-URL_IP = '222.106.22.110'
-URL_PORT = '45045'
+URL_IP = '222.106.22.97'
+URL_PORT = '45055'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
