@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 from image_2_style_gan.image_crossover_face import image_crossover_face
 from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
 # from image_animator.image_animator import image_animator
+=======
+from image_2_style_gan.image_crossover import image_crossover
+>>>>>>> upstream/model_only_eyes
 from image_2_style_gan.align_images import align_images
 from flask import Flask, request
 import requests as rq
@@ -9,41 +13,48 @@ import base64
 import json
 import cv2
 import os
-import uuid
 import shutil
+
+from img_processing_maneger.dir_manage import rand_uuid, make_dir, make_img_path, save_jpg, transform_jpg_to_png, transform_aligned_custom_img
+from data_check.data_checker import post_get_checker
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
+URL_IP = '222.106.22.97'
+URL_PORT = '45055'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
     global data
+    # post_get_checker(data)
+
     if request.method == 'POST':
         data = request.get_json(silent=True)
     elif request.method == 'GET':
         data_buf = data
-        data = ''
         return data_buf
     elif data == '':
         data_return.close()
     return ''
 
 
-@app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
+@app.route("/let_me_shine", methods=['POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
+<<<<<<< HEAD
     URL_IP = '121.138.83.1'
     URL_PORT = '45045'
+=======
+>>>>>>> upstream/model_only_eyes
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
-    rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
+    # rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
     process_selection = 0
 
     try:
         data = request.get_json(silent=True)
-        if not data['origin']:
-            print("Received Blank(0-Byte) File. Re-send image, please.")
-            return "Re-send image, please."
+        if not data['origin']: return "Re-send image, please."
         else:
+<<<<<<< HEAD
             # item = {'label': data.get('label'), 'text': data.get('text')}
             BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
             if not os.path.isdir(BASE_DIR):
@@ -66,22 +77,27 @@ def let_me_shine():
             cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
             cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
             os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
+=======
+            gender = data['gender']
+            # 베이스 디렉터리 생성
+            BASE_DIR, RAW_DIR = make_dir(process_selection)
+            # 경로 설정
+            jpg_path, png_path = make_img_path(RAW_DIR)
+            # jpg 저장
+            save_jpg(jpg_path, data['origin'], process_selection)
+            # jpg -> png
+            png_path = transform_jpg_to_png(jpg_path, png_path)
+>>>>>>> upstream/model_only_eyes
 
             try:
                 if data['custom']:
                     process_selection = 1
-                    custom_target_name = f'{BASE_DIR}raw_target/'
-                    os.makedirs(f'{custom_target_name}aligned/', exist_ok=True)
-                    os.mkdir(f'{custom_target_name}un_aligned/')
-
-                    with open(custom_target_name + 'c_target.jpg', 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                        f.write(base64.b64decode(data['custom']))
-
-                    cnv_buffer = cv2.imread(f'{custom_target_name}c_target.jpg')
-                    cv2.imwrite(f'{custom_target_name}un_aligned/c_target.png', cnv_buffer)
-                    os.remove(f'{custom_target_name}c_target.jpg')
-
-                    align_images(f'{custom_target_name}un_aligned/', f'{custom_target_name}aligned/')
+                    # 디렉터리 생성
+                    BASE_DIR, CUSTOM_DIR = make_dir(process_selection)
+                    # 커스텀 jpg 저장
+                    save_jpg(CUSTOM_DIR, data['custom'], process_selection)
+                    # jpg -> png, 정방형 처리
+                    transform_aligned_custom_img(CUSTOM_DIR)
             except Exception as e:
                 pass
 
@@ -119,6 +135,7 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
+<<<<<<< HEAD
     app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
 
@@ -130,3 +147,7 @@ if __name__ == "__main__":
     
     if not os.path.isdir('../image_2_style_gan/images/'):
         os.makedirs('../image_2_style_gan/images/', exist_ok=True)
+=======
+    app.run(URL_IP, port=URL_PORT, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
+>>>>>>> upstream/model_only_eyes

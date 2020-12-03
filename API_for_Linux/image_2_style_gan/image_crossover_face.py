@@ -2,6 +2,11 @@ import argparse
 import random
 import os
 import shutil
+<<<<<<< HEAD:API_for_Linux/image_2_style_gan/image_crossover_face.py
+=======
+import uuid
+import cv2
+>>>>>>> upstream/model_only_eyes:API_for_Linux/image_2_style_gan/image_crossover.py
 import sys
 import numpy as np
 from collections import OrderedDict
@@ -12,7 +17,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
+<<<<<<< HEAD:API_for_Linux/image_2_style_gan/image_crossover_face.py
 from image_2_style_gan.mask_makers.facial_mask_maker import precision_facial_mask
+=======
+from image_2_style_gan.mask_maker import precision_eye_masks
+>>>>>>> upstream/model_only_eyes:API_for_Linux/image_2_style_gan/image_crossover.py
 from image_2_style_gan.read_image import image_reader_color, image_reader_gray
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
