@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
+=======
+import React, { useState, useRef, useEffect } from 'react';
+>>>>>>> 2527f509ecd6f4542b225d4b67a123b5fdd7afdb
 import {
 	ActivityIndicator,
 	Text,
@@ -58,43 +62,43 @@ import { useNextState } from "./Buttons/ChangeBtns/nextBtn/nextContainer";
 import CancelBtn from "./Buttons/TransferCancelBtns/cancelBtn/cancelPresenter";
 // import { useCancelState } from "./Buttons/TransferCancelBtns/cancelBtn/cancelContainer";
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
-	flex: 1;
-	background-color: white;
+  flex: 1;
+  background-color: white;
 `;
 
 const IconContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const ChangeFunctionContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-around;
-	position: absolute;
-	bottom: 0;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
 `;
 
 const ChangeButtonContainer = styled.View`
-	width: 100%;
-	flex: 1;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+  width: 100%;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const HowToPage = styled.View`
-	width: 100%;
-	height: 100%;
-	position: absolute;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 `;
 
 const PicLightContainer = styled.View`
