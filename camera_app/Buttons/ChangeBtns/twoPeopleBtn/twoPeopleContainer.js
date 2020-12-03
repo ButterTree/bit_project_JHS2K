@@ -1,25 +1,22 @@
 import { useState } from "react";
 
-export const useTwoPeopleToggleState = (initialValue = false) => {
-  const [twoPeopleValue, setTwoPeopleToggleValue] = useState(initialValue);
+export const useTwoPeoPleToggle = (initialValue = false) => {
+	const [toggleValue, setToggleValue] = useState(initialValue);
 
-  return {
-    twoPeopleValue,
-    setTwoPeopleToggleValue,
-    onToggleTwoPeople: (event) => (newState) =>
-      setTwoPeopleToggleValue(newState)
-  };
+	return {
+		toggleValue,
+		onToggleTwoPeople: (event) => {
+			(newState) => setToggleValue(newState);
+		},
+	};
 };
 
-export const useTwoPeopleState = (initialValue = false) => {
-  const [isTwoPeople, setIsTwoPeople, onPressTwoPeople] = useState(
-    initialValue
-  );
+export const useTwoPeople = (initialValue = false) => {
+	const [isTwoPeople, setIsTwoPeople] = useState(initialValue);
 
-  return {
-    isTwoPeople,
-    setIsTwoPeople,
-    onPressTwoPeople: (event) =>
-      isTwoPeople ? setIsTwoPeople(false) : setIsTwoPeople(true)
-  };
+	return {
+		isTwoPeople,
+		onPressTwoPeople: (event) =>
+			isTwoPeople ? setIsTwoPeople(false) : setIsTwoPeople(true),
+	};
 };
