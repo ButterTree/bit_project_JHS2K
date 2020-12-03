@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef } from 'react';
 
 export const useTakePhotoState = () => {
   const [isPreview, setIsPreview] = useState(false);
   const [firstPhotoUri, setFirstPhotoUri] = useState(null);
   const [secondPhotoUri, setSecondPhotoUri] = useState(null);
-  const [firstPhotoBase64, setFirstPhotoBase64] = useState("");
-  const [secondPhotoBase64, setSecondPhotoBase64] = useState("");
+  const [firstPhotoBase64, setFirstPhotoBase64] = useState('');
+  const [secondPhotoBase64, setSecondPhotoBase64] = useState('');
   const cameraRef = useRef();
 
   return {
@@ -19,7 +19,7 @@ export const useTakePhotoState = () => {
         if (photo.uri) {
           await cameraRef.current.pausePreview();
           setIsPreview(true);
-          if (firstPhotoBase64 === "") {
+          if (firstPhotoBase64 === '') {
             setFirstPhotoUri(photo.uri);
             setFirstPhotoBase64(photo.base64);
           } else {
@@ -32,7 +32,7 @@ export const useTakePhotoState = () => {
     firstPhotoBase64,
     setFirstPhotoBase64,
     secondPhotoBase64,
-    setSecondPhotoBase64
+    setSecondPhotoBase64,
   };
 
   //   if (!isTwoPeople) {
