@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	ActivityIndicator,
 	Text,
@@ -58,43 +58,43 @@ import { useCameraTypeState } from "./Buttons/MainScreenBtns/switchCameraBtn/swi
 // 받는 결과 이미지
 let photos = []; // 모델 계산후 얻은 [원본, 결과] 사진 리스트 저장용
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
-	flex: 1;
-	background-color: white;
+  flex: 1;
+  background-color: white;
 `;
 
 const IconContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const ChangeFunctionContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-around;
-	position: absolute;
-	bottom: 0;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
 `;
 
 const ChangeButtonContainer = styled.View`
-	width: 100%;
-	flex: 1;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+  width: 100%;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const HowToPage = styled.View`
-	width: 100%;
-	height: 100%;
-	position: absolute;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 `;
 
 const PicLightContainer = styled.View`
