@@ -15,7 +15,7 @@ const ChangeFemale = ({ onPress }) => {
 			onToggle={(newState) => setToggleValue(newState)}
 			thumbActiveComponent={
 				<Image
-					source={require("./Gender/man.png")}
+					source={require("../images/man.png")}
 					style={{
 						width: "100%",
 						height: "100%",
@@ -26,7 +26,7 @@ const ChangeFemale = ({ onPress }) => {
 			}
 			thumbInActiveComponent={
 				<Image
-					source={require("./Gender/woman.png")}
+					source={require("../images/woman.png")}
 					style={{
 						width: "100%",
 						height: "100%",

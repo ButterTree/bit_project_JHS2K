@@ -17,7 +17,7 @@ const ChangeTwoPeople = ({ onPress }) => {
 			thumbActiveComponent={
 				// <MaterialIcons name="people-outline" color="white" size={35} />
 				<Image
-					source={require("./PeopleNumber/two_people.png")}
+					source={require("../images/two_people.png")}
 					style={{
 						width: "100%",
 						height: "100%",
@@ -29,7 +29,7 @@ const ChangeTwoPeople = ({ onPress }) => {
 			thumbInActiveComponent={
 				// <MaterialIcons name="person-outline" color="white" size={35} />
 				<Image
-					source={require("./PeopleNumber/one_person.png")}
+					source={require("../images/one_person.png")}
 					style={{
 						width: "100%",
 						height: "100%",

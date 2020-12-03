@@ -43,7 +43,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     model_resolution=1024
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=10, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--batch_size', default=5, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=model_resolution, type=int)
     parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
@@ -69,6 +69,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
         
         random_target_image_index = random.randint(0, len(os.listdir(TARGET_SOURCE_DIR))-1)
+        # random_target_image_index = 3
         target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]
         print(os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]) # Image file 이름 확인
 

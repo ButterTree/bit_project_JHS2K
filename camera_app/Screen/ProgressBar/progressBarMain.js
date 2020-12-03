@@ -32,9 +32,10 @@ const Progress = ({ step, steps, height }) => {
         }}
         style={{
           height,
-          backgroundColor: 'black',
+          backgroundColor: '#ffffff',
           borderRadius: height,
           overflow: 'hidden',
+          marginBottom: height / 0.04,
         }}
       >
         <Animated.View
@@ -42,7 +43,8 @@ const Progress = ({ step, steps, height }) => {
             height,
             width: '100%',
             borderRadius: height,
-            backgroundColor: 'lightgray',
+            backgroundColor: '#032dff',
+            marginBottom: height / 0.04,
 
             left: 0,
             top: 0,
@@ -75,7 +77,7 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((index + 4) % (100 + 4));
+      setIndex((index + 2) % (100 + 2));
     }, 1000);
 
     return () => {
@@ -86,7 +88,7 @@ export default function App() {
     <View style={styles.container}>
       <ProgressLoading />
       <StatusBar hidden />
-      <Progress step={index} steps={100} height={30} />
+      <Progress step={index} steps={100} height={3} />
     </View>
   );
 }
@@ -96,6 +98,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    padding: (20, 60),
+    padding: (0, 20),
   },
 });
