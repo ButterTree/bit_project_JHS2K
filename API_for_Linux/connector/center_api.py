@@ -1,4 +1,6 @@
-from image_2_style_gan.image_crossover import image_crossover
+from image_2_style_gan.image_crossover_face import image_crossover_face
+from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
+# from image_animator.image_animator import image_animator
 from image_2_style_gan.align_images import align_images
 from flask import Flask, request
 import requests as rq
@@ -9,13 +11,13 @@ import cv2
 import os
 import shutil
 
-from img_processing_maneger.dir_manage import rand_uuid, make_dir, make_img_path, save_jpg, transform_jpg_to_png, transform_aligned_custom_img
-from data_check.data_checker import post_get_checker
+from img_processing_manager.dir_manage import rand_uuid, make_dir, make_img_path, save_jpg, transform_jpg_to_png, transform_aligned_custom_img
+from connector.data_check.data_checker import post_get_checker
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-URL_IP = '222.106.22.97'
-URL_PORT = '45055'
+URL_IP = '121.138.83.1'
+URL_PORT = '45045'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
@@ -38,6 +40,7 @@ def let_me_shine():
     # rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
     process_selection = 0
+    scope = 'eyes'
 
     try:
         data = request.get_json(silent=True)
@@ -64,7 +67,12 @@ def let_me_shine():
                     transform_aligned_custom_img(CUSTOM_DIR)
             except Exception as e:
                 pass
-            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+
+            if scope == 'eyes':
+                input_image, output_image = image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+            else:
+                input_image, output_image = image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+
             torch.cuda.empty_cache()
             # 'image_crossover'는 변경 요청 대상 Image에서 눈 부분만 Target처럼 바꿔주는 메소드이다.
             # 저장 파일명에 활용할 Client의 UUID를 Parameter로 넘겨주고, 처리 전의 원본 Image와 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.

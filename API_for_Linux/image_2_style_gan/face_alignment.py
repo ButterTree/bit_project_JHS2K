@@ -6,6 +6,7 @@ import scipy.ndimage
 
 
 def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_size=4096, enable_padding=True):
+    print('Initiating [ Align & Crop of Raw Image ]')
     # Align function from FFHQ dataset pre-processing step
     # https://github.com/NVlabs/ffhq-dataset/blob/master/download_ffhq.py
 
@@ -29,11 +30,12 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     mouth_right  = lm_mouth_outer[6]
     mouth_avg    = (mouth_left + mouth_right) * 0.5
     eye_to_mouth = mouth_avg - eye_avg
+    eye_to_mouth[0] = eye_to_eye[1] * -1
 
     # Choose oriented crop rectangle.
     x = eye_to_eye - np.flipud(eye_to_mouth) * [-1, 1]
     x /= np.hypot(*x)
-    x *= max(np.hypot(*eye_to_eye) * 2.0, np.hypot(*eye_to_mouth) * 1.8)
+    x *= max(np.hypot(*eye_to_eye) * 2, np.hypot(*eye_to_mouth) * 1.8)
     y = np.flipud(x) * [-1, 1]
     c = eye_avg + eye_to_mouth * 0.1
     quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
