@@ -1,20 +1,22 @@
 import { useState } from "react";
 
 export const useGenderToggleState = (initialValue = false) => {
-  const [genderValue, setGenderValue] = useState(initialValue);
+	const [genderValue, setGenderValue] = useState(initialValue);
 
-  return {
-    genderValue,
-    onToggleGender: (event) => (newState) => setGenderValue(newState)
-  };
+	return {
+		genderValue,
+		setGenderValue,
+		onToggleGender: () => (newState) => setGenderValue(newState),
+	};
 };
 
 export const useGenderState = (initialValue = "female") => {
-  const [isGender, setIsGender] = useState(initialValue);
+	const [isGender, setIsGender] = useState(initialValue);
 
-  return {
-    isGender,
-    setIsGender: (event) =>
-      isGender === "male" ? setIsGender("female") : setIsGender("male")
-  };
+	return {
+		isGender,
+		setIsGender,
+		onPressGender: () =>
+			isGender === "male" ? setIsGender("female") : setIsGender("male"),
+	};
 };

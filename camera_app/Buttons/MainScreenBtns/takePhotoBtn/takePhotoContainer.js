@@ -1,48 +1,43 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import * as Permissions from "expo-permissions";
 
 export const useTakePhotoState = () => {
-  const [isPreview, setIsPreview] = useState(false);
-  const [firstPhotoUri, setFirstPhotoUri] = useState(null);
-  const [secondPhotoUri, setSecondPhotoUri] = useState(null);
-  const [firstPhotoBase64, setFirstPhotoBase64] = useState("");
-  const [secondPhotoBase64, setSecondPhotoBase64] = useState("");
-  const cameraRef = useRef();
+	const [hasPermission, setHasPermission] = useState(null);
+	const [isPreview, setIsPreview] = useState(false);
+	const [takePhoto, setTakePhoto] = useState({});
+	const cameraRef = useRef();
 
-  return {
-    cameraRef,
-    isPreview,
-    setIsPreview,
-    takePhoto: async () => {
-      if (cameraRef.current) {
-        const options = { quality: 1, base64: true };
-        const photo = await cameraRef.current.takePictureAsync(options);
-        if (photo.uri) {
-          await cameraRef.current.pausePreview();
-          setIsPreview(true);
-          if (firstPhotoBase64 === "") {
-            setFirstPhotoUri(photo.uri);
-            setFirstPhotoBase64(photo.base64);
-          } else {
-            setSecondPhotoUri(photo.uri);
-            setSecondPhotoBase64(photo.base64);
-          }
-        }
-      }
-    },
-    firstPhotoBase64,
-    setFirstPhotoBase64,
-    secondPhotoBase64,
-    setSecondPhotoBase64
-  };
+	useEffect(() => {
+		(async () => {
+			const { status } = await Permissions.askAsync(Permissions.CAMERA);
+			setHasPermission(status == "granted");
+			console.log(status);
+		})();
+	}, []);
 
-  //   if (!isTwoPeople) {
-  //     firstPhoto = photo.base64;
-  //   } else {
-  //     if (!firstPhoto) {
-  //       firstPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
-  //     } else {
-  //       secondPhoto = photo.base64;
-  //       setIsTwoPhotoComplete(true);
-  //     }
-  //   }
+	return {
+		hasPermission,
+		setHasPermission,
+		cameraRef,
+		isPreview,
+		setIsPreview,
+		onPresstakePhoto: async () => {
+			if (cameraRef.current) {
+				const options = { quality: 1, base64: true };
+				const photo = await cameraRef.current.takePictureAsync(options);
+
+				if (photo.uri) {
+					await cameraRef.current.pausePreview();
+					setIsPreview(true);
+				}
+
+				setTakePhoto({
+					uri: photo.uri,
+					base64: photo.base64,
+				});
+			}
+		},
+		takePhoto,
+		setTakePhoto,
+	};
 };
