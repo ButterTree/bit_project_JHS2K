@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 from image_2_style_gan.image_crossover_face import image_crossover_face
 from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
 # from image_animator.image_animator import image_animator
-=======
-from image_2_style_gan.image_crossover import image_crossover
->>>>>>> upstream/model_only_eyes
 from image_2_style_gan.align_images import align_images
 from flask import Flask, request
 import requests as rq
@@ -15,13 +11,13 @@ import cv2
 import os
 import shutil
 
-from img_processing_maneger.dir_manage import rand_uuid, make_dir, make_img_path, save_jpg, transform_jpg_to_png, transform_aligned_custom_img
-from data_check.data_checker import post_get_checker
+from img_processing_manager.dir_manage import rand_uuid, make_dir, make_img_path, save_jpg, transform_jpg_to_png, transform_aligned_custom_img
+from connector.data_check.data_checker import post_get_checker
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-URL_IP = '222.106.22.97'
-URL_PORT = '45055'
+URL_IP = '121.138.83.1'
+URL_PORT = '45045'
 
 @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
 def data_return():
@@ -40,44 +36,16 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
-<<<<<<< HEAD
-    URL_IP = '121.138.83.1'
-    URL_PORT = '45045'
-=======
->>>>>>> upstream/model_only_eyes
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
     # rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
     usr_ID = f'{rand_uuid}'
     process_selection = 0
+    scope = 'eyes'
 
     try:
         data = request.get_json(silent=True)
         if not data['origin']: return "Re-send image, please."
         else:
-<<<<<<< HEAD
-            # item = {'label': data.get('label'), 'text': data.get('text')}
-            BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
-            if not os.path.isdir(BASE_DIR):
-                os.makedirs(BASE_DIR, exist_ok=True)
-            
-            RAW_DIR = f'{BASE_DIR}raw/'
-            os.mkdir(RAW_DIR)
-
-            file_name = f'{RAW_DIR}raw_{rand_uuid}.jpg'  # 첨부한 Image가 업로드한 파일명과 형식 그대로 일단 저장될 위치를 지정한다.
-            client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
-
-            # gender = data['gender']
-            # scope = data['scope']
-            gender = 'male'
-            scope = 'eyes'
-
-            with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
-                f.write(base64.b64decode(data['origin']))
-
-            cnv_buffer = cv2.imread(file_name)  # 앞서 저장한 업로드 Image를 openCV Library의 'imread'메소드를 이용해 다시 읽어들인다.
-            cv2.imwrite(client_img_name, cnv_buffer)  # 접속한 Client의 UUID를 활용해 지정한 이름으로, 읽어들였던 Image를 png파일로 다시 기록한다.
-            os.remove(file_name)  # 기존의 원본 Image 파일은 삭제한다.
-=======
             gender = data['gender']
             # 베이스 디렉터리 생성
             BASE_DIR, RAW_DIR = make_dir(process_selection)
@@ -87,7 +55,6 @@ def let_me_shine():
             save_jpg(jpg_path, data['origin'], process_selection)
             # jpg -> png
             png_path = transform_jpg_to_png(jpg_path, png_path)
->>>>>>> upstream/model_only_eyes
 
             try:
                 if data['custom']:
@@ -135,19 +102,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-<<<<<<< HEAD
-    app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
-    # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
-
-    if not os.path.isdir('../image_2_style_gan/torch_weight_files/'):
-        os.makedirs('../image_2_style_gan/torch_weight_files/', exist_ok=True)
-    
-    if not os.path.isdir('../image_2_style_gan/landmark_model/'):
-        os.makedirs('../image_2_style_gan/landmark_model/', exist_ok=True)
-    
-    if not os.path.isdir('../image_2_style_gan/images/'):
-        os.makedirs('../image_2_style_gan/images/', exist_ok=True)
-=======
     app.run(URL_IP, port=URL_PORT, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
->>>>>>> upstream/model_only_eyes

@@ -44,13 +44,13 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     model_resolution=1024
 
     parser = argparse.ArgumentParser(description='Find latent representation of reference images using perceptual loss')
-    parser.add_argument('--batch_size', default=6, help='Batch size for generator and perceptual model', type=int)
+    parser.add_argument('--batch_size', default=1, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--resolution', default=model_resolution, type=int)
     parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
     parser.add_argument('--mask', default=MASK_DIR)
     parser.add_argument('--weight_file', default=f"../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{model_resolution}x{model_resolution}.pt", type=str)
-    parser.add_argument('--iteration', default=50, type=int)
+    parser.add_argument('--iteration', default=150, type=int)
     args = parser.parse_args()
     
     aligned_image_names = align_images(RAW_DIR, args.src_im2)
@@ -93,8 +93,8 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     blur_mask0_1=image_reader_gray(mask_name).to(device)
     blur_mask0_2=image_reader_gray(eyes_mask_name).to(device)
     blur_mask0_3=image_reader_gray(lids_mask_name).to(device)
-    blur_mask0_4=image_reader_gray(brows_mask_name).to(device)
-    blur_mask0_5=image_reader_gray(face_mask_name).to(device)
+    # blur_mask0_4=image_reader_gray(brows_mask_name).to(device)
+    # blur_mask0_5=image_reader_gray(face_mask_name).to(device)
     blur_mask1=1-blur_mask0_1
     blur_mask_eyes=blur_mask0_1-blur_mask0_2
     blur_mask_lids=blur_mask0_1-torch.clamp(blur_mask0_3-blur_mask0_2, 0, 1)
@@ -104,9 +104,13 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     hist_bias_g = torch.mean(img_1[0, 1, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 1, ..., ...]*blur_mask0_1)
     hist_bias_b = torch.mean(img_1[0, 2, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 2, ..., ...]*blur_mask0_1)
 
-    img_0[0, 0, ..., ...] = torch.clamp(img_0[0, 0, ..., ...] + hist_bias_r*33, 0, 1)
-    img_0[0, 1, ..., ...] = torch.clamp(img_0[0, 1, ..., ...] + hist_bias_g*33, 0, 1)
-    img_0[0, 2, ..., ...] = torch.clamp(img_0[0, 2, ..., ...] + hist_bias_b*33, 0, 1)
+    print(f'r : {hist_bias_r}')
+    print(f'g : {hist_bias_g}')
+    print(f'b : {hist_bias_b}')
+
+    img_0[0, 0, ..., ...] = torch.clamp(img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*19000), 0, 1)
+    img_0[0, 1, ..., ...] = torch.clamp(img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*19000), 0, 1)
+    img_0[0, 2, ..., ...] = torch.clamp(img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*19000), 0, 1)
     save_image(img_0, '../image_2_style_gan/source/img_0_1.png')
 
     MSE_Loss=nn.MSELoss(reduction="mean")
