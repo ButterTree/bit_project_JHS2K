@@ -36,22 +36,19 @@ def let_me_shine():
         input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
         print("\n********** Model processing succeed, post data **********\n")
         # 이미지 base64형식으로 변환
-        final_data = result_processing(input_image, output_image)
+        json_data = result_processing(input_image, output_image)
         # results로 포스트
-        post_data(final_data)
+        post_data(json_data)
         shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         return url_base + '{}'.format(usr_ID)
     except Exception as e:
         shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         print(f'json_data part error: {e}')
 
-        # 모든 Image 처리 과정이 완료되면, 'result.html'을 참조해 Page를 구성해 출력하고,
-        # 각 scr를 받아들여 출력하는 부분에 해당되는 자료의 경로 및 파일명을 Parameter로 넘겨줘 Page에 출력할 수 있도록 한다.
 
 if __name__ == "__main__":
     # __name__ == "__main__" 구문의 의미하는 것은 우선 [Module을 Command Prompt 등을 통해 "직접 실행하는 경우"]라는 의미이다.
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
-
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
     app.run(URL_IP, port=URL_PORT, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
