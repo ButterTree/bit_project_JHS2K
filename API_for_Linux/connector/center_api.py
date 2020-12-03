@@ -1,7 +1,8 @@
-from image_2_style_gan.image_crossover import image_crossover
-from image_animator.image_animator import image_animator
+from image_2_style_gan.image_crossover_face import image_crossover_face
+from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
+# from image_animator.image_animator import image_animator
 from image_2_style_gan.align_images import align_images
-from flask import Flask, render_template, request
+from flask import Flask, request
 import requests as rq
 import torch
 import base64
@@ -45,7 +46,7 @@ def let_me_shine():
         else:
             # item = {'label': data.get('label'), 'text': data.get('text')}
             BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
-            if os.path.isdir(BASE_DIR) is not True:
+            if not os.path.isdir(BASE_DIR):
                 os.makedirs(BASE_DIR, exist_ok=True)
             
             RAW_DIR = f'{BASE_DIR}raw/'
@@ -55,7 +56,9 @@ def let_me_shine():
             client_img_name = f'{RAW_DIR}{rand_uuid}.png' # 첨부한 Image가 png 형식으로 다시 저장될 경로와 이름을 지정한다.
 
             # gender = data['gender']
+            # scope = data['scope']
             gender = 'male'
+            scope = 'eyes'
 
             with open(file_name, 'wb') as f:  # 변수에 받아들여 놓은 Image를 파일로 저장한다.
                 f.write(base64.b64decode(data['origin']))
@@ -82,7 +85,11 @@ def let_me_shine():
             except Exception as e:
                 pass
 
-            input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+            if scope == 'eyes':
+                input_image, output_image = image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+            else:
+                input_image, output_image = image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+
             torch.cuda.empty_cache()
             # 'image_crossover'는 변경 요청 대상 Image에서 눈 부분만 Target처럼 바꿔주는 메소드이다.
             # 저장 파일명에 활용할 Client의 UUID를 Parameter로 넘겨주고, 처리 전의 원본 Image와 처리 후의 결과물 Image의 '경로 + 파일명'을 반환받는다.
@@ -114,3 +121,12 @@ if __name__ == "__main__":
     print("Server Initiative")  # 메시지를 출력해 Server의 작동 시작을 알린다.
     app.run('121.138.83.1', port=45045, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
+
+    if not os.path.isdir('../image_2_style_gan/torch_weight_files/'):
+        os.makedirs('../image_2_style_gan/torch_weight_files/', exist_ok=True)
+    
+    if not os.path.isdir('../image_2_style_gan/landmark_model/'):
+        os.makedirs('../image_2_style_gan/landmark_model/', exist_ok=True)
+    
+    if not os.path.isdir('../image_2_style_gan/images/'):
+        os.makedirs('../image_2_style_gan/images/', exist_ok=True)

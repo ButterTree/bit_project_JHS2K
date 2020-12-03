@@ -32,12 +32,21 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
 
     # Choose oriented crop rectangle.
     x = eye_to_eye - np.flipud(eye_to_mouth) * [-1, 1]
+    print(np.flipud(eye_to_mouth) * [-1, 1])
+    print(x)
     x /= np.hypot(*x)
-    x *= max(np.hypot(*eye_to_eye) * 2.5, np.hypot(*eye_to_mouth) * 2.25)
+    print(*x)
+    print(x)
+    x *= max(np.hypot(*eye_to_eye) * 2, np.hypot(*eye_to_mouth) * 1.8)
+    print(x)
     y = np.flipud(x) * [-1, 1]
+    print(y)
     c = eye_avg + eye_to_mouth * 0.1
+    print(c)
     quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
+    print(quad)
     qsize = np.hypot(*x) * 2
+    print(qsize)
 
     # Load in-the-wild image.
     if not os.path.isfile(src_file):
@@ -48,7 +57,7 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     # Shrink.
     shrink = int(np.floor(qsize / output_size * 0.5))
     if shrink > 1:
-        rsize = (int(np.rint(float(img.size[0]) / shrink)), int(np.rint(float(img.size[1]) / shr ink)))
+        rsize = (int(np.rint(float(img.size[0]) / shrink)), int(np.rint(float(img.size[1]) / shrink)))
         img = img.resize(rsize, PIL.Image.ANTIALIAS)
         quad /= shrink
         qsize /= shrink

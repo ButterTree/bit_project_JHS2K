@@ -6,55 +6,7 @@ import argparse
 import dlib
 import cv2
 import os
-import random
-
-
-# def mask_maker(aligned_image_name, mask_dir):
-# # def mask_maker(fileDir + fileName):
-#     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-#     eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
-
-#     # img = cv2.imread(fileDir + fileName)
-#     img = cv2.imread(aligned_image_name)
-#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-#     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-#     try:
-#         for x, y, w, h in faces:                       # 얼굴 x좌표, y좌표, 가로길이, 세로길이
-#             cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-#             face_gray = gray[y: y + h, x: x + w]
-#             face_color = img[y: y + h, x: x + w]
-
-#             eyes = eye_cascade.detectMultiScale(face_gray, scaleFactor=2.3, minSize=(85, 85), maxSize=(95, 95))
-#             # 눈만 잘 찾도록 값 조정
-
-#             for (ex, ey, ew, eh) in eyes:               # 눈 x좌표, y좌표, 가로길이, 세로길이
-#                 cv2.rectangle(face_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
-
-#         eyes_loc = eyes + [[x, y, 0, 0]]                # 눈의 좌표가 얼굴 내부 기준이므로 얼굴좌표를 더해줌
-
-#         mask_loc = eyes_loc[eyes_loc[:, 1] < 500] - [[50, 40, 0, 0]]        # 눈이 있을 높이 내에서만 (입 인식 방지), 마스킹 잘 되도록 적절한 위치로 조정
-
-#         # Mask 생성
-#         mask = Image.open('../image_2_style_gan/source/mask_origin/mask_circle_blur.jpg')                 # 이미지 파일과 동일한 디렉토리
-#         resized_mask = mask.resize((mask_loc[0, 2] * 2, mask_loc[0, 2] * 2))        # 인식된 눈 사이즈 * 2
-
-#         back = Image.new("L", (1024, 1024))                                 # 검정색 1024 x 1024 배경 생성
-#         for index in range(len(mask_loc)):
-#             if len(mask_loc) == 1:                                          # 눈이 하나만 인식되면 중앙을 기준으로 y축 대칭 생성
-#                 back.paste(im=resized_mask, box=(mask_loc[index, 0], mask_loc[index, 1]))
-#                 back.paste(im=resized_mask, box=(1024 - mask_loc[index, 0] - mask_loc[index, 2] * 2, mask_loc[index, 1]))
-#             else:
-#                 back.paste(im=resized_mask, box=(mask_loc[index, 0], mask_loc[index, 1]))
-#         back.save(mask_dir + 'Mask.png')                          # Mask 파일 생성
-
-#     except IndexError:
-#         pass    # 눈이 인식되지 않을 시 pass
-#     except TypeError:
-#         pass    # 눈이 인식되지 않을 시 pass
-#     except UnboundLocalError:
-#         pass    # 눈이 인식되지 않을 시 pass
+# import random
 
 
 def precision_eye_masks(aligned_image_name, mask_dir):
@@ -69,34 +21,31 @@ def precision_eye_masks(aligned_image_name, mask_dir):
     image = cv2.imread(aligned_image_name)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    rects = detector(gray, 1)
+    shape = predictor(gray, detector(gray, 1)[0])
+    coordinates = np.zeros((68, 2), dtype=int)
 
-    for (i, rect) in enumerate(rects):
-        shape = predictor(gray, rect)
-        coordinates = np.zeros((68, 2), dtype=int)
+    for i in range(0, 68):
+        coordinates[i] = (shape.part(i).x, shape.part(i).y)
 
-        for i in range(0, 68):
-            coordinates[i] = (shape.part(i).x, shape.part(i).y)
+    mask_base = np.zeros((1024, 1024, 1))
+    eyes_base = np.zeros((1024, 1024, 1))
+    lids_base = np.zeros((1024, 1024, 1))
 
-        mask_base = np.zeros((1024, 1024, 1))
-        eyes_base = np.zeros((1024, 1024, 1))
-        lids_base = np.zeros((1024, 1024, 1))
+    for i, landmark_name in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
+        (j, k) = FACIAL_LANDMARKS_INDEXES[landmark_name]
+        lid_coords = np.append(coordinates[j: k-2], np.flip(coordinates[j: k-2] + lid_bias[0+(4*i):4+(4*i)], axis=0), axis=0)
 
-        for (i, name) in enumerate(FACIAL_LANDMARKS_INDEXES.keys()):
-            (j, k) = FACIAL_LANDMARKS_INDEXES[name]
-            lid_coords = np.append(coordinates[j: k-2], np.flip(coordinates[j: k-2] + lid_bias[0+(4*i):4+(4*i)], axis=0), axis=0)
+        mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*i):6+(6*i)], 255)
+        eyes_base = cv2.fillConvexPoly(eyes_base, coordinates[j:k], 255)
+        lids_base = cv2.fillConvexPoly(lids_base, lid_coords, 255)
+    
+    mask_base = cv2.blur(mask_base, (15,18))
+    eyes_base = cv2.blur(eyes_base, (10,3))
+    lids_base = cv2.blur(lids_base, (5,7))
 
-            mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*i):6+(6*i)], 255)
-            eyes_base = cv2.fillConvexPoly(eyes_base, coordinates[j:k], 255)
-            lids_base = cv2.fillConvexPoly(lids_base, lid_coords, 255)
-        
-        mask_base = cv2.blur(mask_base, (15,18))
-        eyes_base = cv2.blur(eyes_base, (10,3))
-        lids_base = cv2.blur(lids_base, (5,7))
-
-        cv2.imwrite(mask_dir + 'mask.png', mask_base)
-        cv2.imwrite(mask_dir + 'mask_eyes.png', eyes_base)
-        cv2.imwrite(mask_dir + 'mask_lids.png', lids_base)
+    cv2.imwrite(mask_dir + 'mask.png', mask_base)
+    cv2.imwrite(mask_dir + 'mask_eyes.png', eyes_base)
+    cv2.imwrite(mask_dir + 'mask_lids.png', lids_base)
 
     return mask_dir + 'mask.png', mask_dir + 'mask_eyes.png', mask_dir + 'mask_lids.png'
 
