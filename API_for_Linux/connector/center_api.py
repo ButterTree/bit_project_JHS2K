@@ -1,4 +1,5 @@
-from image_2_style_gan.image_crossover import image_crossover
+from image_2_style_gan.image_crossover_face import image_crossover_face
+from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
 from img_processing_manage.path_manager import *
 from result_manage.result_processing import *
 from flask import Flask, request
@@ -22,6 +23,7 @@ def data_return():
 
 @app.route("/let_me_shine", methods=['POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
+    scope = 'eyes'
     try:
         # 앱으로부터 데이터 전송받기
         data = request.get_json(silent=True)
@@ -33,7 +35,10 @@ def let_me_shine():
             process_selection = 1
             custom_image_control(data, process_selection)
         print("\n********** Image processing succeed, send to model **********\n")
-        input_image, output_image = image_crossover(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+        if scope == 'eyes':
+            input_image, output_image = image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
+        else:
+            input_image, output_image = image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
         print("\n********** Model processing succeed, post data **********\n")
         # 이미지 base64형식으로 변환
         json_data = result_processing(input_image, output_image)
