@@ -68,8 +68,8 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
 
         ingredient_name = args.src_im2 + os.listdir(args.src_im2)[0]
         
-        # random_target_image_index = random.randint(0, len(os.listdir(TARGET_SOURCE_DIR))-1)
-        random_target_image_index = 3
+        random_target_image_index = random.randint(0, len(os.listdir(TARGET_SOURCE_DIR))-1)
+        # random_target_image_index = 3
         target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]
         print(os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]) # Image file 이름 확인
 
