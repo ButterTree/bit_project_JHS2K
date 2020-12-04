@@ -25,7 +25,7 @@ def origin_image_control(data, process_selection):
 def custom_image_control(data, process_selection):
     try:
         # 디렉터리 생성
-        BASE_DIR, CUSTOM_DIR = make_dir(process_selection)
+        _, CUSTOM_DIR = make_dir(process_selection)
         # 커스텀 jpg 저장
         save_jpg(CUSTOM_DIR, data['custom'], process_selection)
         # jpg -> png, 정방형 처리
