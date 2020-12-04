@@ -40,7 +40,7 @@ def make_dir(process_selection):
     if process_selection == 0:
         if os.path.isdir(BASE_DIR) is not True:
             os.makedirs(BASE_DIR, exist_ok=True)
-        
+
         RAW_DIR = f'{BASE_DIR}raw/'
         os.mkdir(RAW_DIR)
         return BASE_DIR, RAW_DIR
