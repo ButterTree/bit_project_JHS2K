@@ -1,5 +1,5 @@
-from img_processing_manage.transform_manager import *
-from img_processing_manage.save_photo import save_jpg
+from ..img_processing_manage.transform_manager import *
+from ..img_processing_manage.save_photo import save_jpg
 import os
 import uuid
 

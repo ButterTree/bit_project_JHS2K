@@ -5,27 +5,27 @@ import {
   Image,
   Dimensions,
   Alert,
-} from 'react-native';
-import { Camera } from 'expo-camera';
-import styled from 'styled-components';
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import { imageTransfer } from './api';
-import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
-import FaceLine from './Screen/FaceLine';
-import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn';
-import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn';
-import TakePhotoBtn from './Buttons/MainScreenBtns/TakePhotoBtn';
-import SaveBtn from './Buttons/SaveShareCancelBtns/SaveBtn';
-import ShareBtn from './Buttons/SaveShareCancelBtns/ShareBtn';
-import CancelBtn from './Buttons/TransferCancelBtns/CancelBtn';
-import TransferBtn from './Buttons/TransferCancelBtns/TransferBtn';
-import ChangeFemaleBtn from './Buttons/ChangeBtns/ChangeFemaleBtn';
-import ChangeTwoPeopleBtn from './Buttons/ChangeBtns/ChangeTwoPeopleBtn';
-import NextBtn from './Buttons/ChangeBtns/Change2ndCameraBtn';
+} from "react-native";
+import { Camera } from "expo-camera";
+import styled from "styled-components";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import { imageTransfer } from "./api";
+import ProgressBarMain from "./Screen/ProgressBar/progressBarMain";
+import FaceLine from "./Screen/FaceLine";
+import GetPhotoBtn from "./Buttons/MainScreenBtns/GetPhotoBtn";
+import SwitchCameraBtn from "./Buttons/MainScreenBtns/SwitchCameraBtn";
+import TakePhotoBtn from "./Buttons/MainScreenBtns/TakePhotoBtn";
+import SaveBtn from "./Buttons/SaveShareCancelBtns/SaveBtn";
+import ShareBtn from "./Buttons/SaveShareCancelBtns/ShareBtn";
+import CancelBtn from "./Buttons/TransferCancelBtns/CancelBtn";
+import TransferBtn from "./Buttons/TransferCancelBtns/TransferBtn";
+import ChangeFemaleBtn from "./Buttons/ChangeBtns/ChangeFemaleBtn";
+import ChangeTwoPeopleBtn from "./Buttons/ChangeBtns/ChangeTwoPeopleBtn";
+import NextBtn from "./Buttons/ChangeBtns/Change2ndCameraBtn";
 
 // 보내는 이미지
 let firstPhoto = ""; // 처음 찍은 사진 저장용
@@ -38,8 +38,8 @@ let gender = "female";
 const { width, height } = Dimensions.get("window");
 
 const CenterView = styled.View`
-	flex: 1;
-	background-color: white;
+  flex: 1;
+  background-color: white;
 `;
 
 const IconContainer = styled.View`
@@ -77,11 +77,11 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      setHasPermission(status == 'granted');
+      setHasPermission(status == "granted");
       const {
         picStatus,
       } = await ImagePicker.requestCameraRollPermissionsAsync();
-      setImage(picStatus === 'granted');
+      setImage(picStatus === "granted");
     })();
   }, []);
 
@@ -121,8 +121,8 @@ export default function App() {
       }
 
       console.log(
-        'firstPhoto:' + firstPhoto.substring(0, 20),
-        'secondPhoto: ' + secondPhoto.substring(0, 20)
+        "firstPhoto:" + firstPhoto.substring(0, 20),
+        "secondPhoto: " + secondPhoto.substring(0, 20)
       );
       // if (photo.uri) {
       //   this.savePhoto(photo.uri);
@@ -148,7 +148,7 @@ export default function App() {
 
     if (!isTwoPeople) {
       firstPhoto = photo.base64;
-      gender = 'female'; // 성별 default 값인 여성으로 초기화
+      gender = "female"; // 성별 default 값인 여성으로 초기화
     } else {
       if (!firstPhoto) {
         firstPhoto = photo.base64; // photo.base64는 촬영한 사진의 이미지 String 값
@@ -159,16 +159,16 @@ export default function App() {
     }
 
     console.log(
-      'firstPhoto:' + firstPhoto.substring(0, 20),
-      'secondPhoto:' + secondPhoto.substring(0, 20)
+      "firstPhoto:" + firstPhoto.substring(0, 20),
+      "secondPhoto:" + secondPhoto.substring(0, 20)
     );
   };
 
   const changeToMale = () => {
-    if (gender === 'female') {
-      gender = 'male';
+    if (gender === "female") {
+      gender = "male";
     } else {
-      gender = 'female';
+      gender = "female";
     }
     console.log(gender);
   };
@@ -190,8 +190,8 @@ export default function App() {
         setIsAfterview(false);
         setIsTwoPeople(false);
         setIsTwoPhotoComplete(false);
-        firstPhoto = '';
-        secondPhoto = '';
+        firstPhoto = "";
+        secondPhoto = "";
       } else {
         setIsAfterview(true);
       }
@@ -199,7 +199,7 @@ export default function App() {
       setImageSelected(false);
       setImageComeback(false);
 
-      gender = 'female';
+      gender = "female";
     } catch (error) {
       console.log(`getTransferImage Error: ${error}`);
     }
@@ -228,18 +228,18 @@ export default function App() {
     setIsTwoPeople(false);
     setIsTwoPhotoComplete(false);
 
-    if (firstPhoto !== '') firstPhoto = '';
-    if (secondPhoto !== '') secondPhoto = '';
+    if (firstPhoto !== "") firstPhoto = "";
+    if (secondPhoto !== "") secondPhoto = "";
     console.log(
-      firstPhoto ? firstPhoto.substring(0, 10) : 'firstPhoto is Empty!',
-      secondPhoto ? secondPhoto.substring(0, 10) : 'secondPhoto is Empty!'
+      firstPhoto ? firstPhoto.substring(0, 10) : "firstPhoto is Empty!",
+      secondPhoto ? secondPhoto.substring(0, 10) : "secondPhoto is Empty!"
     );
   };
 
   savePhoto = async (uri) => {
     try {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status === 'granted') {
+      if (status === "granted") {
         const asset = await MediaLibrary.createAssetAsync(uri);
         let album = await MediaLibrary.getAlbumAsync(ALBUM_NAME);
         if (album === null) {
@@ -257,10 +257,10 @@ export default function App() {
 
   const saveResultPhoto = async () => {
     try {
-      Alert.alert('저장완료❤', '갤러리에서 확인할 수 있습니다.');
-      const base64Code = photos[1].split('data:image/png;base64,')[1];
+      Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
+      const base64Code = photos[1].split("data:image/png;base64,")[1];
 
-      const filename = FileSystem.documentDirectory + 'changed.png';
+      const filename = FileSystem.documentDirectory + "changed.png";
 
       await FileSystem.writeAsStringAsync(filename, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
@@ -271,8 +271,8 @@ export default function App() {
       setIsAfterview(false);
       setIsTwoPeople(false);
       setIsTwoPhotoComplete(false);
-      firstPhoto = '';
-      secondPhoto = '';
+      firstPhoto = "";
+      secondPhoto = "";
     } catch (error) {
       console.log(error);
     }
@@ -280,9 +280,9 @@ export default function App() {
 
   const openShareDialog = async () => {
     try {
-      const base64Code = photos[1].split('data:image/png;base64,')[1];
+      const base64Code = photos[1].split("data:image/png;base64,")[1];
 
-      const filename = FileSystem.documentDirectory + 'changed.png';
+      const filename = FileSystem.documentDirectory + "changed.png";
 
       await FileSystem.writeAsStringAsync(filename, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
@@ -293,8 +293,8 @@ export default function App() {
       setIsAfterview(false);
       setIsTwoPeople(false);
       setIsTwoPhotoComplete(false);
-      firstPhoto = '';
-      secondPhoto = '';
+      firstPhoto = "";
+      secondPhoto = "";
     } catch (error) {
       console.log(error);
     }
@@ -310,7 +310,7 @@ export default function App() {
       <CenterView>
         <Camera
           style={{
-            alignItems: 'center',
+            alignItems: "center",
             width: width - 1,
             height: height / 1.4,
             marginTop: 50,
@@ -331,7 +331,7 @@ export default function App() {
                 width: width - 1,
                 height: height / 1.4,
                 marginTop: 50,
-                position: 'absolute',
+                position: "absolute",
               }}
               source={{ uri: image }}
             />
@@ -347,7 +347,7 @@ export default function App() {
               width: width - 1,
               height: height / 1.4,
               marginTop: 50,
-              position: 'absolute',
+              position: "absolute",
             }}
             source={{ uri: photos[1] }}
           />

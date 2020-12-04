@@ -1,24 +1,24 @@
 from image_2_style_gan.image_crossover_face import image_crossover_face
 from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
-from img_processing_manage.path_manager import *
-from result_manage.result_processing import *
+from connector.img_processing_manage.path_manager import *
+from connector.result_manage.result_processing import *
 from flask import Flask, request
 import shutil
 
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-@app.route("/let_me_shine/results/", methods=['GET', 'POST'])
-def data_return():
-    global data
-    if request.method == 'POST':
-        data = request.get_json(silent=True)
-    elif request.method == 'GET':
-        data_buf = data
-        return data_buf
-    elif data == '':
-        data_return.close()
-    return ''
+# @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
+# def data_return():
+#     global data
+#     if request.method == 'POST':
+#         data = request.get_json(silent=True)
+#     elif request.method == 'GET':
+#         data_buf = data
+#         return data_buf
+#     elif data == '':
+#         data_return.close()
+#     return ''
 
 
 @app.route("/let_me_shine", methods=['POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
@@ -43,9 +43,9 @@ def let_me_shine():
         # 이미지 base64형식으로 변환
         json_data = result_processing(input_image, output_image)
         # results로 포스트
-        post_data(json_data)
+        # post_data(json_data)
         shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
-        return url_base + '{}'.format(usr_ID)
+        return json_data
     except Exception as e:
         shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         print(f'json_data part error: {e}')
