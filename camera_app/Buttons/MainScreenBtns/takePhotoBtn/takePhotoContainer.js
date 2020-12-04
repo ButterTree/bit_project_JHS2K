@@ -11,7 +11,6 @@ export const useTakePhotoState = () => {
 		(async () => {
 			const { status } = await Permissions.askAsync(Permissions.CAMERA);
 			setHasPermission(status == "granted");
-			console.log(status);
 		})();
 	}, []);
 
@@ -29,12 +28,12 @@ export const useTakePhotoState = () => {
 				if (photo.uri) {
 					await cameraRef.current.pausePreview();
 					setIsPreview(true);
-				}
 
-				setTakePhoto({
-					uri: photo.uri,
-					base64: photo.base64,
-				});
+					setTakePhoto({
+						uri: photo.uri,
+						base64: photo.base64,
+					});
+				}
 			}
 		},
 		takePhoto,

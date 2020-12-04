@@ -3,7 +3,7 @@ import { useGetPhotoState } from "../../MainScreenBtns/getPhotoBtn/getPhotoConta
 import { useTakePhotoState } from "../../MainScreenBtns/takePhotoBtn/takePhotoContainer";
 
 export const useNextState = () => {
-	const { isNext, setIsNext } = useState(false);
+	const [isNext, setIsNext] = useState(false);
 	const { isPreview, setIsPreview, setTakePhoto } = useTakePhotoState();
 	const {
 		imageSelected,
@@ -13,7 +13,6 @@ export const useNextState = () => {
 
 	return {
 		isNext,
-		setIsNext,
 		onPressNext: async () => {
 			if (isPreview) {
 				await cameraRef.current.resumePreview();
@@ -25,6 +24,7 @@ export const useNextState = () => {
 			}
 
 			setIsNext(true);
+
 			setTakePhoto({});
 			setAlbumPhoto({});
 		},

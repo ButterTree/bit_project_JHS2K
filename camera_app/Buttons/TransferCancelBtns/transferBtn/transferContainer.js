@@ -1,34 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { imageTransfer } from "../../../api";
 import { useGenderState } from "../../ChangeBtns/genderBtn/genderContainer";
+import { useGetPhotoState } from "../../MainScreenBtns/getPhotoBtn/getPhotoContainer";
 import { useTakePhotoState } from "../../MainScreenBtns/takePhotoBtn/takePhotoContainer";
 
 export const useTransferState = (initialValue = []) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAfterView, setIsAfterView] = useState(false);
-	const [resultPhotoList, setResultPhotoList] = useState(initialValue);
+	const [resultPhotoList, setResultPhotoList] = useState([]);
 
 	const { isGender, setIsGender } = useGenderState();
 	const { isPreview, setIsPreview } = useTakePhotoState();
+	const { takePhoto } = useTakePhotoState();
+	const { albumPhoto } = useGetPhotoState();
 
 	return {
 		isLoading,
 		isAfterView,
 		setIsAfterView,
-		resultPhotoList,
 		getTransferImage: async () => {
 			try {
-				if (isPreview) await cameraRef.current.resumePreview();
-
+				if (isPreview) {
+					await cameraRef.current.resumePreview();
+					setIsPreview(false);
+				}
 				setIsLoading(true);
 				console.log(`getTransfer Check: ${isGender}`);
-				const photos = await imageTransfer(
-					selectedPhotos[0],
-					selectedPhotos[1],
-					isGender
+				setResultPhotoList(
+					await imageTransfer(isFirstPhoto, isSecondPhoto, isGender)
 				);
-				setResultPhotoList(photos);
-				clearPhotos();
 				setIsLoading(false);
 			} catch (e) {
 				alert(`getTransferImage Error: ${e}`);

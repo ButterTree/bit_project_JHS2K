@@ -3,6 +3,7 @@ import * as ImagePicker from "expo-image-picker";
 
 export const useGetPhotoState = () => {
 	const [imageSelected, setImageSelected] = useState(false);
+	const [hasAlbumPermission, setHasAlbumPermission] = useState(false);
 	const [albumPhoto, setAlbumPhoto] = useState({});
 
 	useEffect(() => {
@@ -10,7 +11,7 @@ export const useGetPhotoState = () => {
 			const {
 				status: albumStatus,
 			} = await ImagePicker.requestCameraRollPermissionsAsync();
-			setImageSelected(albumStatus === "granted");
+			setHasAlbumPermission(albumStatus === "granted");
 		})();
 	}, []);
 
@@ -24,12 +25,13 @@ export const useGetPhotoState = () => {
 				base64: true,
 			});
 
-			if (photo.uri) setImageSelected(true);
-
-			setAlbumPhoto({
-				uri: photo.uri,
-				base64: photo.base64,
-			});
+			if (photo.uri) {
+				setImageSelected(true);
+				setAlbumPhoto({
+					uri: photo.uri,
+					base64: photo.base64,
+				});
+			}
 		},
 		albumPhoto,
 		setAlbumPhoto,
