@@ -92,7 +92,7 @@ const PicLightContainer = styled.View`
 	justify-content: space-between;
 	align-items: center;
 	padding: 0 3%;
-	margin: 0;
+	margin-top: 10%;
 	position: absolute;
 	top: 3%;
 `;
