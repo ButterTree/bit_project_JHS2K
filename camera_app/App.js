@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Camera } from "expo-camera";
-// import * as FaceDetector from "expo-face-detector";
 import styled from "styled-components";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
@@ -110,10 +109,6 @@ export default function App() {
 	const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
 	const [isOnceSkipHowToPage, setIsOnceSkipHowToPage] = useState(false);
 	const [isForeverSkipHowToPage, setIsForeverSkipHowToPage] = useState(false);
-	// const [leftEyeOpen, setLeftEyeOpen] = useState(false); // 왼쪽 눈 열려있을 확률
-	// const [rightEyeOpen, setRightEyeOpen] = useState(false); // 오른쪽 눈 열려있을 확률
-	// const [yawAngle, setYawAngle] = useState(false); // 얼굴의 요 각도
-	// const [bounds, setBounds] = useState(false); // 얼굴 사각형 위치, 크기
 	const cameraRef = useRef();
 
 	useEffect(() => {
@@ -299,6 +294,7 @@ export default function App() {
 		}
 	};
 
+	// // 자동으로 앨범에 촬영한 사진 저장
 	// const savePhoto = async (uri) => {
 	// 	try {
 	// 		const { status } = await Permissions.askAsync(
@@ -319,6 +315,7 @@ export default function App() {
 	// 		console.log(`savePhotoError: ${error}`);
 	// 	}
 	// };
+
 	const saveResultPhoto = async () => {
 		try {
 			Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
@@ -388,20 +385,6 @@ export default function App() {
 						}
 						type={cameraType}
 						ref={cameraRef}
-						// onFacesDetected={
-						// 	(leftEyeOpen ? null : onFacesDetected,
-						// 	rightEyeOpen ? null : onFacesDetected,
-						// 	yawAngle ? null : onFacesDetected,
-						// 	bounds ? null : onFacesDetected)
-						// }
-						// faceDetectorSettings={{
-						// 	// mode: FaceDetector.Constants.Mode.fast,
-						// 	detectLandmarks: FaceDetector.Constants.Landmarks.all,
-						// 	runClassifications:
-						// 		FaceDetector.Constants.Classifications.all,
-						// 	minDetectionInterval: 3000,
-						// 	// tracking: true,
-						// }}
 					>
 						<FaceLine />
 						{!isTwoPeople ? (
