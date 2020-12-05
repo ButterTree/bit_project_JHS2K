@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -7,62 +7,65 @@ import {
   Alert,
   ImageBackground
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Camera } from "expo-camera";
 import styled from "styled-components";
+
+import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+
+import { imageTransfer } from "./API/api";
+
 import ProgressBarMain from "./Screen/ProgressBar/progressBarMain";
 import FaceLine from "./Screen/FaceLine";
-import OnceSkipHowToPageBtn from "./Buttons/MainScreenBtns/skipHowToPage/OnceSkipHowToPageBtn";
-import ForeverSkipHowToPageBtn from "./Buttons/MainScreenBtns/skipHowToPage/ForeverSkipHowToPageBtn";
-import SaveBtn from "./Buttons/SaveShareCancelBtns/SaveBtn";
-import ShareBtn from "./Buttons/SaveShareCancelBtns/ShareBtn";
-import OnePersonPopup from "./Popup/OnePersonPopup";
-import TwoPeopleMainPopup from "./Popup/TwoPeople/TwoPeopleMainPopup";
-import FirstPicLightOff from "./Popup/TwoPeople/FirstPicLightOff";
-import FirstPicLightOn from "./Popup/TwoPeople/FirstPicLightOn";
-import SecondPicLightOff from "./Popup/TwoPeople/SecondPicLightOff";
-import SecondPicLightOn from "./Popup/TwoPeople/SecondPicLightOn";
 
-import TwoPeopleBtn from "./Buttons/ChangeBtns/twoPeopleBtn/twoPeoplePresenter";
+import TwoPeopleBtn from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter";
 import {
   useTwoPeopleToggleState,
   useTwoPeopleState
-} from "./Buttons/ChangeBtns/twoPeopleBtn/twoPeopleContainer";
+} from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeopleContainer";
 
-import GenderBtn from "./Buttons/ChangeBtns/genderBtn/genderPresenter";
+import GenderBtn from "./Buttons/ChangeBtns/GenderBtn/GenderPresenter";
 import {
   useGenderState,
   useGenderToggleState
-} from "./Buttons/ChangeBtns/genderBtn/genderContainer";
+} from "./Buttons/ChangeBtns/GenderBtn/GenderContainer";
 
-import TakePhotoBtn from "./Buttons/MainScreenBtns/takePhotoBtn/takePhotoPresenter";
-import { useTakePhotoState } from "./Buttons/MainScreenBtns/takePhotoBtn/takePhotoContainer";
+import TakePhotoBtn from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoPresenter";
+import { useTakePhotoState } from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoContainer";
 
-import SwitchCameraBtn from "./Buttons/MainScreenBtns/switchCameraBtn/switchCameraPresenter";
-import { useCameraTypeState } from "./Buttons/MainScreenBtns/switchCameraBtn/switchCameraContainer";
+import SwitchCameraBtn from "./Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraPresenter";
+import { useCameraTypeState } from "./Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraContainer";
 
-import GetPhotoBtn from "./Buttons/MainScreenBtns/getPhotoBtn/getPhotoPresenter";
-import { useGetPhotoState } from "./Buttons/MainScreenBtns/getPhotoBtn/getPhotoContainer";
+import GetPhotoBtn from "./Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoPresenter";
+import { useGetPhotoState } from "./Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoContainer";
 
-import TransferBtn from "./Buttons/TransferCancelBtns/transferBtn/transferPresenter";
-import { useTransferState } from "./Buttons/TransferCancelBtns/transferBtn/transferContainer";
+import TransferBtn from "./Buttons/TransferCancelBtns/TransferBtn/TransferPresenter";
+import NextBtn from "./Buttons/ChangeBtns/NextBtn/NextPresenter";
+import CancelBtn from "./Buttons/TransferCancelBtns/CancelBtn/CancelPresenter";
 
-import NextBtn from "./Buttons/ChangeBtns/nextBtn/nextPresenter";
-import { useNextState } from "./Buttons/ChangeBtns/nextBtn/nextContainer";
+import SaveBtn from "./Buttons/SaveShareBtns/SaveBtn/SavePresenter";
+import ShareBtn from "./Buttons/SaveShareBtns/ShareBtn/SharePresenter";
 
-import CancelBtn from "./Buttons/TransferCancelBtns/cancelBtn/cancelPresenter";
-// import { useCancelState } from "./Buttons/TransferCancelBtns/cancelBtn/cancelContainer";
+import NoticeCancelBtn from "./Buttons/MainScreenBtns/noticeBtns/NoticeCancelBtn/NoticeCancelPresenter";
+import NoticeNeverBtn from "./Buttons/MainScreenBtns/noticeBtns/NoticeNeverBtn/NoticeNeverPresenter";
+import { useNoticeState } from "./Buttons/MainScreenBtns/noticeBtns/NoticeContainer";
+
+import OnePersonPopup from "./Buttons/PopupBtns/OnePersonPopup";
+import TwoPeopleMainPopup from "./Buttons/PopupBtns/TwoPeoplePopup";
+
+import {
+  OffFirstLight,
+  OnFirstLight,
+  OffSecondLight,
+  OnSecondLight
+} from "./Buttons/PopupBtns/TwoPeopleLights";
 
 const { width, height } = Dimensions.get("window");
-
 const CenterView = styled.View`
   flex: 1;
   background-color: white;
 `;
-
 const IconContainer = styled.View`
   flex: 1;
   width: 100%;
@@ -70,7 +73,6 @@ const IconContainer = styled.View`
   justify-content: space-around;
   align-items: center;
 `;
-
 const ChangeFunctionContainer = styled.View`
   flex: 1;
   width: 100%;
@@ -80,7 +82,6 @@ const ChangeFunctionContainer = styled.View`
   position: absolute;
   bottom: 0;
 `;
-
 const ChangeButtonContainer = styled.View`
   width: 100%;
   flex: 1;
@@ -88,13 +89,11 @@ const ChangeButtonContainer = styled.View`
   justify-content: space-around;
   align-items: center;
 `;
-
 const HowToPage = styled.View`
   width: 100%;
   height: 100%;
   position: absolute;
 `;
-
 const PicLightContainer = styled.View`
   width: 100%;
   flex: 1;
@@ -107,27 +106,27 @@ const PicLightContainer = styled.View`
   top: 3%;
 `;
 
+// Image Temporary Storage
+let firstPhoto = "";
+let secondPhoto = "";
+let resultPhotoList = [];
+
 export default function App() {
-  const [isAfterview, setIsAfterview] = useState(false);
-  const [isTwoPhotoComplete, setIsTwoPhotoComplete] = useState(false);
-  const [isOnceSkipHowToPage, setIsOnceSkipHowToPage] = useState(false);
-  const [isForeverSkipHowToPage, setIsForeverSkipHowToPage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAfterView, setIsAfterView] = useState(false);
 
   const {
-    twoPeopleValue,
+    twoPeopleToggleValue,
     setTwoPeopleToggleValue,
     onToggleTwoPeople
   } = useTwoPeopleToggleState();
-
   const { isTwoPeople, setIsTwoPeople, onPressTwoPeople } = useTwoPeopleState();
-
   const {
     genderValue,
     setGenderValue,
     onToggleGender
   } = useGenderToggleState();
   const { isGender, setIsGender, onPressGender } = useGenderState();
-
   const {
     hasPermission,
     cameraRef,
@@ -137,74 +136,18 @@ export default function App() {
     setTakePhoto,
     onPressTakePhoto
   } = useTakePhotoState();
-
   const {
     imageSelected,
     setImageSelected,
-    getPhoto,
+    onPressGetPhoto,
     albumPhoto,
     setAlbumPhoto
   } = useGetPhotoState();
-
   const { cameraType, switchCameraType } = useCameraTypeState();
+  const { isNotice, clickCancelNotice, clickNeverNotice } = useNoticeState();
 
-  const {
-    isLoading,
-    isAfterView,
-    setIsAfterView,
-    getTransferImage,
-    resultPhotoList,
-    setResultPhotoList
-  } = useTransferState();
-
-  const { isNext, onPressNext } = useNextState();
-
-  // const { setCancelClear } = useCancelState();
-
-  console.log(
-    `===================\ntakePhoto: ${
-      takePhoto.base64 ? takePhoto.base64.substring(0, 25) : takePhoto
-    }`
-  );
-
-  console.log(
-    `albumPhoto: ${
-      albumPhoto.base64 ? albumPhoto.base64.substring(0, 25) : albumPhoto
-    }`
-  );
-
-  // console.log(
-  //   `isFirstPhoto: ${
-  //     isFirstPhoto ? isFirstPhoto.substring(0, 25) : null
-  //   }, isSecondPhoto: ${isSecondPhoto ? isSecondPhoto.substring(0, 25) : null}`
-  // );
-
-  console.log(`Gender is ${isGender}`);
-  console.log(`People Number is ${isTwoPeople}\n===================`);
-
-  useEffect(() => {
-    (async () => {
-      const howToStatus = await AsyncStorage.getItem("show_howTo");
-      if (howToStatus !== null ? !JSON.parse(howToStatus) : false) {
-        setIsForeverSkipHowToPage(true);
-      }
-    })();
-  }, []);
-
-  const OnceSkipHowToPage = () => {
-    setIsOnceSkipHowToPage(true);
-  };
-
-  const ForeverSkipHowToPage = async () => {
-    try {
-      await AsyncStorage.setItem("show_howTo", JSON.stringify(false));
-    } catch (e) {
-      console.log(`setItemError: ${e}`);
-    }
-    setIsForeverSkipHowToPage(true);
-  };
-
-  const setCancelClear = async () => {
+  // 2인일 때, 2번째 사진으로 넘어가는 버튼
+  const onPressNext = async () => {
     if (isPreview) {
       await cameraRef.current.resumePreview();
       setIsPreview(false);
@@ -214,63 +157,129 @@ export default function App() {
       setImageSelected(false);
     }
 
-    setIsAfterview(false);
-    setIsTwoPeople(false);
-    setTwoPeopleToggleValue(false);
-    setGenderValue(false);
-    setIsGender("female"); // 취소 버튼 누르면 성별 '여자'로 초기화
+    firstPhoto =
+      (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
 
     setTakePhoto({});
     setAlbumPhoto({});
   };
 
-  const saveResultPhoto = async () => {
+  // 취소 버튼, 모든 상태 초기화
+  const onPressCancel = async () => {
+    if (isPreview) {
+      await cameraRef.current.resumePreview();
+      setIsPreview(false);
+      setTakePhoto({});
+    }
+
+    if (imageSelected) {
+      setImageSelected(false);
+      setAlbumPhoto({});
+    }
+
+    setIsGender("female"); // 취소 버튼 누르면 성별 '여자'로 초기화
+    setGenderValue(false);
+
+    setIsTwoPeople(false);
+    setTwoPeopleToggleValue(false);
+
+    setIsAfterView(false);
+    firstPhoto = "";
+    secondPhoto = "";
+    setTakePhoto({});
+    setAlbumPhoto({});
+  };
+
+  // AI Server로 전송하는 버튼
+  const getTransferImage = async () => {
+    try {
+      console.log(`getTransferImage start!`);
+
+      if (!firstPhoto) {
+        firstPhoto =
+          (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
+      } else {
+        secondPhoto =
+          (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
+      }
+
+      // Image Transformation Start
+      setIsLoading(true);
+
+      console.log(`getTransfer Check: ${isGender}`);
+
+      resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender);
+
+      setIsLoading(false);
+      // Image Transformation End
+
+      if (isPreview) {
+        await cameraRef.current.resumePreview();
+        setIsPreview(false);
+      }
+
+      if (imageSelected) {
+        setImageSelected(false);
+      }
+
+      firstPhoto = "";
+      secondPhoto = "";
+      setIsAfterView(true);
+    } catch (e) {
+      alert(`getTransferImage Error: ${e}`);
+    }
+  };
+
+  // 결과 이미지 저장 버튼
+  const onPressSave = async () => {
     try {
       Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
-      const base64Code = resultPhotoList[1].split("data:image/png;base64,")[1];
-
-      const filename = FileSystem.documentDirectory + "changed.png";
-
-      await FileSystem.writeAsStringAsync(filename, base64Code, {
+      // original Image path 설정
+      const originalImg = resultPhotoList[0].split("data:image/png;base64,")[0];
+      const originalFileName = FileSystem.documentDirectory + "original.png";
+      await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
         encoding: FileSystem.EncodingType.Base64
       });
 
-      await MediaLibrary.saveToLibraryAsync(filename);
+      // changed Image path 설정
+      const changedImg = resultPhotoList[1].split("data:image/png;base64,")[1];
+      const changedFileName = FileSystem.documentDirectory + "changed.png";
+      await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
+        encoding: FileSystem.EncodingType.Base64
+      });
 
-      setIsAfterview(false);
-      setIsTwoPeople(false);
-      setIsTwoPhotoComplete(false);
+      // Original, Changed 모두 갤러리 저장
+      await MediaLibrary.saveToLibraryAsync(originalFileName);
+      await MediaLibrary.saveToLibraryAsync(changedFileName);
     } catch (error) {
       alert(`Save Result Photo Error: ${error}`);
     }
   };
 
-  const openShareDialog = async () => {
+  // 공유 버튼
+  const onPressShare = async () => {
     try {
-      const base64Code = resultPhotoList[1].split("data:image/png;base64,")[1];
-
-      const filename = FileSystem.documentDirectory + "changed.png";
-
-      await FileSystem.writeAsStringAsync(filename, base64Code, {
+      // changed Image path 설정
+      const changedImg = resultPhotoList[1].split("data:image/png;base64,")[1];
+      const changedFileName = FileSystem.documentDirectory + "changed.png";
+      await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
         encoding: FileSystem.EncodingType.Base64
       });
 
-      await Sharing.shareAsync(filename);
-
-      setIsAfterview(false);
-      setIsTwoPeople(false);
-      setIsTwoPhotoComplete(false);
+      // changed Image 공유
+      await Sharing.shareAsync(changedFileName);
     } catch (error) {
       alert(`Open Sharing Error: ${error}`);
     }
   };
 
+  // View
   if (hasPermission === true) {
     return isLoading ? (
       <ProgressBarMain />
     ) : (
       <CenterView>
-        {!imageSelected && !isAfterview && (
+        {!imageSelected && !isAfterView && (
           <Camera
             style={
               height >= 790
@@ -291,17 +300,17 @@ export default function App() {
             ref={cameraRef}>
             <FaceLine />
             {!isTwoPeople ? <OnePersonPopup /> : <TwoPeopleMainPopup />}
-            {!isTwoPeople ? (
+            {!isTwoPeople || isPreview ? (
               <></>
-            ) : !takePhoto.base64 ? (
+            ) : !firstPhoto ? (
               <PicLightContainer>
-                <FirstPicLightOn />
-                <SecondPicLightOff />
+                <OnFirstLight />
+                <OffSecondLight />
               </PicLightContainer>
             ) : (
               <PicLightContainer>
-                <FirstPicLightOff />
-                <SecondPicLightOn />
+                <OffFirstLight />
+                <OnSecondLight />
               </PicLightContainer>
             )}
 
@@ -318,7 +327,7 @@ export default function App() {
               <ChangeButtonContainer>
                 <TwoPeopleBtn
                   onPress={onPressTwoPeople}
-                  value={twoPeopleValue}
+                  value={twoPeopleToggleValue}
                   onToggle={onToggleTwoPeople}
                 />
               </ChangeButtonContainer>
@@ -357,7 +366,7 @@ export default function App() {
           </>
         )}
 
-        {isAfterview && (
+        {isAfterView && (
           <Image
             style={
               height >= 790
@@ -376,31 +385,31 @@ export default function App() {
           />
         )}
 
-        {!isPreview && !imageSelected && !isAfterview && (
+        {!isPreview && !imageSelected && !isAfterView && (
           <IconContainer>
-            <GetPhotoBtn onPress={getPhoto} />
+            <GetPhotoBtn onPress={onPressGetPhoto} />
             <TakePhotoBtn onPress={onPressTakePhoto} />
             <SwitchCameraBtn onPress={switchCameraType} />
           </IconContainer>
         )}
-        {isAfterview && (
+        {isAfterView && (
           <IconContainer>
-            <SaveBtn onPress={saveResultPhoto} />
-            <ShareBtn onPress={openShareDialog} />
-            <CancelBtn onPress={setCancelClear} />
+            <SaveBtn onPress={onPressSave} />
+            <ShareBtn onPress={onPressShare} />
+            <CancelBtn onPress={onPressCancel} />
           </IconContainer>
         )}
         {(isPreview || imageSelected) && (
           <IconContainer>
-            {!isTwoPeople || isNext ? (
+            {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
               <TransferBtn onPress={getTransferImage} />
             ) : (
               <NextBtn onPress={onPressNext} />
             )}
-            <CancelBtn onPress={setCancelClear} />
+            <CancelBtn onPress={onPressCancel} />
           </IconContainer>
         )}
-        {!isOnceSkipHowToPage && !isForeverSkipHowToPage && (
+        {isNotice && (
           <HowToPage>
             <ImageBackground
               source={require("./assets/app_intro.png")}
@@ -408,8 +417,8 @@ export default function App() {
                 width: "100%",
                 height: "100%"
               }}>
-              <ForeverSkipHowToPageBtn onPress={ForeverSkipHowToPage} />
-              <OnceSkipHowToPageBtn onPress={OnceSkipHowToPage} />
+              <NoticeCancelBtn onPress={clickCancelNotice} />
+              <NoticeNeverBtn onPress={clickNeverNotice} />
             </ImageBackground>
           </HowToPage>
         )}

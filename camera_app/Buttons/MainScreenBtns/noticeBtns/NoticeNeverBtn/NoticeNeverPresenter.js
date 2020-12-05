@@ -1,34 +1,36 @@
-import React from "react";
+import React, { memo } from "react";
 import { TouchableOpacity, Image } from "react-native";
 import { Dimensions, StyleSheet } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
-const OnceSkipHowToPage = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress} style={styles.OnceCloseHowToPageBtn}>
-    <Image source={require("./OnceSkip.png")} style={styles.imgStyle} />
+const NoticeNeverBtn = memo((props) => (
+  <TouchableOpacity
+    onPress={props.onPress}
+    style={styles.ForeverCloseHowToPageBtn}>
+    <Image source={require("./ForeverSkip.png")} style={styles.imgStyle} />
   </TouchableOpacity>
-);
+));
 
 const styles = StyleSheet.create({
-  OnceCloseHowToPageBtn: {
-    width: width / 7,
+  ForeverCloseHowToPageBtn: {
+    width: width / 2.1,
     height: height / 17,
     top: "88%",
-    left: "73%",
+    left: "19%",
     borderColor: "#6e6e6e",
     borderWidth: 5,
     position: "absolute",
+    resizeMode: "contain",
     backgroundColor: "#292826"
   },
-
   imgStyle: {
-    width: width / 12,
+    width: width / 2.7,
     height: height / 10,
     resizeMode: "contain",
     bottom: "61%",
-    left: "14%"
+    left: "8%"
   }
 });
 
-export default OnceSkipHowToPage;
+export default NoticeNeverBtn;

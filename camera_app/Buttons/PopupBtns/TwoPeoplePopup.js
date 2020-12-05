@@ -6,23 +6,13 @@ import {
   TouchableHighlight,
   StyleSheet,
   Dimensions,
-  Alert,
-  Image
+  Alert
 } from "react-native";
-import styled from "styled-components";
-
-const TipContainer = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: -10%;
-  margin-bottom: 3%;
-`;
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
-const onePopup = () => {
+const twoPopup = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -37,35 +27,13 @@ const onePopup = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              {`1. 정면을 바라보고 눈을 바르게 뜨세요.
-                                2. 아래 버튼으로 성별을 바꿀 수 있어요.
-                            `}
+              {`1. 첫번째는 본인이나 원본 사진을 선택!\n2. 두번째는 합성할 사진을 선택! 🌷\n`}
             </Text>
-            <TipContainer>
-              <Image
-                source={require("../images/genderImages/woman.png")}
-                style={{
-                  width: 40,
-                  height: 40
-                  // marginTop: -10,
-                  // resizeMode: 'contain',
-                }}
-              />
-              <Image
-                source={require("../images/genderImages/man.png")}
-                style={{
-                  width: 40,
-                  height: 40
-                  // marginTop: -10,
-                  // resizeMode: 'contain',
-                }}
-              />
-            </TipContainer>
 
             <TouchableHighlight
               style={{
                 ...styles.openButton,
-                backgroundColor: "#f7eeb0"
+                backgroundColor: "#b9d3ed"
               }}
               onPress={() => {
                 setModalVisible(false);
@@ -76,9 +44,7 @@ const onePopup = () => {
         </View>
       </Modal>
       <TouchableHighlight
-        style={
-          styles.openButton //, setTimeout(() => 'display:none', 2000))
-        }
+        style={styles.openButton}
         onPress={() => {
           setModalVisible(true);
         }}>
@@ -102,9 +68,6 @@ const styles = StyleSheet.create({
     top: deviceHeight / 2.39,
     left: deviceWidth / 25,
     position: "absolute"
-
-    // marginTop: -650,
-    // marginLeft: -310,
   },
   modalView: {
     margin: 20,
@@ -122,7 +85,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   openButton: {
-    backgroundColor: "#b9d3ed",
+    backgroundColor: "#f7eeb0",
     borderRadius: 20,
     padding: 10,
     elevation: 2
@@ -134,10 +97,9 @@ const styles = StyleSheet.create({
     textAlign: "justify"
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: "center",
+    textAlign: "left",
     lineHeight: 25
   }
 });
 
-export default onePopup;
+export default twoPopup;
