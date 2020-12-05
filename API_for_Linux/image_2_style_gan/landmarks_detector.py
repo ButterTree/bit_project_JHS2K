@@ -1,4 +1,3 @@
-from skimage.exposure import equalize_adapthist
 import dlib
 import cv2
 
