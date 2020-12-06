@@ -41,9 +41,9 @@ import CancelBtn from "./Buttons/TransferCancelBtns/CancelBtn/CancelPresenter";
 import SaveBtn from "./Buttons/SaveShareBtns/SaveBtn/SavePresenter";
 import ShareBtn from "./Buttons/SaveShareBtns/ShareBtn/SharePresenter";
 
-import NoticeCancelBtn from "./Buttons/MainScreenBtns/noticeBtns/NoticeCancelBtn/NoticeCancelPresenter";
-import NoticeNeverBtn from "./Buttons/MainScreenBtns/noticeBtns/NoticeNeverBtn/NoticeNeverPresenter";
-import { useNoticeState } from "./Buttons/MainScreenBtns/noticeBtns/NoticeContainer";
+import NoticeCancelBtn from "./Buttons/MainScreenBtns/NoticeBtns/NoticeCancelBtn/NoticeCancelPresenter";
+import NoticeNeverBtn from "./Buttons/MainScreenBtns/NoticeBtns/NoticeNeverBtn/NoticeNeverPresenter";
+import { useNoticeState } from "./Buttons/MainScreenBtns/NoticeBtns/NoticeContainer";
 
 import OnePersonPopup from "./Buttons/PopupBtns/OnePersonPopup";
 import TwoPeopleMainPopup from "./Buttons/PopupBtns/TwoPeoplePopup";
