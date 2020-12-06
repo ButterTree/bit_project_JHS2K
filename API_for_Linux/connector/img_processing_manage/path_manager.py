@@ -1,5 +1,5 @@
-from img_processing_manage.transform_manager import *
-from img_processing_manage.save_photo import save_jpg
+from ..img_processing_manage.transform_manager import *
+from ..img_processing_manage.save_photo import save_jpg
 import os
 import uuid
 
@@ -25,7 +25,7 @@ def origin_image_control(data, process_selection):
 def custom_image_control(data, process_selection):
     try:
         # 디렉터리 생성
-        BASE_DIR, CUSTOM_DIR = make_dir(process_selection)
+        _, CUSTOM_DIR = make_dir(process_selection)
         # 커스텀 jpg 저장
         save_jpg(CUSTOM_DIR, data['custom'], process_selection)
         # jpg -> png, 정방형 처리
@@ -40,7 +40,7 @@ def make_dir(process_selection):
     if process_selection == 0:
         if os.path.isdir(BASE_DIR) is not True:
             os.makedirs(BASE_DIR, exist_ok=True)
-        
+
         RAW_DIR = f'{BASE_DIR}raw/'
         os.mkdir(RAW_DIR)
         return BASE_DIR, RAW_DIR
