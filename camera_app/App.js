@@ -20,16 +20,10 @@ import ProgressBarMain from "./Screen/ProgressBar/progressBarMain";
 import FaceLine from "./Screen/FaceLine";
 
 import TwoPeopleBtn from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter";
-import {
-  useTwoPeopleToggleState,
-  useTwoPeopleState
-} from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeopleContainer";
+import { useTwoPeopleState } from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeopleContainer";
 
 import GenderBtn from "./Buttons/ChangeBtns/GenderBtn/GenderPresenter";
-import {
-  useGenderState,
-  useGenderToggleState
-} from "./Buttons/ChangeBtns/GenderBtn/GenderContainer";
+import { useGenderState } from "./Buttons/ChangeBtns/GenderBtn/GenderContainer";
 
 import TakePhotoBtn from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoPresenter";
 import { useTakePhotoState } from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoContainer";
@@ -54,12 +48,8 @@ import { useNoticeState } from "./Buttons/MainScreenBtns/noticeBtns/NoticeContai
 import OnePersonPopup from "./Buttons/PopupBtns/OnePersonPopup";
 import TwoPeopleMainPopup from "./Buttons/PopupBtns/TwoPeoplePopup";
 
-import {
-  OffFirstLight,
-  OnFirstLight,
-  OffSecondLight,
-  OnSecondLight
-} from "./Buttons/PopupBtns/TwoPeopleLights";
+import OrderLight from "./Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPresenter";
+import { useLightState } from "./Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer";
 
 const { width, height } = Dimensions.get("window");
 const CenterView = styled.View`
@@ -116,17 +106,21 @@ export default function App() {
   const [isAfterView, setIsAfterView] = useState(false);
 
   const {
+    isTwoPeople,
+    setIsTwoPeople,
+    onPressTwoPeople,
     twoPeopleToggleValue,
     setTwoPeopleToggleValue,
     onToggleTwoPeople
-  } = useTwoPeopleToggleState();
-  const { isTwoPeople, setIsTwoPeople, onPressTwoPeople } = useTwoPeopleState();
+  } = useTwoPeopleState();
   const {
+    isGender,
+    setIsGender,
+    onPressGender,
     genderValue,
     setGenderValue,
     onToggleGender
-  } = useGenderToggleState();
-  const { isGender, setIsGender, onPressGender } = useGenderState();
+  } = useGenderState();
   const {
     hasPermission,
     cameraRef,
@@ -145,6 +139,17 @@ export default function App() {
   } = useGetPhotoState();
   const { cameraType, switchCameraType } = useCameraTypeState();
   const { isNotice, clickCancelNotice, clickNeverNotice } = useNoticeState();
+  const {
+    firstLightColor,
+    firstLightText,
+    secondLightColor,
+    secondLightText,
+    LightDefaultColor
+  } = useLightState();
+
+  console.log(
+    `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
+  );
 
   // 2인일 때, 2번째 사진으로 넘어가는 버튼
   const onPressNext = async () => {
@@ -160,6 +165,8 @@ export default function App() {
     firstPhoto =
       (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
 
+    setIsTwoPeople(true);
+    setTwoPeopleToggleValue(true);
     setTakePhoto({});
     setAlbumPhoto({});
   };
@@ -233,9 +240,8 @@ export default function App() {
   // 결과 이미지 저장 버튼
   const onPressSave = async () => {
     try {
-      Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
       // original Image path 설정
-      const originalImg = resultPhotoList[0].split("data:image/png;base64,")[0];
+      const originalImg = resultPhotoList[0].split("data:image/png;base64,")[1];
       const originalFileName = FileSystem.documentDirectory + "original.png";
       await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
         encoding: FileSystem.EncodingType.Base64
@@ -251,6 +257,8 @@ export default function App() {
       // Original, Changed 모두 갤러리 저장
       await MediaLibrary.saveToLibraryAsync(originalFileName);
       await MediaLibrary.saveToLibraryAsync(changedFileName);
+
+      Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
     } catch (error) {
       alert(`Save Result Photo Error: ${error}`);
     }
@@ -304,13 +312,25 @@ export default function App() {
               <></>
             ) : !firstPhoto ? (
               <PicLightContainer>
-                <OnFirstLight />
-                <OffSecondLight />
+                <OrderLight
+                  backgroundColor={firstLightColor}
+                  text={firstLightText}
+                />
+                <OrderLight
+                  backgroundColor={LightDefaultColor}
+                  text={secondLightText}
+                />
               </PicLightContainer>
             ) : (
               <PicLightContainer>
-                <OffFirstLight />
-                <OnSecondLight />
+                <OrderLight
+                  backgroundColor={LightDefaultColor}
+                  text={firstLightText}
+                />
+                <OrderLight
+                  backgroundColor={secondLightColor}
+                  text={secondLightText}
+                />
               </PicLightContainer>
             )}
 
