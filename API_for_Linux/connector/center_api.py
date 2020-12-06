@@ -8,20 +8,7 @@ import shutil
 
 app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
 
-# @app.route("/let_me_shine/results/", methods=['GET', 'POST'])
-# def data_return():
-#     global data
-#     if request.method == 'POST':
-#         data = request.get_json(silent=True)
-#     elif request.method == 'GET':
-#         data_buf = data
-#         return data_buf
-#     elif data == '':
-#         data_return.close()
-#     return ''
 
-
-# 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 @app.route("/let_me_shine", methods=['POST'])
 def let_me_shine():
     scope = 'eyes'
