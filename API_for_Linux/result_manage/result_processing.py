@@ -4,8 +4,8 @@ import base64
 import json
 import requests as rq
 
-URL_IP = '222.106.22.97'
-URL_PORT = '45055'
+URL_IP = '121.138.83.1'
+URL_PORT = '45045'
 
 url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
 usr_ID = f'{rand_uuid}'

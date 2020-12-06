@@ -1,6 +1,5 @@
 # from skimage.exposure import match_histograms, equalize_adapthist
 from collections import OrderedDict
-import re
 # from PIL import Image
 import numpy as np
 import argparse

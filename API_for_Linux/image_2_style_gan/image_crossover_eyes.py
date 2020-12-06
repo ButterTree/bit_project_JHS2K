@@ -13,7 +13,8 @@ import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_makers.eyebrows_mask_maker import precision_eye_masks
-from image_2_style_gan.read_image import image_reader_color, image_reader_gray
+from image_2_style_gan.mask_makers.eyes_only_mask_maker import precision_eyes_only_masks
+from image_2_style_gan.read_image import *
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
@@ -69,7 +70,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         target_name = TARGET_SOURCE_DIR + os.listdir(TARGET_SOURCE_DIR)[random_target_image_index]
 
     except IndexError as e:
-        print("\nMissing file(s).\nCheck if all of source images prepared properly and try again.")
+        print("Missing file(s).\nCheck if all of source images prepared properly and try again.")
         print(f"Aligned_image_names function: {e}")
         shutil.rmtree(BASE_DIR) # UUID 디렉터리 삭제
         sys.exit(1)
@@ -96,8 +97,20 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     # blur_mask0_4=image_reader_gray(brows_mask_name).to(device)
     # blur_mask0_5=image_reader_gray(face_mask_name).to(device)
     blur_mask1=1-blur_mask0_1
+    blur_mask2=1-blur_mask0_2
     blur_mask_eyes=blur_mask0_1-blur_mask0_2
     blur_mask_lids=blur_mask0_1-torch.clamp(blur_mask0_3-blur_mask0_2, 0, 1)
+
+    ingredient_eyes = img_1 * blur_mask0_2
+    e_mean = []
+    for i in range(ingredient_eyes.shape[1]):
+        e_mean.append(torch.mean(ingredient_eyes[0, i, ..., ...]))
+    idx = e_mean.index(min(e_mean))
+    for i in range(ingredient_eyes.shape[1]):
+        ingredient_eyes[0, i, ..., ...] = ingredient_eyes[0, idx, ..., ...]
+    img_1 = (img_1 * blur_mask2) + ingredient_eyes
+    img_1=img_1.to(device) #(1,3,1024,1024)
+    save_image(img_1, '../image_2_style_gan/source/img_1_0.png')
 
     save_image(img_0, '../image_2_style_gan/source/img_0_0.png')
     hist_bias_r = torch.mean(img_1[0, 0, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 0, ..., ...]*blur_mask0_1)
@@ -108,9 +121,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     print(f'g : {hist_bias_g}')
     print(f'b : {hist_bias_b}')
 
-    img_0[0, 0, ..., ...] = torch.clamp(img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*19000), 0, 1)
-    img_0[0, 1, ..., ...] = torch.clamp(img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*19000), 0, 1)
-    img_0[0, 2, ..., ...] = torch.clamp(img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*19000), 0, 1)
+    img_0[0, 0, ..., ...] = torch.clamp(img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*20000), 0, 1)
+    img_0[0, 1, ..., ...] = torch.clamp(img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*20000), 0, 1)
+    img_0[0, 2, ..., ...] = torch.clamp(img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*20000), 0, 1)
     save_image(img_0, '../image_2_style_gan/source/img_0_1.png')
 
     MSE_Loss=nn.MSELoss(reduction="mean")
@@ -158,9 +171,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         elif i == (args.iteration - 1):
             save_image(img_1*blur_mask1 + synth_img*blur_mask0_1, final_name)
             # save_image(synth_img.clamp(0, 1), final_name)
-
-    compare_origin = imread(ingredient_name).astype(np.uint8)
+   
     compare_result = imread(final_name).astype(np.uint8)
+    compare_origin = imread(ingredient_name).astype(np.uint8)
     matched = match_histograms(compare_result, compare_origin, multichannel=True).astype(np.uint8)
     imsave(final_name, matched)
 
