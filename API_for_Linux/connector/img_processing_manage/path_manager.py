@@ -1,3 +1,6 @@
+from random import shuffle
+from shutil import rmtree
+import shutil
 from ..img_processing_manage.transform_manager import *
 from ..img_processing_manage.save_photo import save_jpg
 import os
@@ -19,6 +22,7 @@ def origin_image_control(data, process_selection):
         return BASE_DIR, RAW_DIR
 
     except Exception as e:
+        shutil.rmtree(BASE_DIR)
         print(f"origin processing failed : {e}")
 
 
@@ -32,6 +36,7 @@ def custom_image_control(data, process_selection):
         transform_aligned_custom_img(CUSTOM_DIR)
 
     except Exception as e:
+        shutil.rmtree(CUSTOM_DIR)
         print(f"custom processing failed : {e}")
 
 
