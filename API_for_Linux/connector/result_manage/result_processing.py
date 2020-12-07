@@ -2,7 +2,6 @@ from ..img_processing_manage.path_manager import *
 import torch
 import base64
 import json
-import requests as rq
 
 URL_IP = '222.106.22.110'
 URL_PORT = '45045'
