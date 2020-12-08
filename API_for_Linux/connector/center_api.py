@@ -30,7 +30,7 @@ def data_return():
 @app.route("/let_me_shine", methods=['GET', 'POST'])  # 첫 화면에서 Image 파일을 제출하고 나면, 본 Url Page로 접속하게 된다. (Web)
 def let_me_shine():
     URL_IP = '192.168.1.47'
-    URL_PORT = '45045'
+    URL_PORT = '45055'
     url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
  
     rand_uuid = uuid.uuid4()    # 랜덤 UUID 생성 (범용 고유 식별자, universally unique identifier, UUID)
@@ -109,5 +109,5 @@ if __name__ == "__main__":
     # 즉, 이는 특정 Module을 타 Module에서 Import를 통해 활용하는 경우와 구분지을 수 있는 수단이 된다.
 
     print("Server Start!!")  # 메시지를 출력해 Server의 작동 시작을 알린다.
-    app.run('222.106.22.97', port=45055, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
+    app.run('192.168.1.47', port=45055, debug=True)  # 생성한 'app' 객체를 Parameter 값들을 이용해 구동한다.
     # 위에서 활용된 Parameter는 IP(v4)와 포트 번호, 디버그 모드의 수행 여부에 대한 Boolean 값이다.
