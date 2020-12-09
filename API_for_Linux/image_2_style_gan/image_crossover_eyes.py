@@ -110,9 +110,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         ingredient_eyes[0, i, ..., ...] = ingredient_eyes[0, idx, ..., ...]
     img_1 = (img_1 * blur_mask2) + ingredient_eyes
     img_1=img_1.to(device) #(1,3,1024,1024)
-    save_image(img_1, '../image_2_style_gan/source/img_1_0.png')
 
-    save_image(img_0, '../image_2_style_gan/source/img_0_0.png')
     hist_bias_r = torch.mean(img_1[0, 0, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 0, ..., ...]*blur_mask0_1)
     hist_bias_g = torch.mean(img_1[0, 1, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 1, ..., ...]*blur_mask0_1)
     hist_bias_b = torch.mean(img_1[0, 2, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 2, ..., ...]*blur_mask0_1)
@@ -124,7 +122,6 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     img_0[0, 0, ..., ...] = torch.clamp(img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*20000), 0, 1)
     img_0[0, 1, ..., ...] = torch.clamp(img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*20000), 0, 1)
     img_0[0, 2, ..., ...] = torch.clamp(img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*20000), 0, 1)
-    save_image(img_0, '../image_2_style_gan/source/img_0_1.png')
 
     MSE_Loss=nn.MSELoss(reduction="mean")
     upsample2d=torch.nn.Upsample(scale_factor=0.5, mode='nearest')
