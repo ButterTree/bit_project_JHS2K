@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View } from 'react-native';
 
-export default function ProgressLoading() {
+export default function Loading() {
   const [isReady, setIsReady] = useState(true);
   useEffect(() => {
     setTimeout(() => {
