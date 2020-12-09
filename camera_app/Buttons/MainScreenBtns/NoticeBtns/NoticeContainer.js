@@ -6,6 +6,7 @@ export const useNoticeState = () => {
 
   return {
     isNotice,
+    setIsNotice,
     clickCancelNotice: () => setIsNotice(false),
     clickNeverNotice: async () => {
       try {

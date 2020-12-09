@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { imageTransfer } from './API/api';
 
-import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
+import ProgressBarMain from './Screen/ProgressBar/ProgressBarMain';
 import FaceLine from './Screen/FaceLine';
 
 import TwoPeopleBtn from './Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter';
@@ -53,6 +53,8 @@ import TwoPeopleMainPopup from './Buttons/PopupBtns/TwoPeoplePopup';
 
 import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPresenter';
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
+
+import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
@@ -99,9 +101,9 @@ const PicLightContainer = styled.View`
 `;
 
 // Image Temporary Storage
-let firstPhoto = '';
-let secondPhoto = '';
-let resultPhotoList = [];
+let firstPhoto = ''; // base64
+let secondPhoto = ''; // base64
+let resultPhotoList = []; // [origin png, resultpng]
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -141,7 +143,12 @@ export default function App() {
     setAlbumPhoto,
   } = useGetPhotoState();
   const { cameraType, switchCameraType } = useCameraTypeState();
-  const { isNotice, clickCancelNotice, clickNeverNotice } = useNoticeState();
+  const {
+    isNotice,
+    setIsNotice,
+    clickCancelNotice,
+    clickNeverNotice,
+  } = useNoticeState();
   const {
     firstLightColor,
     firstLightText,
@@ -149,6 +156,21 @@ export default function App() {
     secondLightText,
     LightDefaultColor,
   } = useLightState();
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      setHasPermission(status == 'granted');
+
+      const {
+        status: albumStatus,
+      } = await ImagePicker.requestCameraRollPermissionsAsync();
+      setHasAlbumPermission(albumStatus === 'granted');
+
+      const noticeStatus = await AsyncStorage.getItem('Notice');
+      noticeStatus !== null ? setIsNotice(JSON.parse(noticeStatus)) : false;
+    })();
+  }, []);
 
   console.log(
     `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
@@ -200,25 +222,19 @@ export default function App() {
     setAlbumPhoto({});
   };
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      setHasPermission(status == 'granted');
-
-      const {
-        status: albumStatus,
-      } = await ImagePicker.requestCameraRollPermissionsAsync();
-      setHasAlbumPermission(albumStatus === 'granted');
-
-      const noticeStatus = await AsyncStorage.getItem('Notice');
-      noticeStatus !== null ? setIsNotice(JSON.parse(noticeStatus)) : false;
-    })();
-  }, []);
-
   // AI Server로 전송하는 버튼
   const getTransferImage = async () => {
     try {
       console.log(`getTransferImage start!`);
+
+      if (isPreview) {
+        await cameraRef.current.resumePreview();
+        setIsPreview(false);
+      }
+
+      if (imageSelected) {
+        setImageSelected(false);
+      }
 
       if (!firstPhoto) {
         firstPhoto =
@@ -237,15 +253,6 @@ export default function App() {
 
       setIsLoading(false);
       // Image Transformation End
-
-      if (isPreview) {
-        await cameraRef.current.resumePreview();
-        setIsPreview(false);
-      }
-
-      if (imageSelected) {
-        setImageSelected(false);
-      }
 
       firstPhoto = '';
       secondPhoto = '';
@@ -301,14 +308,19 @@ export default function App() {
 
   // View
   if (hasPermission === true) {
-    return isLoading ? (
+    return isLoading && !isTwoPeople && !secondPhoto ? (
       <ProgressBarMain />
+    ) : isTwoPeople && secondPhoto ? (
+      <TwoPeopleLoading
+        firstPhoto={`data:image/png;base64,${firstPhoto}`}
+        secondPhoto={`data:image/png;base64,${secondPhoto}`}
+      />
     ) : (
       <CenterView>
         {!imageSelected && !isAfterView && (
           <Camera
             style={
-              height >= 790
+              height >= 700
                 ? {
                     alignItems: 'center',
                     width: width,
@@ -318,7 +330,7 @@ export default function App() {
                 : {
                     alignItems: 'center',
                     width: width,
-                    height: width / 0.65,
+                    height: width / 0.75,
                     marginTop: 0,
                   }
             }
@@ -379,7 +391,7 @@ export default function App() {
           <>
             <Image
               style={
-                height >= 790
+                height >= 700
                   ? {
                       width: width,
                       height: width / 0.75,
@@ -408,11 +420,11 @@ export default function App() {
         {isAfterView && (
           <Image
             style={
-              height >= 790
+              height >= 700
                 ? {
                     width: width,
                     height: width,
-                    marginTop: 100,
+                    marginTop: '20%',
                   }
                 : {
                     width: width,
