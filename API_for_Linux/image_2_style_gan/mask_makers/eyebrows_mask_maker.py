@@ -26,7 +26,8 @@ def precision_eye_masks(aligned_image_name, mask_dir, landmark_dat_dir=default_d
     FACIAL_CONVPOLY_INDEXES.append(range(16, -1, -1))
 
     # bias = [[-35, 0], [0, -30], [0, -30], [20, 0], [0, 5], [0, 5], [-20, 0], [0, -30], [0, -30], [35, 0], [0, 5], [0, 5]]
-    bias = [[-40, 0], [-30, -30], [25, -30], [25, 0], [0, 10], [0, 10], [-20, 0], [-25, -30], [30, -30], [40, 0], [0, 10], [0, 10]]
+    bias = [[-40, 0], [-30, -28], [25, -28], [25, 0], [0, 10], [0, 10], [-20, 0], [-25, -28], [30, -28], [40, 0], [0, 10], [0, 10]]
+    eye_only_bias = [[1, 0], [0, 0], [0, 0], [0, -1], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [-1, 0], [0, 0], [0, 0]]
     lid_bias = [[-7, -15], [0, -13], [0, -13], [-3, -12], [3, -12], [0, -13], [0, -13], [7, -15]]
     brows_bias = [0, 20]
 
@@ -57,7 +58,7 @@ def precision_eye_masks(aligned_image_name, mask_dir, landmark_dat_dir=default_d
             lid_coords = np.append(coordinates[j: k-2], np.flip(coordinates[j: k-2] + lid_bias[0+(4*(i-2)):4+(4*(i-2))], axis=0), axis=0)
             lids_base = cv2.fillConvexPoly(lids_base, lid_coords, 255)
             mask_base = cv2.fillConvexPoly(mask_base, coordinates[j:k] + bias[0+(6*(i-2)):6+(6*(i-2))], 255)
-            eyes_base = cv2.fillConvexPoly(eyes_base, coordinates[j:k], 255)
+            eyes_base = cv2.fillConvexPoly(eyes_base, coordinates[j:k] + eye_only_bias[0+(6*(i-2)):6+(6*(i-2))], 255)
     
     face_poly_coords = []
     for i in FACIAL_CONVPOLY_INDEXES:
@@ -66,8 +67,8 @@ def precision_eye_masks(aligned_image_name, mask_dir, landmark_dat_dir=default_d
     face_base = cv2.fillConvexPoly(face_base, np.array(face_poly_coords), 255)
 
     face_base = cv2.blur(face_base, (30, 30))
-    mask_base = cv2.blur(mask_base, (20,25))
-    eyes_base = cv2.blur(eyes_base, (10,3))
+    mask_base = cv2.blur(mask_base, (15,20))
+    eyes_base = cv2.blur(eyes_base, (1,1))
     brows_base = cv2.blur(brows_base, (10,15))
     lids_base = cv2.blur(lids_base, (5,7))
 
