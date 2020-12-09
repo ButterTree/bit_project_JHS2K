@@ -3,15 +3,15 @@ import torch
 import base64
 import json
 
-URL_IP = '222.106.22.110'
-URL_PORT = '45045'
+URL_IP = '192.168.1.44'
+URL_PORT = '45015'
 
 url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
-usr_ID = f'{rand_uuid}'
 
 
-def result_processing(input_image, output_image):
+def result_processing(input_image, output_image, rand_uuid):
     try:
+        usr_ID = f'{rand_uuid}'
         torch.cuda.empty_cache()
         post_processed_data = {'results': {'imgID_1': base64.b64encode(open(input_image, 'rb').read()).decode('utf-8'),
                                            'imgID_2': base64.b64encode(open(output_image, 'rb').read()).decode('utf-8')}, 'usrID': usr_ID}

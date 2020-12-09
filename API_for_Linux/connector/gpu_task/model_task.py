@@ -5,16 +5,19 @@ from connector.result_manage.result_processing import *
 import shutil
 
 
-def main_processing(data):
+def main_processing(data, rand_uuid):
     try:
         scope = 'eyes'
         gender = data['gender']
         process_selection = 0
         # 전송받은 데이터와 프로세스 선택 변수 넘겨주기
-        BASE_DIR, RAW_DIR = origin_image_control(data, process_selection)
+        print("\n100\n")
+        BASE_DIR, RAW_DIR = origin_image_control(
+            data, process_selection, rand_uuid)
+        print("\n200\n")
         if data['custom']:
             process_selection = 1
-            custom_image_control(data, process_selection)
+            custom_image_control(data, process_selection, rand_uuid)
 
         print("\n********** Image processing succeed, send to model **********\n")
         if scope == 'eyes':
@@ -26,7 +29,7 @@ def main_processing(data):
         print("\n********** Model processing succeed, post data **********\n")
 
         # 이미지 base64형식으로 변환
-        json_data = result_processing(input_image, output_image)
+        json_data = result_processing(input_image, output_image, rand_uuid)
         shutil.rmtree(BASE_DIR)  # UUID 디렉터리 삭제
         return json_data
     except Exception as e:
