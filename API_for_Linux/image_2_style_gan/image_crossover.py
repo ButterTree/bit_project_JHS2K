@@ -48,7 +48,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
     parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
     parser.add_argument('--mask', default=MASK_DIR)
-    parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/karras2019stylegan-ffhq-1024x1024.pt", type=str)
+    parser.add_argument('--weight_file', default="../image_2_style_gan/weight_files/pytorch/550000.pt", type=str)
     parser.add_argument('--iteration', default=150, type=int)
 
     args = parser.parse_args()
