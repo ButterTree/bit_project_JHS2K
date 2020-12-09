@@ -11,10 +11,8 @@ def main_processing(data, rand_uuid):
         gender = data['gender']
         process_selection = 0
         # 전송받은 데이터와 프로세스 선택 변수 넘겨주기
-        print("\n100\n")
         BASE_DIR, RAW_DIR = origin_image_control(
             data, process_selection, rand_uuid)
-        print("\n200\n")
         if data['custom']:
             process_selection = 1
             custom_image_control(data, process_selection, rand_uuid)

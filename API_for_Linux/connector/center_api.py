@@ -1,11 +1,10 @@
 from connector.result_manage.result_processing import *
 from connector.gpu_task.model_task import main_processing
 from flask import Flask, request
-from queue import Queue
 
 import uuid
 
-app = Flask(__name__)  # 'app'이라는 이름의 Flask Application 객체를 생성한다.
+app = Flask(__name__)
 
 
 @app.route("/let_me_shine", methods=['POST'])
