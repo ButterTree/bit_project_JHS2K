@@ -61,7 +61,7 @@ import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
     flex: 1;
-    background-color: white;
+    background-color: #fadbdb;
 `;
 const IconContainer = styled.View`
     flex: 1;
@@ -177,7 +177,7 @@ export default function App() {
     }, []);
 
     console.log(
-        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
+        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`,
     );
 
     // 2인일 때, 2번째 사진으로 넘어가는 버튼
@@ -259,7 +259,7 @@ export default function App() {
             resultPhotoList = await imageTransfer(
                 firstPhoto,
                 secondPhoto,
-                isGender
+                isGender,
             );
 
             setIsLoading(false);
@@ -278,7 +278,7 @@ export default function App() {
         try {
             // original Image path 설정
             const originalImg = resultPhotoList[0].split(
-                'data:image/png;base64,'
+                'data:image/png;base64,',
             )[1];
             const originalFileName =
                 FileSystem.documentDirectory + 'original.png';
@@ -288,7 +288,7 @@ export default function App() {
 
             // changed Image path 설정
             const changedImg = resultPhotoList[1].split(
-                'data:image/png;base64,'
+                'data:image/png;base64,',
             )[1];
             const changedFileName =
                 FileSystem.documentDirectory + 'changed.png';
@@ -311,7 +311,7 @@ export default function App() {
         try {
             // changed Image path 설정
             const changedImg = resultPhotoList[1].split(
-                'data:image/png;base64,'
+                'data:image/png;base64,',
             )[1];
             const changedFileName =
                 FileSystem.documentDirectory + 'changed.png';
@@ -469,19 +469,20 @@ export default function App() {
                 )}
                 {isAfterView && (
                     <IconContainer>
-                        <SaveBtn onPress={onPressSave} />
-                        <ShareBtn onPress={onPressShare} />
                         <CancelBtn onPress={onPressCancel} />
+                        <ShareBtn onPress={onPressShare} />
+                        <SaveBtn onPress={onPressSave} />
                     </IconContainer>
                 )}
                 {(isPreview || imageSelected) && (
                     <IconContainer>
+                        <CancelBtn onPress={onPressCancel} />
+
                         {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
                             <TransferBtn onPress={getTransferImage} />
                         ) : (
                             <NextBtn onPress={onPressNext} />
                         )}
-                        <CancelBtn onPress={onPressCancel} />
                     </IconContainer>
                 )}
                 {isNotice && (
