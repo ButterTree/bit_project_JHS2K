@@ -5,7 +5,7 @@ import {
     Image,
     Dimensions,
     Alert,
-    ImageBackground,
+    ImageBackground
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -117,7 +117,7 @@ export default function App() {
         onPressTwoPeople,
         twoPeopleToggleValue,
         setTwoPeopleToggleValue,
-        onToggleTwoPeople,
+        onToggleTwoPeople
     } = useTwoPeopleState();
     const {
         isGender,
@@ -125,7 +125,7 @@ export default function App() {
         onPressGender,
         genderValue,
         setGenderValue,
-        onToggleGender,
+        onToggleGender
     } = useGenderState();
     const {
         cameraRef,
@@ -133,28 +133,28 @@ export default function App() {
         setIsPreview,
         takePhoto,
         setTakePhoto,
-        onPressTakePhoto,
+        onPressTakePhoto
     } = useTakePhotoState();
     const {
         imageSelected,
         setImageSelected,
         onPressGetPhoto,
         albumPhoto,
-        setAlbumPhoto,
+        setAlbumPhoto
     } = useGetPhotoState();
     const { cameraType, switchCameraType } = useCameraTypeState();
     const {
         isNotice,
         setIsNotice,
         clickCancelNotice,
-        clickNeverNotice,
+        clickNeverNotice
     } = useNoticeState();
     const {
         firstLightColor,
         firstLightText,
         secondLightColor,
         secondLightText,
-        LightDefaultColor,
+        LightDefaultColor
     } = useLightState();
 
     useEffect(() => {
@@ -163,7 +163,7 @@ export default function App() {
             setHasPermission(status == 'granted');
 
             const {
-                status: albumStatus,
+                status: albumStatus
             } = await ImagePicker.requestCameraRollPermissionsAsync();
             setHasAlbumPermission(albumStatus === 'granted');
 
@@ -175,7 +175,7 @@ export default function App() {
     }, []);
 
     console.log(
-        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`,
+        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
     );
 
     // 2인일 때, 2번째 사진으로 넘어가는 버튼
@@ -257,7 +257,7 @@ export default function App() {
             resultPhotoList = await imageTransfer(
                 firstPhoto,
                 secondPhoto,
-                isGender,
+                isGender
             );
 
             setIsLoading(false);
@@ -276,22 +276,22 @@ export default function App() {
         try {
             // original Image path 설정
             const originalImg = resultPhotoList[0].split(
-                'data:image/png;base64,',
+                'data:image/png;base64,'
             )[1];
             const originalFileName =
                 FileSystem.documentDirectory + 'original.png';
             await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
-                encoding: FileSystem.EncodingType.Base64,
+                encoding: FileSystem.EncodingType.Base64
             });
 
             // changed Image path 설정
             const changedImg = resultPhotoList[1].split(
-                'data:image/png;base64,',
+                'data:image/png;base64,'
             )[1];
             const changedFileName =
                 FileSystem.documentDirectory + 'changed.png';
             await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
-                encoding: FileSystem.EncodingType.Base64,
+                encoding: FileSystem.EncodingType.Base64
             });
 
             // Original, Changed 모두 갤러리 저장
@@ -309,12 +309,12 @@ export default function App() {
         try {
             // changed Image path 설정
             const changedImg = resultPhotoList[1].split(
-                'data:image/png;base64,',
+                'data:image/png;base64,'
             )[1];
             const changedFileName =
                 FileSystem.documentDirectory + 'changed.png';
             await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
-                encoding: FileSystem.EncodingType.Base64,
+                encoding: FileSystem.EncodingType.Base64
             });
 
             // changed Image 공유
@@ -343,13 +343,13 @@ export default function App() {
                                       alignItems: 'center',
                                       width: width,
                                       height: width / 0.75,
-                                      marginTop: 50,
+                                      marginTop: 50
                                   }
                                 : {
                                       alignItems: 'center',
                                       width: width,
                                       height: width / 0.75,
-                                      marginTop: 0,
+                                      marginTop: 0
                                   }
                         }
                         type={cameraType}
@@ -417,12 +417,12 @@ export default function App() {
                                     ? {
                                           width: width,
                                           height: width / 0.75,
-                                          marginTop: 50,
+                                          marginTop: 50
                                       }
                                     : {
                                           width: width,
                                           height: width / 0.75,
-                                          marginTop: 25,
+                                          marginTop: 25
                                       }
                             }
                             source={{ uri: albumPhoto.uri }}
@@ -446,12 +446,12 @@ export default function App() {
                                 ? {
                                       width: width,
                                       height: width,
-                                      marginTop: '20%',
+                                      marginTop: '20%'
                                   }
                                 : {
                                       width: width,
                                       height: width,
-                                      marginTop: 0,
+                                      marginTop: 0
                                   }
                         }
                         source={{ uri: resultPhotoList[1] }}
@@ -489,7 +489,7 @@ export default function App() {
                             source={require('./assets/app_intro.png')}
                             style={{
                                 width: '100%',
-                                height: '100%',
+                                height: '100%'
                             }}
                         >
                             <NoticeCancelBtn onPress={clickCancelNotice} />
