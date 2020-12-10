@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	ActivityIndicator,
 	Text,
@@ -6,55 +6,55 @@ import {
 	Dimensions,
 	Alert,
 	ImageBackground,
-} from "react-native";
-import styled from "styled-components";
+} from 'react-native';
+import styled from 'styled-components';
 
-import { Camera } from "expo-camera";
-import * as Permissions from "expo-permissions";
-import * as ImagePicker from "expo-image-picker";
-import * as MediaLibrary from "expo-media-library";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
+import { Camera } from 'expo-camera';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
-import { imageTransfer } from "./API/api";
+import { imageTransfer } from './API/api';
 
-import ProgressBarMain from "./Screen/ProgressBar/progressBarMain";
-import FaceLine from "./Screen/FaceLine";
+import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
+import FaceLine from './Screen/FaceLine';
 
-import TwoPeopleBtn from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter";
-import { useTwoPeopleState } from "./Buttons/ChangeBtns/TwoPeopleBtn/TwoPeopleContainer";
+import TwoPeopleBtn from './Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter';
+import { useTwoPeopleState } from './Buttons/ChangeBtns/TwoPeopleBtn/TwoPeopleContainer';
 
-import GenderBtn from "./Buttons/ChangeBtns/GenderBtn/GenderPresenter";
-import { useGenderState } from "./Buttons/ChangeBtns/GenderBtn/GenderContainer";
+import GenderBtn from './Buttons/ChangeBtns/GenderBtn/GenderPresenter';
+import { useGenderState } from './Buttons/ChangeBtns/GenderBtn/GenderContainer';
 
-import TakePhotoBtn from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoPresenter";
-import { useTakePhotoState } from "./Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoContainer";
+import TakePhotoBtn from './Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoPresenter';
+import { useTakePhotoState } from './Buttons/MainScreenBtns/TakePhotoBtn/TakePhotoContainer';
 
-import SwitchCameraBtn from "./Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraPresenter";
-import { useCameraTypeState } from "./Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraContainer";
+import SwitchCameraBtn from './Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraPresenter';
+import { useCameraTypeState } from './Buttons/MainScreenBtns/SwitchCameraBtn/SwitchCameraContainer';
 
-import GetPhotoBtn from "./Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoPresenter";
-import { useGetPhotoState } from "./Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoContainer";
+import GetPhotoBtn from './Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoPresenter';
+import { useGetPhotoState } from './Buttons/MainScreenBtns/GetPhotoBtn/GetPhotoContainer';
 
-import TransferBtn from "./Buttons/TransferCancelBtns/TransferBtn/TransferPresenter";
-import NextBtn from "./Buttons/ChangeBtns/NextBtn/NextPresenter";
-import CancelBtn from "./Buttons/TransferCancelBtns/CancelBtn/CancelPresenter";
+import TransferBtn from './Buttons/TransferCancelBtns/TransferBtn/TransferPresenter';
+import NextBtn from './Buttons/ChangeBtns/NextBtn/NextPresenter';
+import CancelBtn from './Buttons/TransferCancelBtns/CancelBtn/CancelPresenter';
 
-import SaveBtn from "./Buttons/SaveShareBtns/SaveBtn/SavePresenter";
-import ShareBtn from "./Buttons/SaveShareBtns/ShareBtn/SharePresenter";
+import SaveBtn from './Buttons/SaveShareBtns/SaveBtn/SavePresenter';
+import ShareBtn from './Buttons/SaveShareBtns/ShareBtn/SharePresenter';
 
-import NoticeCancelBtn from "./Buttons/MainScreenBtns/NoticeBtns/NoticeCancelBtn/NoticeCancelPresenter";
-import NoticeNeverBtn from "./Buttons/MainScreenBtns/NoticeBtns/NoticeNeverBtn/NoticeNeverPresenter";
-import { useNoticeState } from "./Buttons/MainScreenBtns/NoticeBtns/NoticeContainer";
+import NoticeCancelBtn from './Buttons/MainScreenBtns/NoticeBtns/NoticeCancelBtn/NoticeCancelPresenter';
+import NoticeNeverBtn from './Buttons/MainScreenBtns/NoticeBtns/NoticeNeverBtn/NoticeNeverPresenter';
+import { useNoticeState } from './Buttons/MainScreenBtns/NoticeBtns/NoticeContainer';
 
-import OnePersonPopup from "./Buttons/PopupBtns/OnePersonPopup";
-import TwoPeopleMainPopup from "./Buttons/PopupBtns/TwoPeoplePopup";
+import OnePersonPopup from './Buttons/PopupBtns/OnePersonPopup';
+import TwoPeopleMainPopup from './Buttons/PopupBtns/TwoPeoplePopup';
 
-import OrderLight from "./Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPresenter";
-import { useLightState } from "./Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer";
+import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPresenter';
+import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 const MainContainer = styled.View`
 	flex: 1;
 	background-color: white;
@@ -100,8 +100,8 @@ const LightContainer = styled.View`
 `;
 
 // Image Temporary Storage
-let firstPhoto = "";
-let secondPhoto = "";
+let firstPhoto = '';
+let secondPhoto = '';
 let resultPhotoList = [];
 
 export default function App() {
@@ -163,16 +163,16 @@ export default function App() {
 		(async () => {
 			// Camera 권한 체크
 			const { status } = await Permissions.askAsync(Permissions.CAMERA);
-			setHasPermission(status == "granted");
+			setHasPermission(status == 'granted');
 
 			// Album 권한 체크
 			const {
 				status: albumStatus,
 			} = await ImagePicker.requestCameraRollPermissionsAsync();
-			setHasAlbumPermission(albumStatus === "granted");
+			setHasAlbumPermission(albumStatus === 'granted');
 
 			// 안내문 다시보지 않기 체크
-			const noticeStatus = await AsyncStorage.getItem("Notice");
+			const noticeStatus = await AsyncStorage.getItem('Notice');
 			noticeStatus !== null
 				? setIsNotice(JSON.parse(noticeStatus))
 				: false;
@@ -217,15 +217,15 @@ export default function App() {
 			setAlbumPhoto({});
 		}
 
-		setIsGender("female"); // 취소 버튼 누르면 성별 '여자'로 초기화
+		setIsGender('female'); // 취소 버튼 누르면 성별 '여자'로 초기화
 		setGenderValue(false);
 
 		setIsTwoPeople(false);
 		setTwoPeopleToggleValue(false);
 
 		setIsAfterView(false);
-		firstPhoto = "";
-		secondPhoto = "";
+		firstPhoto = '';
+		secondPhoto = '';
 		setTakePhoto({});
 		setAlbumPhoto({});
 	};
@@ -268,8 +268,8 @@ export default function App() {
 				setImageSelected(false);
 			}
 
-			firstPhoto = "";
-			secondPhoto = "";
+			firstPhoto = '';
+			secondPhoto = '';
 			setIsAfterView(true);
 		} catch (e) {
 			alert(`getTransferImage Error: ${e}`);
@@ -281,20 +281,20 @@ export default function App() {
 		try {
 			// original Image path 설정
 			const originalImg = resultPhotoList[0].split(
-				"data:image/png;base64,"
+				'data:image/png;base64,'
 			)[1];
 			const originalFileName =
-				FileSystem.documentDirectory + "original.png";
+				FileSystem.documentDirectory + 'original.png';
 			await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
 				encoding: FileSystem.EncodingType.Base64,
 			});
 
 			// changed Image path 설정
 			const changedImg = resultPhotoList[1].split(
-				"data:image/png;base64,"
+				'data:image/png;base64,'
 			)[1];
 			const changedFileName =
-				FileSystem.documentDirectory + "changed.png";
+				FileSystem.documentDirectory + 'changed.png';
 			await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
 				encoding: FileSystem.EncodingType.Base64,
 			});
@@ -303,7 +303,7 @@ export default function App() {
 			await MediaLibrary.saveToLibraryAsync(originalFileName);
 			await MediaLibrary.saveToLibraryAsync(changedFileName);
 
-			Alert.alert("저장완료❤", "갤러리에서 확인할 수 있습니다.");
+			Alert.alert('저장완료❤', '갤러리에서 확인할 수 있습니다.');
 		} catch (error) {
 			alert(`Save Result Photo Error: ${error}`);
 		}
@@ -314,10 +314,10 @@ export default function App() {
 		try {
 			// changed Image path 설정
 			const changedImg = resultPhotoList[1].split(
-				"data:image/png;base64,"
+				'data:image/png;base64,'
 			)[1];
 			const changedFileName =
-				FileSystem.documentDirectory + "changed.png";
+				FileSystem.documentDirectory + 'changed.png';
 			await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
 				encoding: FileSystem.EncodingType.Base64,
 			});
@@ -340,13 +340,13 @@ export default function App() {
 						style={
 							height >= 790
 								? {
-										alignItems: "center",
+										alignItems: 'center',
 										width: width,
 										height: width / 0.75,
 										marginTop: 50,
 								  }
 								: {
-										alignItems: "center",
+										alignItems: 'center',
 										width: width,
 										height: width / 0.7,
 										marginTop: 0,
@@ -485,10 +485,10 @@ export default function App() {
 				{isNotice && (
 					<NoticeContainer>
 						<ImageBackground
-							source={require("./assets/app_intro.png")}
+							source={require('./assets/app_intro.png')}
 							style={{
-								width: "100%",
-								height: "100%",
+								width: '100%',
+								height: '100%',
 							}}
 						>
 							<NoticeCancelBtn onPress={clickCancelNotice} />
