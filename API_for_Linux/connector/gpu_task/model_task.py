@@ -3,9 +3,25 @@ from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
 from connector.img_processing_manage.path_manager import *
 from connector.result_manage.result_processing import *
 import shutil
+import nvidia_smi
+
+
+def check_gpu_usage():
+
+    nvidia_smi.nvmlInit()
+    handle = nvidia_smi.nvmlDeviceGetHandleByIndex(0)
+    # card id 0 hardcoded here, there is also a call to get all available card ids, so we could iterate
+    gpu_status = nvidia_smi.nvmlDeviceGetUtilizationRates(handle)
+    return gpu_status
+
+
+# gpu status
+gpu_status = check_gpu_usage()
 
 
 def main_processing(data, rand_uuid):
+    print("GPU사용량 : {}% 사용중인 메모리 : {}% ".format(
+        gpu_status.gpu, gpu_status.memory))
     try:
         scope = 'eyes'
         gender = data['gender']
