@@ -13,14 +13,14 @@ const TakePhotoBtn = memo((props) => (
 const styles = StyleSheet.create({
     ShotBtn: {
         width: width / 4,
-        height: height / 7,
+        height: height / 7
     },
 
     imgStyle: {
         width: width / 4,
         height: height / 7,
-        resizeMode: 'contain',
-    },
+        resizeMode: 'contain'
+    }
 });
 
 export default TakePhotoBtn;

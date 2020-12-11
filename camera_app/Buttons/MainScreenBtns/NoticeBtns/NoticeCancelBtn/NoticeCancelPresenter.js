@@ -7,7 +7,20 @@ const { width, height } = Dimensions.get('window');
 const NoticeCancelBtn = memo((props) => (
     <TouchableOpacity
         onPress={props.onPress}
-        style={styles.OnceCloseHowToPageBtn}
+        style={
+            height >= 700
+                ? {
+                      width: width / 7.8,
+                      height: height / 20,
+                      bottom: '9%',
+                      left: '13%'
+                  }
+                : {
+                      width: width / 7.8,
+                      height: height / 20,
+                      left: '13%'
+                  }
+        }
     >
         <Image source={require('./OnceSkip.png')} style={styles.imgStyle} />
     </TouchableOpacity>
@@ -18,17 +31,17 @@ const styles = StyleSheet.create({
         width: width / 7.8,
         height: height / 20,
         top: '92%',
-        left: '78%',
-        position: 'absolute',
+        left: '13%'
+        // position: 'absolute',
     },
 
     imgStyle: {
         width: width / 9,
         height: height / 10,
-        resizeMode: 'contain',
-        bottom: '46%',
-        left: '7%',
-    },
+        resizeMode: 'contain'
+        // bottom: '46%',
+        // left: '7%',
+    }
 });
 
 export default NoticeCancelBtn;

@@ -55,6 +55,7 @@ import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPrese
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
+import { View } from 'native-base';
 
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
@@ -88,12 +89,13 @@ const HowToPage = styled.View`
     width: 100%;
     height: 100%;
     position: absolute;
+    flex: 1;
 `;
 const PicLightContainer = styled.View`
     width: 100%;
     flex: 1;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 0 3%;
     margin-top: 5%;
@@ -343,7 +345,7 @@ export default function App() {
                                       alignItems: 'center',
                                       width: width,
                                       height: width / 0.75,
-                                      marginTop: 50
+                                      marginTop: height / 12
                                   }
                                 : {
                                       alignItems: 'center',
@@ -468,8 +470,8 @@ export default function App() {
                 {isAfterView && (
                     <IconContainer>
                         <CancelBtn onPress={onPressCancel} />
-                        <ShareBtn onPress={onPressShare} />
                         <SaveBtn onPress={onPressSave} />
+                        <ShareBtn onPress={onPressShare} />
                     </IconContainer>
                 )}
                 {(isPreview || imageSelected) && (
@@ -486,10 +488,131 @@ export default function App() {
                 {isNotice && (
                     <HowToPage>
                         <ImageBackground
-                            source={require('./assets/app_intro.png')}
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
                             style={{
-                                width: '100%',
-                                height: '100%'
+                                width: width,
+                                height: height / 3.5,
+                                alignItems: 'center',
+                                position: 'relative'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/faceLineNotice.png')}
+                                style={
+                                    height >= 700
+                                        ? {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5,
+                                              top: height / 15
+                                          }
+                                        : {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5
+                                          }
+                                }
+                            />
+                            {/* <FaceLine style={{ position: 'absolute' }} /> */}
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 14
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 10,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/tipNotice.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={
+                                height >= 700 && height < 800
+                                    ? {
+                                          width: width,
+                                          height: height / 12
+                                      }
+                                    : {
+                                          width: width,
+                                          height: height / 50
+                                      }
+                            }
+                        />
+
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 4.5,
+                                alignItems: 'flex-end'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/genderNotice2.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 70
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 6,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/twoPeopleNotice3.png')}
+                                style={
+                                    height >= 700
+                                        ? {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6,
+                                              bottom: height / 20
+                                          }
+                                        : {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6
+                                          }
+                                }
+                            />
+                            {/* <NoticeCancelBtn onPress={clickCancelNotice} />
+                            <NoticeNeverBtn onPress={clickNeverNotice} /> */}
+                        </ImageBackground>
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 3,
+                                alignItems: 'flex-start',
+                                flexDirection: 'row-reverse'
                             }}
                         >
                             <NoticeCancelBtn onPress={clickCancelNotice} />

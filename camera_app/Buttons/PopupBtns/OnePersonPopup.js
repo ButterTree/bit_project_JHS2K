@@ -7,7 +7,7 @@ import {
     StyleSheet,
     Dimensions,
     Alert,
-    Image,
+    Image
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -26,7 +26,27 @@ const onePopup = () => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
-        <View style={styles.LeftView}>
+        <View
+            style={
+                deviceHeight >= 700
+                    ? {
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.3,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
+                    : {
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.05,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
+            }
+        >
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -45,22 +65,21 @@ const onePopup = () => {
                                 source={require('../../images/genderImages/woman.png')}
                                 style={{
                                     width: 40,
-                                    height: 40,
+                                    height: 40
                                 }}
                             />
                             <Image
                                 source={require('../../images/genderImages/man.png')}
                                 style={{
                                     width: 40,
-                                    height: 40,
+                                    height: 40
                                 }}
                             />
                         </TipContainer>
-
                         <TouchableHighlight
                             style={{
                                 ...styles.openButton,
-                                backgroundColor: '#f7eeb0',
+                                backgroundColor: '#FADBDB'
                             }}
                             onPress={() => {
                                 setModalVisible(false);
@@ -88,15 +107,15 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        marginTop: 22
     },
     LeftView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        top: deviceHeight / 2.39,
+        height: deviceHeight / 1.1,
         left: deviceWidth / 25,
-        position: 'absolute',
+        position: 'absolute'
     },
     modalView: {
         margin: 20,
@@ -107,29 +126,29 @@ const styles = StyleSheet.create({
         shadowColor: 'transparent',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 5
     },
     openButton: {
         backgroundColor: '#FADBDB',
         borderRadius: 20,
         padding: 10,
-        elevation: 2,
+        elevation: 2
     },
     closeButton: {},
     textStyle: {
         color: '#4d4d4d',
         fontWeight: 'bold',
-        textAlign: 'justify',
+        textAlign: 'justify'
     },
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
-        lineHeight: 25,
-    },
+        lineHeight: 25
+    }
 });
 
 export default onePopup;

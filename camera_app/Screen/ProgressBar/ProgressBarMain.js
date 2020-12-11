@@ -4,14 +4,13 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Loading from './Loading';
 import Texts from './Texts';
-import InfinitCircle from './InfinitCircle';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignContent: 'center',
-    },
+        alignContent: 'center'
+    }
 });
 
 export default ProgressBarMain = () => {
@@ -20,7 +19,6 @@ export default ProgressBarMain = () => {
             <View style={styles.container}>
                 <Loading />
                 <Texts />
-                <InfinitCircle />
             </View>
         </>
     );
