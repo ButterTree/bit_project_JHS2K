@@ -29,6 +29,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     TARGET_IMAGE_DIR = f'{BASE_DIR}target/'
     os.mkdir(TARGET_IMAGE_DIR)
 
+    ITERATION = 150
+    BATCH_SIZE = 1
+
     if process_selection == 0 and gender == 'female':
         TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/female/'
     elif process_selection == 0 and gender == 'male':
@@ -157,7 +160,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
     print("Start ---------------------------------------------------------------------------------------")
     # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
-    for i in range(150):
+    for i in range(ITERATION):
         optimizer.zero_grad()
         synth_img = g_synthesis(dlatent)
         synth_img = (synth_img + 1) / 2
@@ -184,7 +187,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
             print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i,
                                                                        loss_np, loss_0, loss_1))
             # print("iter{}: loss --{},  loss0 --{}".format(i, loss_np, loss_0))
-        elif i == (150 - 1):
+        elif i == (ITERATION - 1):
             save_image(img_1*blur_mask1 + synth_img*blur_mask0_1, final_name)
             # save_image(synth_img.clamp(0, 1), final_name)
 
