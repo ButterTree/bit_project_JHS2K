@@ -8,6 +8,7 @@ import Texts from './Texts';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fadbdb',
         justifyContent: 'center',
         alignContent: 'center'
     }
@@ -18,7 +19,9 @@ export default ProgressBarMain = () => {
         <>
             <View style={styles.container}>
                 <Loading />
-                <Texts />
+                <View style={{ marginBottom: "20%" }}>
+                    <Texts />
+                </View>
             </View>
         </>
     );

@@ -363,30 +363,26 @@ export default function App() {
                         ) : (
                             <TwoPeopleMainPopup />
                         )}
-                        {!isTwoPeople || isPreview ? (
-                            <></>
-                        ) : !firstPhoto ? (
-                            <PicLightContainer>
-                                <OrderLight
-                                    backgroundColor={firstLightColor}
-                                    text={firstLightText}
-                                />
-                                <OrderLight
-                                    backgroundColor={LightDefaultColor}
-                                    text={secondLightText}
-                                />
-                            </PicLightContainer>
-                        ) : (
-                            <PicLightContainer>
-                                <OrderLight
-                                    backgroundColor={LightDefaultColor}
-                                    text={firstLightText}
-                                />
-                                <OrderLight
-                                    backgroundColor={secondLightColor}
-                                    text={secondLightText}
-                                />
-                            </PicLightContainer>
+
+                        {imageSelected && (
+
+                            <Image
+                                style={
+                                    height >= 700
+                                        ? {
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 50
+                                        }
+                                        : {
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 25
+                                        }
+                                }
+                                source={{ uri: albumPhoto.uri }}
+                            />
+
                         )}
 
                         <ChangeFunctionContainer>
@@ -621,7 +617,7 @@ export default function App() {
                     </HowToPage>
                 )}
             </CenterView>
-        );
+        );   
     } else if (hasPermission === false) {
         return (
             <CenterView>

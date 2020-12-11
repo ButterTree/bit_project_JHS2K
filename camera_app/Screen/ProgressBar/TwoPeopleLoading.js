@@ -45,52 +45,50 @@ export default class MyComponent extends Component {
         return (
             <>
                 <View style={styles.container}>
-                    <Animated.Image
-                        style={{
-                            transform: [
-                                {
-                                    translateX: SlideInLeft.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [-95, 0]
-                                    })
-                                }
-                            ],
-                            opacity: animation,
-                            flex: 1,
-                            height: height / 4,
-                            width: width / 2.5,
-                            borderRadius: 12,
-                            borderWidth: 5,
-                            borderColor: '#FADBDB',
-                            justifyContent: 'center',
-                            position: 'absolute'
-                        }}
-                        source={{ uri: this.props.firstPhoto }}
-                    ></Animated.Image>
-                    <Animated.Image
-                        style={{
-                            transform: [
-                                {
-                                    translateX: slideInRight.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [95, 0]
-                                    })
-                                }
-                            ],
-                            opacity: animation,
-                            flex: 1,
-                            height: height / 4,
-                            width: width / 2.5,
-                            borderRadius: 12,
-                            borderWidth: 5,
-                            borderColor: '#D69999',
-                            justifyContent: 'center',
-                            position: 'absolute'
-                        }}
-                        source={{ uri: this.props.secondPhoto }}
-                    ></Animated.Image>
+                    <View>
+                        <Animated.Image
+                            style={{
+                                transform: [
+                                    {
+                                        translateX: SlideInLeft.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: [-95, 0],
+                                        }),
+                                    },
+                                ],
+                                opacity: animation,
+                                height: height / 4,
+                                width: width / 2.5,
+                                borderRadius: 12,
+                                borderWidth: 5,
+                                borderColor: '#D69999',
+                                position: 'absolute'
+
+                            }}
+                            source={{ uri: this.props.firstPhoto }}
+                        ></Animated.Image>
+                        <Animated.Image
+                            style={{
+                                transform: [
+                                    {
+                                        translateX: slideInRight.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: [95, 0],
+                                        }),
+                                    },
+                                ],
+                                opacity: animation,
+                                height: height / 4,
+                                width: width / 2.5,
+                                borderRadius: 12,
+                                borderWidth: 5,
+                                borderColor: '#D69999',
+                            }}
+                            source={{ uri: this.props.secondPhoto }}
+                        ></Animated.Image>
+                    </View>
+                    <Texts />
                 </View>
-                <Texts />
             </>
         );
     }
@@ -99,9 +97,12 @@ export default class MyComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF',
-        justifyContent: 'center',
+        width: width,
+        height: height,
+        backgroundColor: '#fadbdb',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
         alignItems: 'center',
-        position: 'relative'
+        padding: 20
     }
 });
