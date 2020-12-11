@@ -91,14 +91,14 @@ const HowToPage = styled.View`
     position: absolute;
     flex: 1;
 `;
-const PicLightContainer = styled.View`
+const LightContainer = styled.View`
     width: 100%;
     flex: 1;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     padding: 0 3%;
-    margin-top: 5%;
+    margin-top: 10%;
     position: absolute;
 `;
 
@@ -363,28 +363,49 @@ export default function App() {
                         ) : (
                             <TwoPeopleMainPopup />
                         )}
-
+                        {!isTwoPeople || isPreview ? (
+                            <></>
+                        ) : !firstPhoto ? (
+                            <LightContainer>
+                                <OrderLight
+                                    backgroundColor={firstLightColor}
+                                    text={firstLightText}
+                                />
+                                <OrderLight
+                                    backgroundColor={LightDefaultColor}
+                                    text={secondLightText}
+                                />
+                            </LightContainer>
+                        ) : (
+                            <LightContainer>
+                                <OrderLight
+                                    backgroundColor={LightDefaultColor}
+                                    text={firstLightText}
+                                />
+                                <OrderLight
+                                    backgroundColor={secondLightColor}
+                                    text={secondLightText}
+                                />
+                            </LightContainer>
+                        )}
                         {imageSelected && (
-
                             <Image
                                 style={
                                     height >= 700
                                         ? {
-                                            width: width,
-                                            height: width / 0.75,
-                                            marginTop: 50
-                                        }
+                                              width: width,
+                                              height: width / 0.75,
+                                              marginTop: 50
+                                          }
                                         : {
-                                            width: width,
-                                            height: width / 0.75,
-                                            marginTop: 25
-                                        }
+                                              width: width,
+                                              height: width / 0.75,
+                                              marginTop: 25
+                                          }
                                 }
                                 source={{ uri: albumPhoto.uri }}
                             />
-
                         )}
-
                         <ChangeFunctionContainer>
                             <ChangeButtonContainer>
                                 {!isTwoPeople && (
@@ -617,7 +638,7 @@ export default function App() {
                     </HowToPage>
                 )}
             </CenterView>
-        );   
+        );
     } else if (hasPermission === false) {
         return (
             <CenterView>

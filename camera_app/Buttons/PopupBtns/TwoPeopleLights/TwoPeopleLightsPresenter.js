@@ -17,8 +17,7 @@ const OrderLight = memo((props) => (
 const styles = StyleSheet.create({
     openButton: {
         borderRadius: 10,
-        padding: 10,
-        elevation: 2
+        padding: 10
     },
     textStyle: {
         color: '#4d4d4d',
