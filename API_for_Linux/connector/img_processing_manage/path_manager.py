@@ -5,7 +5,7 @@ import os
 
 
 def make_dir(process_selection, rand_uuid):
-    BASE_DIR = f'../../image_2_style_gan/images/{rand_uuid}/'
+    BASE_DIR = f'../image_2_style_gan/images/{rand_uuid}/'
     if process_selection == 0:
         if os.path.isdir(BASE_DIR) is not True:
             os.makedirs(BASE_DIR, exist_ok=True)

@@ -1,4 +1,4 @@
-from connector.result_manage.result_processing import *
+from connector.result_manage.result_processing import URL_IP, URL_PORT
 from connector.gpu_task.model_task import main_processing
 from flask import Flask, request
 
