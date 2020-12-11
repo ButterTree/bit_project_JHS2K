@@ -334,171 +334,161 @@ export default function App() {
                 secondPhoto={`data:image/png;base64,${secondPhoto}`}
             />
         ) : (
-            <CenterView>
-                {!imageSelected && !isAfterView && (
-                    <Camera
-                        style={
-                            height >= 700
-                                ? {
-                                      alignItems: 'center',
-                                      width: width,
-                                      height: width / 0.75,
-                                      marginTop: 50
-                                  }
-                                : {
-                                      alignItems: 'center',
-                                      width: width,
-                                      height: width / 0.75,
-                                      marginTop: 0
-                                  }
-                        }
-                        type={cameraType}
-                        ref={cameraRef}
-                    >
-                        <FaceLine />
-                        {!isTwoPeople ? (
-                            <OnePersonPopup />
-                        ) : (
-                            <TwoPeopleMainPopup />
+                    <CenterView>
+                        {!imageSelected && !isAfterView && (
+                            <Camera
+                                style={
+                                    height >= 700
+                                        ? {
+                                            alignItems: 'center',
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 50
+                                        }
+                                        : {
+                                            alignItems: 'center',
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 0
+                                        }
+                                }
+                                type={cameraType}
+                                ref={cameraRef}
+                            >
+                                <FaceLine />
+                                {!isTwoPeople ? (
+                                    <OnePersonPopup />
+                                ) : (
+                                        <TwoPeopleMainPopup />
+                                    )}
+                                {!isTwoPeople || isPreview ? (
+                                    <></>
+                                ) : !firstPhoto ? (
+                                    <PicLightContainer>
+                                        <OrderLight
+                                            backgroundColor={firstLightColor}
+                                            text={firstLightText}
+                                        />
+                                        <OrderLight
+                                            backgroundColor={LightDefaultColor}
+                                            text={secondLightText}
+                                        />
+                                    </PicLightContainer>
+                                ) : (
+                                            <PicLightContainer>
+                                                <OrderLight
+                                                    backgroundColor={LightDefaultColor}
+                                                    text={firstLightText}
+                                                />
+                                                <OrderLight
+                                                    backgroundColor={secondLightColor}
+                                                    text={secondLightText}
+                                                />
+                                            </PicLightContainer>
+                                        )}
+
+                                <ChangeFunctionContainer>
+                                    <ChangeButtonContainer>
+                                        {!isTwoPeople && !isPreview && (
+                                            <GenderBtn
+                                                onPress={onPressGender}
+                                                value={genderValue}
+                                                onToggle={onToggleGender}
+                                            />
+                                        )}
+                                    </ChangeButtonContainer>
+                                    <ChangeButtonContainer>
+                                        <TwoPeopleBtn
+                                            onPress={onPressTwoPeople}
+                                            value={twoPeopleToggleValue}
+                                            onToggle={onToggleTwoPeople}
+                                        />
+                                    </ChangeButtonContainer>
+                                    <ChangeButtonContainer></ChangeButtonContainer>
+                                </ChangeFunctionContainer>
+                            </Camera>
                         )}
-                        {!isTwoPeople || isPreview ? (
-                            <></>
-                        ) : !firstPhoto ? (
-                            <PicLightContainer>
-                                <OrderLight
-                                    backgroundColor={firstLightColor}
-                                    text={firstLightText}
-                                />
-                                <OrderLight
-                                    backgroundColor={LightDefaultColor}
-                                    text={secondLightText}
-                                />
-                            </PicLightContainer>
-                        ) : (
-                            <PicLightContainer>
-                                <OrderLight
-                                    backgroundColor={LightDefaultColor}
-                                    text={firstLightText}
-                                />
-                                <OrderLight
-                                    backgroundColor={secondLightColor}
-                                    text={secondLightText}
-                                />
-                            </PicLightContainer>
+
+                        {imageSelected && (
+
+                            <Image
+                                style={
+                                    height >= 700
+                                        ? {
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 50
+                                        }
+                                        : {
+                                            width: width,
+                                            height: width / 0.75,
+                                            marginTop: 25
+                                        }
+                                }
+                                source={{ uri: albumPhoto.uri }}
+                            />
+
                         )}
 
-                        <ChangeFunctionContainer>
-                            <ChangeButtonContainer>
-                                {!isTwoPeople && (
-                                    <GenderBtn
-                                        onPress={onPressGender}
-                                        value={genderValue}
-                                        onToggle={onToggleGender}
-                                    />
-                                )}
-                            </ChangeButtonContainer>
-                            <ChangeButtonContainer>
-                                <TwoPeopleBtn
-                                    onPress={onPressTwoPeople}
-                                    value={twoPeopleToggleValue}
-                                    onToggle={onToggleTwoPeople}
-                                />
-                            </ChangeButtonContainer>
-                            <ChangeButtonContainer></ChangeButtonContainer>
-                        </ChangeFunctionContainer>
-                    </Camera>
-                )}
-
-                {imageSelected && (
-                    <>
-                        <Image
-                            style={
-                                height >= 700
-                                    ? {
-                                          width: width,
-                                          height: width / 0.75,
-                                          marginTop: 50
-                                      }
-                                    : {
-                                          width: width,
-                                          height: width / 0.75,
-                                          marginTop: 25
-                                      }
-                            }
-                            source={{ uri: albumPhoto.uri }}
-                        />
-                        <ChangeFunctionContainer>
-                            {!isTwoPeople && (
-                                <GenderBtn
-                                    onPress={onPressGender}
-                                    value={genderValue}
-                                    onToggle={onToggleGender}
-                                />
-                            )}
-                        </ChangeFunctionContainer>
-                    </>
-                )}
-
-                {isAfterView && (
-                    <Image
-                        style={
-                            height >= 700
-                                ? {
-                                      width: width,
-                                      height: width,
-                                      marginTop: '20%'
-                                  }
-                                : {
-                                      width: width,
-                                      height: width,
-                                      marginTop: 0
-                                  }
-                        }
-                        source={{ uri: resultPhotoList[1] }}
-                    />
-                )}
-
-                {!isPreview && !imageSelected && !isAfterView && (
-                    <IconContainer>
-                        <GetPhotoBtn onPress={onPressGetPhoto} />
-                        <TakePhotoBtn onPress={onPressTakePhoto} />
-                        <SwitchCameraBtn onPress={switchCameraType} />
-                    </IconContainer>
-                )}
-                {isAfterView && (
-                    <IconContainer>
-                        <CancelBtn onPress={onPressCancel} />
-                        <ShareBtn onPress={onPressShare} />
-                        <SaveBtn onPress={onPressSave} />
-                    </IconContainer>
-                )}
-                {(isPreview || imageSelected) && (
-                    <IconContainer>
-                        <CancelBtn onPress={onPressCancel} />
-
-                        {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
-                            <TransferBtn onPress={getTransferImage} />
-                        ) : (
-                            <NextBtn onPress={onPressNext} />
+                        {isAfterView && (
+                            <Image
+                                style={
+                                    height >= 700
+                                        ? {
+                                            width: width,
+                                            height: width,
+                                            marginTop: '20%'
+                                        }
+                                        : {
+                                            width: width,
+                                            height: width,
+                                            marginTop: 0
+                                        }
+                                }
+                                source={{ uri: resultPhotoList[1] }}
+                            />
                         )}
-                    </IconContainer>
-                )}
-                {isNotice && (
-                    <HowToPage>
-                        <ImageBackground
-                            source={require('./assets/app_intro.png')}
-                            style={{
-                                width: '100%',
-                                height: '100%'
-                            }}
-                        >
-                            <NoticeCancelBtn onPress={clickCancelNotice} />
-                            <NoticeNeverBtn onPress={clickNeverNotice} />
-                        </ImageBackground>
-                    </HowToPage>
-                )}
-            </CenterView>
-        );
+
+                        {!isPreview && !imageSelected && !isAfterView && (
+                            <IconContainer>
+                                <GetPhotoBtn onPress={onPressGetPhoto} />
+                                <TakePhotoBtn onPress={onPressTakePhoto} />
+                                <SwitchCameraBtn onPress={switchCameraType} />
+                            </IconContainer>
+                        )}
+                        {isAfterView && (
+                            <IconContainer>
+                                <CancelBtn onPress={onPressCancel} />
+                                <ShareBtn onPress={onPressShare} />
+                                <SaveBtn onPress={onPressSave} />
+                            </IconContainer>
+                        )}
+                        {(isPreview || imageSelected) && (
+                            <IconContainer>
+                                <CancelBtn onPress={onPressCancel} />
+                                {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
+                                    <TransferBtn onPress={getTransferImage} />
+                                ) : (
+                                        <NextBtn onPress={onPressNext} />
+                                    )}
+                            </IconContainer>
+                        )}
+                        {isNotice && (
+                            <HowToPage>
+                                <ImageBackground
+                                    source={require('./assets/app_intro.png')}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                >
+                                    <NoticeCancelBtn onPress={clickCancelNotice} />
+                                    <NoticeNeverBtn onPress={clickNeverNotice} />
+                                </ImageBackground>
+                            </HowToPage>
+                        )}
+                    </CenterView>
+                );
     } else if (hasPermission === false) {
         return (
             <CenterView>

@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Image, View } from 'react-native';
+import React, { useState } from 'react';
+import { Image, View, Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 export default function Loading() {
   const [isReady, setIsReady] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsReady(true);
-    }, 3000);
-  }, []);
 
-  return isReady ? (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Image
-        source={require('../../assets/images/again.gif')}
-        onLoad={this._cacheResourcesAsync}
+
+  return isReady &&
+
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+      <Image style={{
+        height: height / 2,
+        width: width / 1,
+      }}
+        source={require('../../assets/images/Loading.gif')}
       />
     </View>
-  ) : (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Image source={require('../../assets/images/3.png')} />
-    </View>
-  );
 }
