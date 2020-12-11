@@ -30,7 +30,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     os.mkdir(TARGET_IMAGE_DIR)
 
     ITERATION = 150
-    BATCH_SIZE = 1
+    BATCH_SIZE = 1  # 이놈 안쓰고 있었음.
 
     if process_selection == 0 and gender == 'female':
         TARGET_SOURCE_DIR = '../image_2_style_gan/source/target/female/'
