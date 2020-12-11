@@ -55,6 +55,7 @@ import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPrese
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
+import { View } from 'native-base';
 
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
@@ -88,12 +89,13 @@ const HowToPage = styled.View`
     width: 100%;
     height: 100%;
     position: absolute;
+    flex: 1;
 `;
 const PicLightContainer = styled.View`
     width: 100%;
     flex: 1;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 0 3%;
     margin-top: 5%;
@@ -334,79 +336,32 @@ export default function App() {
                 secondPhoto={`data:image/png;base64,${secondPhoto}`}
             />
         ) : (
-                    <CenterView>
-                        {!imageSelected && !isAfterView && (
-                            <Camera
-                                style={
-                                    height >= 700
-                                        ? {
-                                            alignItems: 'center',
-                                            width: width,
-                                            height: width / 0.75,
-                                            marginTop: 50
-                                        }
-                                        : {
-                                            alignItems: 'center',
-                                            width: width,
-                                            height: width / 0.75,
-                                            marginTop: 0
-                                        }
-                                }
-                                type={cameraType}
-                                ref={cameraRef}
-                            >
-                                <FaceLine />
-                                {!isTwoPeople ? (
-                                    <OnePersonPopup />
-                                ) : (
-                                        <TwoPeopleMainPopup />
-                                    )}
-                                {!isTwoPeople || isPreview ? (
-                                    <></>
-                                ) : !firstPhoto ? (
-                                    <PicLightContainer>
-                                        <OrderLight
-                                            backgroundColor={firstLightColor}
-                                            text={firstLightText}
-                                        />
-                                        <OrderLight
-                                            backgroundColor={LightDefaultColor}
-                                            text={secondLightText}
-                                        />
-                                    </PicLightContainer>
-                                ) : (
-                                            <PicLightContainer>
-                                                <OrderLight
-                                                    backgroundColor={LightDefaultColor}
-                                                    text={firstLightText}
-                                                />
-                                                <OrderLight
-                                                    backgroundColor={secondLightColor}
-                                                    text={secondLightText}
-                                                />
-                                            </PicLightContainer>
-                                        )}
-
-                                <ChangeFunctionContainer>
-                                    <ChangeButtonContainer>
-                                        {!isTwoPeople && !isPreview && (
-                                            <GenderBtn
-                                                onPress={onPressGender}
-                                                value={genderValue}
-                                                onToggle={onToggleGender}
-                                            />
-                                        )}
-                                    </ChangeButtonContainer>
-                                    <ChangeButtonContainer>
-                                        <TwoPeopleBtn
-                                            onPress={onPressTwoPeople}
-                                            value={twoPeopleToggleValue}
-                                            onToggle={onToggleTwoPeople}
-                                        />
-                                    </ChangeButtonContainer>
-                                    <ChangeButtonContainer></ChangeButtonContainer>
-                                </ChangeFunctionContainer>
-                            </Camera>
+            <CenterView>
+                {!imageSelected && !isAfterView && (
+                    <Camera
+                        style={
+                            height >= 700
+                                ? {
+                                      alignItems: 'center',
+                                      width: width,
+                                      height: width / 0.75,
+                                      marginTop: height / 12
+                                  }
+                                : {
+                                      alignItems: 'center',
+                                      width: width,
+                                      height: width / 0.75,
+                                      marginTop: 0
+                                  }
+                        }
+                        type={cameraType}
+                        ref={cameraRef}
+                    >
+                        <FaceLine />
+                        {!isTwoPeople ? (
+                            <OnePersonPopup />
+                        ) : (
+                            <TwoPeopleMainPopup />
                         )}
 
                         {imageSelected && (
@@ -430,65 +385,239 @@ export default function App() {
 
                         )}
 
-                        {isAfterView && (
+                        <ChangeFunctionContainer>
+                            <ChangeButtonContainer>
+                                {!isTwoPeople && (
+                                    <GenderBtn
+                                        onPress={onPressGender}
+                                        value={genderValue}
+                                        onToggle={onToggleGender}
+                                    />
+                                )}
+                            </ChangeButtonContainer>
+                            <ChangeButtonContainer>
+                                <TwoPeopleBtn
+                                    onPress={onPressTwoPeople}
+                                    value={twoPeopleToggleValue}
+                                    onToggle={onToggleTwoPeople}
+                                />
+                            </ChangeButtonContainer>
+                            <ChangeButtonContainer></ChangeButtonContainer>
+                        </ChangeFunctionContainer>
+                    </Camera>
+                )}
+
+                {imageSelected && (
+                    <>
+                        <Image
+                            style={
+                                height >= 700
+                                    ? {
+                                          width: width,
+                                          height: width / 0.75,
+                                          marginTop: 50
+                                      }
+                                    : {
+                                          width: width,
+                                          height: width / 0.75,
+                                          marginTop: 25
+                                      }
+                            }
+                            source={{ uri: albumPhoto.uri }}
+                        />
+                        <ChangeFunctionContainer>
+                            {!isTwoPeople && (
+                                <GenderBtn
+                                    onPress={onPressGender}
+                                    value={genderValue}
+                                    onToggle={onToggleGender}
+                                />
+                            )}
+                        </ChangeFunctionContainer>
+                    </>
+                )}
+
+                {isAfterView && (
+                    <Image
+                        style={
+                            height >= 700
+                                ? {
+                                      width: width,
+                                      height: width,
+                                      marginTop: '20%'
+                                  }
+                                : {
+                                      width: width,
+                                      height: width,
+                                      marginTop: 0
+                                  }
+                        }
+                        source={{ uri: resultPhotoList[1] }}
+                    />
+                )}
+
+                {!isPreview && !imageSelected && !isAfterView && (
+                    <IconContainer>
+                        <GetPhotoBtn onPress={onPressGetPhoto} />
+                        <TakePhotoBtn onPress={onPressTakePhoto} />
+                        <SwitchCameraBtn onPress={switchCameraType} />
+                    </IconContainer>
+                )}
+                {isAfterView && (
+                    <IconContainer>
+                        <CancelBtn onPress={onPressCancel} />
+                        <SaveBtn onPress={onPressSave} />
+                        <ShareBtn onPress={onPressShare} />
+                    </IconContainer>
+                )}
+                {(isPreview || imageSelected) && (
+                    <IconContainer>
+                        <CancelBtn onPress={onPressCancel} />
+
+                        {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
+                            <TransferBtn onPress={getTransferImage} />
+                        ) : (
+                            <NextBtn onPress={onPressNext} />
+                        )}
+                    </IconContainer>
+                )}
+                {isNotice && (
+                    <HowToPage>
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 3.5,
+                                alignItems: 'center',
+                                position: 'relative'
+                            }}
+                        >
                             <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/faceLineNotice.png')}
                                 style={
                                     height >= 700
                                         ? {
-                                            width: width,
-                                            height: width,
-                                            marginTop: '20%'
-                                        }
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5,
+                                              top: height / 15
+                                          }
                                         : {
-                                            width: width,
-                                            height: width,
-                                            marginTop: 0
-                                        }
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5
+                                          }
                                 }
-                                source={{ uri: resultPhotoList[1] }}
                             />
-                        )}
+                            {/* <FaceLine style={{ position: 'absolute' }} /> */}
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 14
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 10,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/tipNotice.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={
+                                height >= 700 && height < 800
+                                    ? {
+                                          width: width,
+                                          height: height / 12
+                                      }
+                                    : {
+                                          width: width,
+                                          height: height / 50
+                                      }
+                            }
+                        />
 
-                        {!isPreview && !imageSelected && !isAfterView && (
-                            <IconContainer>
-                                <GetPhotoBtn onPress={onPressGetPhoto} />
-                                <TakePhotoBtn onPress={onPressTakePhoto} />
-                                <SwitchCameraBtn onPress={switchCameraType} />
-                            </IconContainer>
-                        )}
-                        {isAfterView && (
-                            <IconContainer>
-                                <CancelBtn onPress={onPressCancel} />
-                                <ShareBtn onPress={onPressShare} />
-                                <SaveBtn onPress={onPressSave} />
-                            </IconContainer>
-                        )}
-                        {(isPreview || imageSelected) && (
-                            <IconContainer>
-                                <CancelBtn onPress={onPressCancel} />
-                                {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
-                                    <TransferBtn onPress={getTransferImage} />
-                                ) : (
-                                        <NextBtn onPress={onPressNext} />
-                                    )}
-                            </IconContainer>
-                        )}
-                        {isNotice && (
-                            <HowToPage>
-                                <ImageBackground
-                                    source={require('./assets/app_intro.png')}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    <NoticeCancelBtn onPress={clickCancelNotice} />
-                                    <NoticeNeverBtn onPress={clickNeverNotice} />
-                                </ImageBackground>
-                            </HowToPage>
-                        )}
-                    </CenterView>
-                );
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 4.5,
+                                alignItems: 'flex-end'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/genderNotice2.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 70
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 6,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/twoPeopleNotice3.png')}
+                                style={
+                                    height >= 700
+                                        ? {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6,
+                                              bottom: height / 20
+                                          }
+                                        : {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6
+                                          }
+                                }
+                            />
+                            {/* <NoticeCancelBtn onPress={clickCancelNotice} />
+                            <NoticeNeverBtn onPress={clickNeverNotice} /> */}
+                        </ImageBackground>
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 3,
+                                alignItems: 'flex-start',
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <NoticeCancelBtn onPress={clickCancelNotice} />
+                            <NoticeNeverBtn onPress={clickNeverNotice} />
+                        </ImageBackground>
+                    </HowToPage>
+                )}
+            </CenterView>
+        );   
     } else if (hasPermission === false) {
         return (
             <CenterView>

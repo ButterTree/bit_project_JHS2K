@@ -10,7 +10,7 @@ export default class MyComponent extends Component {
     state = {
         SlideInLeft: new Animated.Value(0),
         slideInRight: new Animated.Value(0),
-        animation: new Animated.Value(1),
+        animation: new Animated.Value(1)
     };
 
     componentDidMount() {
@@ -23,18 +23,18 @@ export default class MyComponent extends Component {
                 Animated.timing(this.state.SlideInLeft, {
                     toValue: 1,
                     duration: 3500,
-                    useNativeDriver: false,
+                    useNativeDriver: false
                 }),
                 Animated.timing(this.state.slideInRight, {
                     toValue: 1,
                     duration: 3500,
-                    useNativeDriver: false,
+                    useNativeDriver: false
                 }),
                 Animated.timing(this.state.animation, {
                     toValue: 0.1,
                     duration: 3500,
-                    useNativeDriver: false,
-                }),
+                    useNativeDriver: false
+                })
             ])
         ).start();
     }

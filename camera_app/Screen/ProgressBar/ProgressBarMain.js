@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fadbdb',
         justifyContent: 'center',
-        alignContent: 'center',
-    },
+        alignContent: 'center'
+    }
 });
 
 export default ProgressBarMain = () => {

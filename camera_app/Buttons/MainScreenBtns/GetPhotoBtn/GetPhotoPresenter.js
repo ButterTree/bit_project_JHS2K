@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
         width: width / 10,
         height: height / 14,
         top: '3%',
-        left: '10%',
+        left: '10%'
     },
 
     imgStyle: {
         width: width / 10,
         height: height / 14,
-        resizeMode: 'contain',
-    },
+        resizeMode: 'contain'
+    }
 });
 
 export default getPhotoBtn;

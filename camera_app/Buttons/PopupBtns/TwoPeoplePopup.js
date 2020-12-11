@@ -6,7 +6,7 @@ import {
     TouchableHighlight,
     StyleSheet,
     Dimensions,
-    Alert,
+    Alert
 } from 'react-native';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -16,7 +16,27 @@ const twoPopup = () => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
-        <View style={styles.LeftView}>
+        <View
+            style={
+                deviceHeight >= 700
+                    ? {
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.3,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
+                    : {
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.05,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
+            }
+        >
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -34,7 +54,7 @@ const twoPopup = () => {
                         <TouchableHighlight
                             style={{
                                 ...styles.openButton,
-                                backgroundColor: '#b9d3ed',
+                                backgroundColor: '#4d4d4d'
                             }}
                             onPress={() => {
                                 setModalVisible(false);
@@ -62,15 +82,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        marginTop: 22
     },
     LeftView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        top: deviceHeight / 2.39,
+        // top: deviceHeight / 2.39,
+        height: deviceHeight,
         left: deviceWidth / 25,
-        position: 'absolute',
+        position: 'absolute'
     },
     modalView: {
         margin: 20,
@@ -81,28 +102,28 @@ const styles = StyleSheet.create({
         shadowColor: 'transparent',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 5
     },
     openButton: {
-        backgroundColor: '#f7eeb0',
+        backgroundColor: '#4d4d4d',
         borderRadius: 20,
         padding: 10,
-        elevation: 2,
+        elevation: 2
     },
     closeButton: {},
     textStyle: {
-        color: 'black',
+        color: '#FADBDB',
         fontWeight: 'bold',
-        textAlign: 'justify',
+        textAlign: 'justify'
     },
     modalText: {
         textAlign: 'left',
-        lineHeight: 25,
-    },
+        lineHeight: 25
+    }
 });
 
 export default twoPopup;
