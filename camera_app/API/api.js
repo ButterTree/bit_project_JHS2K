@@ -5,6 +5,7 @@ import { SERVER_IP, SERVER_PORT } from "./apiAddress";
 const URL = `http://${SERVER_IP}:${SERVER_PORT}/let_me_shine`;
 
 let tempResult = [];
+let iteration = 0;
 
 export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
   try {
@@ -16,7 +17,6 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
         "Access-Control-Allow-Origin": "*",
       },
     };
-
     await axios
       .post(
         URL,
