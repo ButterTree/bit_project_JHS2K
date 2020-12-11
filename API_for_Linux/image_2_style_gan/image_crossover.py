@@ -90,7 +90,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
 
     g_all = nn.Sequential(OrderedDict([
     ('g_mapping', G_mapping()),
-    #('truncation', Truncation(avg_latent)),
+    # ('truncation', Truncation(avg_latent)),
     ('g_synthesis', G_synthesis(resolution=args.resolution))
     ]))
 
@@ -123,7 +123,7 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
 
     perceptual_net=VGG16_for_Perceptual(n_layers=[2,4,14,21]).to(device) #conv1_1,conv1_2,conv2_2,conv3_3
     dlatent=torch.zeros((1,18,512),requires_grad=True,device=device)
-    optimizer=optim.Adam({dlatent},lr=0.01,betas=(0.9,0.999),eps=1e-8)
+    optimizer=optim.RMSprop({dlatent}, lr=0.01, alpha=0.99, eps=1e-08, weight_decay=0, momentum=0, centered=False)
 
     loss_list = []
 
@@ -156,32 +156,10 @@ def image_crossover(BASE_DIR, RAW_DIR, rand_uuid, client_img_name, process_selec
         elif i == (args.iteration - 1):
             save_image(synth_img.clamp(0, 1), final_name)
 
-    # gif_buffer = []
-    # durations = []
-
-    # gif_buffer.append(Image.open(ingredient_name))
-    # durations.append(3.00)
-    #
-    # for file in file_names:
-    #     gif_buffer.append(Image.open(file))
-    #     durations.append(0.04)
-    #
-    # gif_buffer.append((Image.open(final_name)))
-    # durations.append(3.00)
-
-    # imageio.mimsave('{}{}.gif'.format(FINAL_IMAGE_DIR, time_flag), gif_buffer, duration=durations)
-    # del gif_buffer
-
-    # for file in os.listdir(r'../image_2_style_gan/save_image/crossover/'):
-    #     dir = r'../image_2_style_gan/save_image/crossover/' + file
-    #     os.remove(dir)
-
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
-    # os.remove(ingredient_name)
-    # os.replace(mask_name, '{}Used_{}_mask.png'.format(FINAL_IMAGE_DIR, time_flag))
     os.remove(mask_name) # 마스크 파일 삭제
-    # shutil.copyfile(target_name, '{}Used_{}_target.png'.format(FINAL_IMAGE_DIR, time_flag))
+
 
     print("Complete ---------------------------------------------------------------------------------------------")
 

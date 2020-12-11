@@ -300,7 +300,7 @@ export default function App() {
 			});
 
 			// Original, Changed 모두 갤러리 저장
-			await MediaLibrary.saveToLibraryAsync(originalFileName);
+			// await MediaLibrary.saveToLibraryAsync(originalFileName);
 			await MediaLibrary.saveToLibraryAsync(changedFileName);
 
 			Alert.alert('저장완료❤', '갤러리에서 확인할 수 있습니다.');
