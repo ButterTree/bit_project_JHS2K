@@ -40,6 +40,7 @@
   - Flask
   - gunicorn
   - nginx
+  - dlib
     
 
 - HTML / CSS / JS
