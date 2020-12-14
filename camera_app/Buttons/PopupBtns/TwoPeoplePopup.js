@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
+        padding: 30,
         alignItems: 'center',
         shadowColor: 'transparent',
         shadowOffset: {
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
         padding: 10,
         elevation: 2
     },
-    closeButton: {},
     textStyle: {
         color: '#FADBDB',
         fontWeight: 'bold',
@@ -122,6 +121,8 @@ const styles = StyleSheet.create({
     },
     modalText: {
         textAlign: 'left',
+        fontSize: 12,
+        fontWeight: '700',
         lineHeight: 25
     }
 });
