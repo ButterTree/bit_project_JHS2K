@@ -12,8 +12,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
-from image_2_style_gan.mask_makers.eyebrows_mask_maker import precision_eye_masks
-from image_2_style_gan.mask_makers.eyes_only_mask_maker import precision_eyes_only_masks
+from image_2_style_gan.mask_makers.precision_mask_maker import precision_eye_masks
 from image_2_style_gan.read_image import *
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
@@ -67,7 +66,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
         aligned_image_name = ALIGNED_IMAGE_DIR + \
             os.listdir(ALIGNED_IMAGE_DIR)[0]
-        mask_name, face_mask_name, eyes_mask_name, brows_mask_name, lids_mask_name = precision_eye_masks(
+        mask_name, eyes_mask_name, lids_mask_name = precision_eye_masks(
             aligned_image_name, MASK_DIR)
 
         ingredient_name = ALIGNED_IMAGE_DIR + os.listdir(ALIGNED_IMAGE_DIR)[0]
@@ -109,6 +108,18 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     blur_mask_eyes = blur_mask0_1-blur_mask0_2
     blur_mask_lids = blur_mask0_1-torch.clamp(blur_mask0_3-blur_mask0_2, 0, 1)
 
+    hist_bias = torch.Tensor([0, 0, 0])
+
+    for i in range(3):
+        bias = 0
+        hist_bias[i] = torch.mean(img_1[0, i, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, i, ..., ...]*blur_mask0_1)
+        if hist_bias[i] < 0:
+            bias = hist_bias[i] * 77
+        print('{:.5f}'.format(hist_bias[i]))
+        img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*(15000 + hist_bias[i]*(10 ** 6))), 0, 1) + bias
+    
+    save_image(img_0, '../image_2_style_gan/source/histadjs.png')
+    
     ingredient_eyes = img_1 * blur_mask0_2
     e_mean = []
     for i in range(ingredient_eyes.shape[1]):
@@ -117,25 +128,36 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     for i in range(ingredient_eyes.shape[1]):
         ingredient_eyes[0, i, ..., ...] = ingredient_eyes[0, idx, ..., ...]
     img_1 = (img_1 * blur_mask2) + ingredient_eyes
-    img_1 = img_1.to(device)  # (1,3,1024,1024)
+    # img_1 = img_1.to(device)  # (1,3,1024,1024)
 
-    hist_bias_r = torch.mean(
-        img_1[0, 0, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 0, ..., ...]*blur_mask0_1)
-    hist_bias_g = torch.mean(
-        img_1[0, 1, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 1, ..., ...]*blur_mask0_1)
-    hist_bias_b = torch.mean(
-        img_1[0, 2, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 2, ..., ...]*blur_mask0_1)
+        # if hist_abs_mean < 0.0001:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*16000), 0, 1)
+        # elif hist_abs_mean >= 0.0001 and hist_abs_mean < 0.0009:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*17000), 0, 1)
+        # elif hist_abs_mean >= 0.0009 and hist_abs_mean < 0.0015:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*18500), 0, 1)
+        # elif hist_abs_mean >= 0.0015 and hist_abs_mean < 0.002:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*20500), 0, 1)
+        # elif hist_abs_mean >= 0.002 and hist_abs_mean < 0.0025:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*22500), 0, 1)
+        # elif hist_abs_mean >= 0.0025 and hist_abs_mean < 0.003:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*25000), 0, 1)
+        # else:
+        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*27500), 0, 1)
+    
+    # hist_bias_r = torch.mean(
+    #     img_1[0, 0, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 0, ..., ...]*blur_mask0_1)
+    # hist_bias_g = torch.mean(
+    #     img_1[0, 1, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 1, ..., ...]*blur_mask0_1)
+    # hist_bias_b = torch.mean(
+    #     img_1[0, 2, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 2, ..., ...]*blur_mask0_1)
 
-    print(f'r : {hist_bias_r}')
-    print(f'g : {hist_bias_g}')
-    print(f'b : {hist_bias_b}')
-
-    img_0[0, 0, ..., ...] = torch.clamp(
-        img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*20000), 0, 1)
-    img_0[0, 1, ..., ...] = torch.clamp(
-        img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*20000), 0, 1)
-    img_0[0, 2, ..., ...] = torch.clamp(
-        img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*20000), 0, 1)
+    # img_0[0, 0, ..., ...] = torch.clamp(
+    #     img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*19000), 0, 1)
+    # img_0[0, 1, ..., ...] = torch.clamp(
+    #     img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*19000), 0, 1)
+    # img_0[0, 2, ..., ...] = torch.clamp(
+    #     img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*19000), 0, 1)
 
     MSE_Loss = nn.MSELoss(reduction="mean")
     upsample2d = torch.nn.Upsample(scale_factor=0.5, mode='nearest')
@@ -167,7 +189,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         loss_wl1 = caluclate_loss(
             synth_img, img_1, perceptual_net, img_p1, blur_mask_lids, MSE_Loss, upsample2d)
         # loss_wl2=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask0_2,MSE_Loss,upsample2d)
-        loss = loss_wl0 + loss_wl1  # + loss_wl2
+        loss = loss_wl0 #+ loss_wl1  # + loss_wl2
         loss.backward()
 
         optimizer.step()
