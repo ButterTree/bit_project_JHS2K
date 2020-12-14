@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
+        padding: 30,
         alignItems: 'center',
         shadowColor: 'transparent',
         shadowOffset: {
@@ -147,6 +147,8 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
+        fontSize: 12,
+        fontWeight: '700',
         lineHeight: 25
     }
 });
