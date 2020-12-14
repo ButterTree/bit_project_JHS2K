@@ -3,8 +3,8 @@ import torch
 import base64
 import json
 
-URL_IP = '192.168.1.47'
-URL_PORT = '45055'
+URL_IP = '192.168.1.46'
+URL_PORT = '45095'
 
 url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
 
