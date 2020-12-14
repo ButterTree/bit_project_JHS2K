@@ -55,21 +55,21 @@ import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPrese
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
-import { View } from 'native-base';
 
 const { width, height } = Dimensions.get('window');
+
 const CenterView = styled.View`
     flex: 1;
     background-color: #fadbdb;
 `;
-const IconContainer = styled.View`
+const MainBtnContainer = styled.View`
     flex: 1;
     width: 100%;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 `;
-const ChangeFunctionContainer = styled.View`
+const ChangeBtnContainer = styled.View`
     flex: 1;
     width: 100%;
     flex-direction: row;
@@ -78,14 +78,14 @@ const ChangeFunctionContainer = styled.View`
     position: absolute;
     bottom: 0;
 `;
-const ChangeButtonContainer = styled.View`
+const ChangeBtnBox = styled.View`
     width: 100%;
     flex: 1;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
 `;
-const HowToPage = styled.View`
+const NoticeContainer = styled.View`
     width: 100%;
     height: 100%;
     position: absolute;
@@ -409,8 +409,8 @@ export default function App() {
                                         source={{ uri: albumPhoto.uri }}
                                     />
                                 )}
-                                <ChangeFunctionContainer>
-                                    <ChangeButtonContainer>
+                                <ChangeBtnContainer >
+                                    <ChangeBtnBox >
                                         {!isTwoPeople && !isPreview && (
                                             <GenderBtn
                                                 onPress={onPressGender}
@@ -418,16 +418,16 @@ export default function App() {
                                                 onToggle={onToggleGender}
                                             />
                                         )}
-                                    </ChangeButtonContainer>
-                                    <ChangeButtonContainer>
+                                    </ChangeBtnBox >
+                                    <ChangeBtnBox >
                                         <TwoPeopleBtn
                                             onPress={onPressTwoPeople}
                                             value={twoPeopleToggleValue}
                                             onToggle={onToggleTwoPeople}
                                         />
-                                    </ChangeButtonContainer>
-                                    <ChangeButtonContainer></ChangeButtonContainer>
-                                </ChangeFunctionContainer>
+                                    </ChangeBtnBox >
+                                    <ChangeBtnBox ></ChangeBtnBox >
+                                </ChangeBtnContainer >
                             </Camera>
                         )}
 
@@ -479,21 +479,21 @@ export default function App() {
                         )}
 
                         {!isPreview && !imageSelected && !isAfterView && (
-                            <IconContainer>
+                            <MainBtnContainer>
                                 <GetPhotoBtn onPress={onPressGetPhoto} />
                                 <TakePhotoBtn onPress={onPressTakePhoto} />
                                 <SwitchCameraBtn onPress={switchCameraType} />
-                            </IconContainer>
+                            </MainBtnContainer>
                         )}
                         {isAfterView && (
-                            <IconContainer>
+                            <MainBtnContainer>
                                 <CancelBtn onPress={onPressCancel} />
                                 <SaveBtn onPress={onPressSave} />
                                 <ShareBtn onPress={onPressShare} />
-                            </IconContainer>
+                            </MainBtnContainer>
                         )}
                         {(isPreview || imageSelected) && (
-                            <IconContainer>
+                            <MainBtnContainer>
                                 <CancelBtn onPress={onPressCancel} />
 
                                 {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
@@ -501,10 +501,10 @@ export default function App() {
                                 ) : (
                                         <NextBtn onPress={onPressNext} />
                                     )}
-                            </IconContainer>
+                            </MainBtnContainer>
                         )}
                         {isNotice && (
-                            <HowToPage>
+                            <NoticeContainer >
                                 <ImageBackground
                                     source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
                                     style={{
@@ -636,7 +636,7 @@ export default function App() {
                                     <NoticeCancelBtn onPress={clickCancelNotice} />
                                     <NoticeNeverBtn onPress={clickNeverNotice} />
                                 </ImageBackground>
-                            </HowToPage>
+                            </NoticeContainer >
                         )}
                     </CenterView>
                 );
