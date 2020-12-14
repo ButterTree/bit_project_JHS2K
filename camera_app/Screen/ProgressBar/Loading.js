@@ -11,8 +11,9 @@ export default function Loading() {
 
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
       <Image style={{
-        height: height / 2,
-        width: width / 1,
+        height: width,
+        width: width,
+        resizeMode: "contain"
       }}
         source={require('../../assets/images/Loading.gif')}
       />
