@@ -31,16 +31,17 @@
   - BeautyGAN
   - DFDNet (이미지 화질 향상)
   - First-Order-Model (이미지 동적화)
-    
 
 - Python 3.x
 
   - openCV
   - Crawling
+  - request
   - Flask
   - gunicorn
   - nginx
   - dlib
+  - Pytorch
     
 
 - HTML / CSS / JS
@@ -49,6 +50,9 @@
   
   - expo
   - expo-camera
+  - expo-image-picker
+  - expo-media-library
+  - styled-components
 
 - API
 
