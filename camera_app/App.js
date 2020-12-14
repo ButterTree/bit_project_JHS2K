@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import {
-	ActivityIndicator,
-	Text,
-	Image,
-	Dimensions,
-	Alert,
-	ImageBackground,
+    ActivityIndicator,
+    Text,
+    Image,
+    Dimensions,
+    Alert,
+    ImageBackground
 } from 'react-native';
 import styled from 'styled-components';
 
-import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { imageTransfer } from './API/api';
 
-import ProgressBarMain from './Screen/ProgressBar/progressBarMain';
+import ProgressBarMain from './Screen/ProgressBar/ProgressBarMain';
 import FaceLine from './Screen/FaceLine';
 
 import TwoPeopleBtn from './Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter';
@@ -54,461 +54,602 @@ import TwoPeopleMainPopup from './Buttons/PopupBtns/TwoPeoplePopup';
 import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPresenter';
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
+import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
+import { View } from 'native-base';
+
 const { width, height } = Dimensions.get('window');
-const MainContainer = styled.View`
-	flex: 1;
-	background-color: white;
+const CenterView = styled.View`
+    flex: 1;
+    background-color: #fadbdb;
 `;
-const MainBtnContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+const IconContainer = styled.View`
+    flex: 1;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
 `;
-const ChangeBtnContainer = styled.View`
-	flex: 1;
-	width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-around;
-	position: absolute;
-	bottom: 0;
+const ChangeFunctionContainer = styled.View`
+    flex: 1;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 0;
 `;
-const ChangeBtnBox = styled.View`
-	width: 100%;
-	flex: 1;
-	flex-direction: row;
-	justify-content: space-around;
-	align-items: center;
+const ChangeButtonContainer = styled.View`
+    width: 100%;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
 `;
-const NoticeContainer = styled.View`
-	width: 100%;
-	height: 100%;
-	position: absolute;
+const HowToPage = styled.View`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    flex: 1;
 `;
 const LightContainer = styled.View`
-	width: 100%;
-	flex: 1;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 3%;
-	margin-top: 10%;
-	position: absolute;
-	top: 3%;
+    width: 100%;
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 3%;
+    margin-top: 10%;
+    position: absolute;
 `;
 
 // Image Temporary Storage
-let firstPhoto = '';
-let secondPhoto = '';
-let resultPhotoList = [];
+let firstPhoto = ''; // base64
+let secondPhoto = ''; // base64
+let resultPhotoList = []; // [origin png, resultpng]
 
 export default function App() {
-	// useState
-	const [hasPermission, setHasPermission] = useState(null);
-	const [hasAlbumPermission, setHasAlbumPermission] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [isAfterView, setIsAfterView] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isAfterView, setIsAfterView] = useState(false);
+    const [hasPermission, setHasPermission] = useState(null);
+    const [hasAlbumPermission, setHasAlbumPermission] = useState(false);
 
-	// Own Hooks States
-	const {
-		isTwoPeople,
-		setIsTwoPeople,
-		onPressTwoPeople,
-		twoPeopleToggleValue,
-		setTwoPeopleToggleValue,
-		onToggleTwoPeople,
-	} = useTwoPeopleState();
-	const {
-		isGender,
-		setIsGender,
-		onPressGender,
-		genderValue,
-		setGenderValue,
-		onToggleGender,
-	} = useGenderState();
-	const {
-		cameraRef,
-		isPreview,
-		setIsPreview,
-		takePhoto,
-		setTakePhoto,
-		onPressTakePhoto,
-	} = useTakePhotoState();
-	const {
-		imageSelected,
-		setImageSelected,
-		onPressGetPhoto,
-		albumPhoto,
-		setAlbumPhoto,
-	} = useGetPhotoState();
-	const { cameraType, switchCameraType } = useCameraTypeState();
-	const {
-		isNotice,
-		setIsNotice,
-		clickCancelNotice,
-		clickNeverNotice,
-	} = useNoticeState();
-	const {
-		firstLightColor,
-		firstLightText,
-		secondLightColor,
-		secondLightText,
-		LightDefaultColor,
-	} = useLightState();
+    const {
+        isTwoPeople,
+        setIsTwoPeople,
+        onPressTwoPeople,
+        twoPeopleToggleValue,
+        setTwoPeopleToggleValue,
+        onToggleTwoPeople
+    } = useTwoPeopleState();
+    const {
+        isGender,
+        setIsGender,
+        onPressGender,
+        genderValue,
+        setGenderValue,
+        onToggleGender
+    } = useGenderState();
+    const {
+        cameraRef,
+        isPreview,
+        setIsPreview,
+        takePhoto,
+        setTakePhoto,
+        onPressTakePhoto
+    } = useTakePhotoState();
+    const {
+        imageSelected,
+        setImageSelected,
+        onPressGetPhoto,
+        albumPhoto,
+        setAlbumPhoto
+    } = useGetPhotoState();
+    const { cameraType, switchCameraType } = useCameraTypeState();
+    const {
+        isNotice,
+        setIsNotice,
+        clickCancelNotice,
+        clickNeverNotice
+    } = useNoticeState();
+    const {
+        firstLightColor,
+        firstLightText,
+        secondLightColor,
+        secondLightText,
+        LightDefaultColor
+    } = useLightState();
 
-	// useEffect
-	useEffect(() => {
-		(async () => {
-			// Camera 권한 체크
-			const { status } = await Permissions.askAsync(Permissions.CAMERA);
-			setHasPermission(status == 'granted');
+    useEffect(() => {
+        (async () => {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA);
+            setHasPermission(status == 'granted');
 
-			// Album 권한 체크
-			const {
-				status: albumStatus,
-			} = await ImagePicker.requestCameraRollPermissionsAsync();
-			setHasAlbumPermission(albumStatus === 'granted');
+            const {
+                status: albumStatus
+            } = await ImagePicker.requestCameraRollPermissionsAsync();
+            setHasAlbumPermission(albumStatus === 'granted');
 
-			// 안내문 다시보지 않기 체크
-			const noticeStatus = await AsyncStorage.getItem('Notice');
-			noticeStatus !== null
-				? setIsNotice(JSON.parse(noticeStatus))
-				: false;
-		})();
-	}, []);
+            const noticeStatus = await AsyncStorage.getItem('Notice');
+            noticeStatus !== null
+                ? setIsNotice(JSON.parse(noticeStatus))
+                : false;
+        })();
+    }, []);
 
-	console.log(
-		`isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
-	);
+    console.log(
+        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
+    );
 
-	// 2인일 때, 2번째 사진으로 넘어가는 버튼
-	const onPressNext = async () => {
-		if (isPreview) {
-			await cameraRef.current.resumePreview();
-			setIsPreview(false);
-		}
+    // 2인일 때, 2번째 사진으로 넘어가는 버튼
+    const onPressNext = async () => {
+        if (isPreview) {
+            await cameraRef.current.resumePreview();
+            setIsPreview(false);
+        }
 
-		if (imageSelected) {
-			setImageSelected(false);
-		}
+        if (imageSelected) {
+            setImageSelected(false);
+        }
 
-		firstPhoto =
-			(takePhoto && takePhoto.base64) ||
-			(albumPhoto && albumPhoto.base64);
+        firstPhoto =
+            (takePhoto && takePhoto.base64) ||
+            (albumPhoto && albumPhoto.base64);
 
-		setIsTwoPeople(true);
-		setTwoPeopleToggleValue(true);
-		setTakePhoto({});
-		setAlbumPhoto({});
-	};
+        setIsTwoPeople(true);
+        setTwoPeopleToggleValue(true);
+        setTakePhoto({});
+        setAlbumPhoto({});
+    };
 
-	// 취소 버튼, 모든 상태 초기화
-	const onPressCancel = async () => {
-		if (isPreview) {
-			await cameraRef.current.resumePreview();
-			setIsPreview(false);
-			setTakePhoto({});
-		}
+    // 취소 버튼, 모든 상태 초기화
+    const onPressCancel = async () => {
+        if (isPreview) {
+            await cameraRef.current.resumePreview();
+            setIsPreview(false);
+            setTakePhoto({});
+        }
 
-		if (imageSelected) {
-			setImageSelected(false);
-			setAlbumPhoto({});
-		}
+        if (imageSelected) {
+            setImageSelected(false);
+            setAlbumPhoto({});
+        }
 
-		setIsGender('female'); // 취소 버튼 누르면 성별 '여자'로 초기화
-		setGenderValue(false);
+        setIsGender('female'); // 취소 버튼 누르면 성별 '여자'로 초기화
+        setGenderValue(false);
 
-		setIsTwoPeople(false);
-		setTwoPeopleToggleValue(false);
+        setIsTwoPeople(false);
+        setTwoPeopleToggleValue(false);
 
-		setIsAfterView(false);
-		firstPhoto = '';
-		secondPhoto = '';
-		setTakePhoto({});
-		setAlbumPhoto({});
-	};
+        setIsAfterView(false);
+        firstPhoto = '';
+        secondPhoto = '';
+        setTakePhoto({});
+        setAlbumPhoto({});
+    };
 
-	// AI Server로 이미지 전송하는 버튼
-	const getTransferImage = async () => {
-		try {
-			console.log(`getTransferImage start!`);
+    // AI Server로 전송하는 버튼
+    const getTransferImage = async () => {
+        try {
+            console.log(`getTransferImage start!`);
 
-			if (!firstPhoto) {
-				firstPhoto =
-					(takePhoto && takePhoto.base64) ||
-					(albumPhoto && albumPhoto.base64);
-			} else {
-				secondPhoto =
-					(takePhoto && takePhoto.base64) ||
-					(albumPhoto && albumPhoto.base64);
-			}
+            if (isPreview) {
+                await cameraRef.current.resumePreview();
+                setIsPreview(false);
+            }
 
-			// Image Transformation Start
-			setIsLoading(true);
+            if (imageSelected) {
+                setImageSelected(false);
+            }
 
-			console.log(`getTransfer Check: ${isGender}`);
+            if (!firstPhoto) {
+                firstPhoto =
+                    (takePhoto && takePhoto.base64) ||
+                    (albumPhoto && albumPhoto.base64);
+            } else {
+                secondPhoto =
+                    (takePhoto && takePhoto.base64) ||
+                    (albumPhoto && albumPhoto.base64);
+            }
 
-			resultPhotoList = await imageTransfer(
-				firstPhoto,
-				secondPhoto,
-				isGender
-			);
+            // Image Transformation Start
+            setIsLoading(true);
 
-			setIsLoading(false);
-			// Image Transformation End
+            console.log(`getTransfer Check: ${isGender}`);
 
-			if (isPreview) {
-				await cameraRef.current.resumePreview();
-				setIsPreview(false);
-			}
+            resultPhotoList = await imageTransfer(
+                firstPhoto,
+                secondPhoto,
+                isGender
+            );
 
-			if (imageSelected) {
-				setImageSelected(false);
-			}
+            setIsLoading(false);
+            // Image Transformation End
 
-			firstPhoto = '';
-			secondPhoto = '';
-			setIsAfterView(true);
-		} catch (e) {
-			alert(`getTransferImage Error: ${e}`);
-		}
-	};
+            firstPhoto = '';
+            secondPhoto = '';
+            setIsAfterView(true);
+        } catch (e) {
+            alert(`getTransferImage Error: ${e}`);
+        }
+    };
 
-	// 결과 이미지 저장 버튼
-	const onPressSave = async () => {
-		try {
-			// original Image path 설정
-			const originalImg = resultPhotoList[0].split(
-				'data:image/png;base64,'
-			)[1];
-			const originalFileName =
-				FileSystem.documentDirectory + 'original.png';
-			await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
-				encoding: FileSystem.EncodingType.Base64,
-			});
+    // 결과 이미지 저장 버튼
+    const onPressSave = async () => {
+        try {
+            // original Image path 설정
+            const originalImg = resultPhotoList[0].split(
+                'data:image/png;base64,'
+            )[1];
+            const originalFileName =
+                FileSystem.documentDirectory + 'original.png';
+            await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
+                encoding: FileSystem.EncodingType.Base64
+            });
 
-			// changed Image path 설정
-			const changedImg = resultPhotoList[1].split(
-				'data:image/png;base64,'
-			)[1];
-			const changedFileName =
-				FileSystem.documentDirectory + 'changed.png';
-			await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
-				encoding: FileSystem.EncodingType.Base64,
-			});
+            // changed Image path 설정
+            const changedImg = resultPhotoList[1].split(
+                'data:image/png;base64,'
+            )[1];
+            const changedFileName =
+                FileSystem.documentDirectory + 'changed.png';
+            await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
+                encoding: FileSystem.EncodingType.Base64
+            });
 
-			// Original, Changed 모두 갤러리 저장
-			await MediaLibrary.saveToLibraryAsync(originalFileName);
-			await MediaLibrary.saveToLibraryAsync(changedFileName);
+            // Original, Changed 모두 갤러리 저장
+            await MediaLibrary.saveToLibraryAsync(originalFileName);
+            await MediaLibrary.saveToLibraryAsync(changedFileName);
 
-			Alert.alert('저장완료❤', '갤러리에서 확인할 수 있습니다.');
-		} catch (error) {
-			alert(`Save Result Photo Error: ${error}`);
-		}
-	};
+            Alert.alert('저장완료❤', '갤러리에서 확인할 수 있습니다.');
+        } catch (error) {
+            alert(`Save Result Photo Error: ${error}`);
+        }
+    };
 
-	// 공유 버튼
-	const onPressShare = async () => {
-		try {
-			// changed Image path 설정
-			const changedImg = resultPhotoList[1].split(
-				'data:image/png;base64,'
-			)[1];
-			const changedFileName =
-				FileSystem.documentDirectory + 'changed.png';
-			await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
-				encoding: FileSystem.EncodingType.Base64,
-			});
+    // 공유 버튼
+    const onPressShare = async () => {
+        try {
+            // changed Image path 설정
+            const changedImg = resultPhotoList[1].split(
+                'data:image/png;base64,'
+            )[1];
+            const changedFileName =
+                FileSystem.documentDirectory + 'changed.png';
+            await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
+                encoding: FileSystem.EncodingType.Base64
+            });
 
-			// changed Image 공유
-			await Sharing.shareAsync(changedFileName);
-		} catch (error) {
-			alert(`Open Sharing Error: ${error}`);
-		}
-	};
+            // changed Image 공유
+            await Sharing.shareAsync(changedFileName);
+        } catch (error) {
+            alert(`Open Sharing Error: ${error}`);
+        }
+    };
 
-	// View
-	if (hasPermission === true) {
-		return isLoading ? (
-			<ProgressBarMain />
-		) : (
-			<MainContainer>
-				{!imageSelected && !isAfterView && (
-					<Camera
-						style={
-							height >= 790
-								? {
-										alignItems: 'center',
-										width: width,
-										height: width / 0.75,
-										marginTop: 50,
-								  }
-								: {
-										alignItems: 'center',
-										width: width,
-										height: width / 0.7,
-										marginTop: 0,
-								  }
-						}
-						type={cameraType}
-						ref={cameraRef}
-					>
-						<FaceLine />
-						{!isTwoPeople ? (
-							<OnePersonPopup />
-						) : (
-							<TwoPeopleMainPopup />
-						)}
-						{!isTwoPeople || isPreview ? (
-							<></>
-						) : !firstPhoto ? (
-							<LightContainer>
-								<OrderLight
-									backgroundColor={firstLightColor}
-									text={firstLightText}
-								/>
-								<OrderLight
-									backgroundColor={LightDefaultColor}
-									text={secondLightText}
-								/>
-							</LightContainer>
-						) : (
-							<LightContainer>
-								<OrderLight
-									backgroundColor={LightDefaultColor}
-									text={firstLightText}
-								/>
-								<OrderLight
-									backgroundColor={secondLightColor}
-									text={secondLightText}
-								/>
-							</LightContainer>
-						)}
+    // View
+    if (hasPermission === true) {
+        return isLoading && !isTwoPeople && !secondPhoto ? (
+            <ProgressBarMain />
+        ) : isTwoPeople && secondPhoto ? (
+            <TwoPeopleLoading
+                firstPhoto={`data:image/png;base64,${firstPhoto}`}
+                secondPhoto={`data:image/png;base64,${secondPhoto}`}
+            />
+        ) : (
+            <CenterView>
+                {!imageSelected && !isAfterView && (
+                    <Camera
+                        style={
+                            height >= 700
+                                ? {
+                                      alignItems: 'center',
+                                      width: width,
+                                      height: width / 0.75,
+                                      marginTop: height / 12
+                                  }
+                                : {
+                                      alignItems: 'center',
+                                      width: width,
+                                      height: width / 0.75,
+                                      marginTop: 0
+                                  }
+                        }
+                        type={cameraType}
+                        ref={cameraRef}
+                    >
+                        <FaceLine />
+                        {!isTwoPeople ? (
+                            <OnePersonPopup />
+                        ) : (
+                            <TwoPeopleMainPopup />
+                        )}
+                        {!isTwoPeople || isPreview ? (
+                            <></>
+                        ) : !firstPhoto ? (
+                            <LightContainer>
+                                <OrderLight
+                                    backgroundColor={firstLightColor}
+                                    text={firstLightText}
+                                />
+                                <OrderLight
+                                    backgroundColor={LightDefaultColor}
+                                    text={secondLightText}
+                                />
+                            </LightContainer>
+                        ) : (
+                            <LightContainer>
+                                <OrderLight
+                                    backgroundColor={LightDefaultColor}
+                                    text={firstLightText}
+                                />
+                                <OrderLight
+                                    backgroundColor={secondLightColor}
+                                    text={secondLightText}
+                                />
+                            </LightContainer>
+                        )}
+                        {imageSelected && (
+                            <Image
+                                style={
+                                    height >= 700
+                                        ? {
+                                              width: width,
+                                              height: width / 0.75,
+                                              marginTop: 50
+                                          }
+                                        : {
+                                              width: width,
+                                              height: width / 0.75,
+                                              marginTop: 25
+                                          }
+                                }
+                                source={{ uri: albumPhoto.uri }}
+                            />
+                        )}
+                        <ChangeFunctionContainer>
+                            <ChangeButtonContainer>
+                                {!isTwoPeople && (
+                                    <GenderBtn
+                                        onPress={onPressGender}
+                                        value={genderValue}
+                                        onToggle={onToggleGender}
+                                    />
+                                )}
+                            </ChangeButtonContainer>
+                            <ChangeButtonContainer>
+                                <TwoPeopleBtn
+                                    onPress={onPressTwoPeople}
+                                    value={twoPeopleToggleValue}
+                                    onToggle={onToggleTwoPeople}
+                                />
+                            </ChangeButtonContainer>
+                            <ChangeButtonContainer></ChangeButtonContainer>
+                        </ChangeFunctionContainer>
+                    </Camera>
+                )}
 
-						<ChangeBtnContainer>
-							<ChangeBtnBox>
-								{!isTwoPeople && (
-									<GenderBtn
-										onPress={onPressGender}
-										value={genderValue}
-										onToggle={onToggleGender}
-									/>
-								)}
-							</ChangeBtnBox>
-							<ChangeBtnBox>
-								<TwoPeopleBtn
-									onPress={onPressTwoPeople}
-									value={twoPeopleToggleValue}
-									onToggle={onToggleTwoPeople}
-								/>
-							</ChangeBtnBox>
-							<ChangeBtnBox></ChangeBtnBox>
-						</ChangeBtnContainer>
-					</Camera>
-				)}
+                {imageSelected && (
+                    <>
+                        <Image
+                            style={
+                                height >= 700
+                                    ? {
+                                          width: width,
+                                          height: width / 0.75,
+                                          marginTop: 50
+                                      }
+                                    : {
+                                          width: width,
+                                          height: width / 0.75,
+                                          marginTop: 25
+                                      }
+                            }
+                            source={{ uri: albumPhoto.uri }}
+                        />
+                        <ChangeFunctionContainer>
+                            {!isTwoPeople && (
+                                <GenderBtn
+                                    onPress={onPressGender}
+                                    value={genderValue}
+                                    onToggle={onToggleGender}
+                                />
+                            )}
+                        </ChangeFunctionContainer>
+                    </>
+                )}
 
-				{imageSelected && (
-					<>
-						<Image
-							style={
-								height >= 790
-									? {
-											width: width,
-											height: width / 0.75,
-											marginTop: 50,
-									  }
-									: {
-											width: width,
-											height: width / 0.75,
-											marginTop: 25,
-									  }
-							}
-							source={{ uri: albumPhoto.uri }}
-						/>
-						<ChangeBtnContainer>
-							{!isTwoPeople && (
-								<GenderBtn
-									onPress={onPressGender}
-									value={genderValue}
-									onToggle={onToggleGender}
-								/>
-							)}
-						</ChangeBtnContainer>
-					</>
-				)}
+                {isAfterView && (
+                    <Image
+                        style={
+                            height >= 700
+                                ? {
+                                      width: width,
+                                      height: width,
+                                      marginTop: '20%'
+                                  }
+                                : {
+                                      width: width,
+                                      height: width,
+                                      marginTop: 0
+                                  }
+                        }
+                        source={{ uri: resultPhotoList[1] }}
+                    />
+                )}
 
-				{isAfterView && (
-					<Image
-						style={
-							height >= 790
-								? {
-										width: width,
-										height: width,
-										marginTop: 100,
-								  }
-								: {
-										width: width,
-										height: width,
-										marginTop: 0,
-								  }
-						}
-						source={{ uri: resultPhotoList[1] }}
-					/>
-				)}
+                {!isPreview && !imageSelected && !isAfterView && (
+                    <IconContainer>
+                        <GetPhotoBtn onPress={onPressGetPhoto} />
+                        <TakePhotoBtn onPress={onPressTakePhoto} />
+                        <SwitchCameraBtn onPress={switchCameraType} />
+                    </IconContainer>
+                )}
+                {isAfterView && (
+                    <IconContainer>
+                        <CancelBtn onPress={onPressCancel} />
+                        <SaveBtn onPress={onPressSave} />
+                        <ShareBtn onPress={onPressShare} />
+                    </IconContainer>
+                )}
+                {(isPreview || imageSelected) && (
+                    <IconContainer>
+                        <CancelBtn onPress={onPressCancel} />
 
-				{!isPreview && !imageSelected && !isAfterView && (
-					<MainBtnContainer>
-						<GetPhotoBtn onPress={onPressGetPhoto} />
-						<TakePhotoBtn onPress={onPressTakePhoto} />
-						<SwitchCameraBtn onPress={switchCameraType} />
-					</MainBtnContainer>
-				)}
-				{isAfterView && (
-					<MainBtnContainer>
-						<SaveBtn onPress={onPressSave} />
-						<ShareBtn onPress={onPressShare} />
-						<CancelBtn onPress={onPressCancel} />
-					</MainBtnContainer>
-				)}
-				{(isPreview || imageSelected) && (
-					<MainBtnContainer>
-						{!isTwoPeople || (isTwoPeople && firstPhoto) ? (
-							<TransferBtn onPress={getTransferImage} />
-						) : (
-							<NextBtn onPress={onPressNext} />
-						)}
-						<CancelBtn onPress={onPressCancel} />
-					</MainBtnContainer>
-				)}
-				{isNotice && (
-					<NoticeContainer>
-						<ImageBackground
-							source={require('./assets/app_intro.png')}
-							style={{
-								width: '100%',
-								height: '100%',
-							}}
-						>
-							<NoticeCancelBtn onPress={clickCancelNotice} />
-							<NoticeNeverBtn onPress={clickNeverNotice} />
-						</ImageBackground>
-					</NoticeContainer>
-				)}
-			</MainContainer>
-		);
-	} else if (hasPermission === false) {
-		return (
-			<MainContainer>
-				<Text>Don't have permission for this</Text>
-			</MainContainer>
-		);
-	} else {
-		return (
-			<MainContainer>
-				<ActivityIndicator />
-			</MainContainer>
-		);
-	}
+                        {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
+                            <TransferBtn onPress={getTransferImage} />
+                        ) : (
+                            <NextBtn onPress={onPressNext} />
+                        )}
+                    </IconContainer>
+                )}
+                {isNotice && (
+                    <HowToPage>
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 3.5,
+                                alignItems: 'center',
+                                position: 'relative'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/faceLineNotice.png')}
+                                style={
+                                    height >= 700
+                                        ? {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5,
+                                              top: height / 15
+                                          }
+                                        : {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.5
+                                          }
+                                }
+                            />
+                            {/* <FaceLine style={{ position: 'absolute' }} /> */}
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 14
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 10,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/tipNotice.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={
+                                height >= 700 && height < 800
+                                    ? {
+                                          width: width,
+                                          height: height / 12
+                                      }
+                                    : {
+                                          width: width,
+                                          height: height / 50
+                                      }
+                            }
+                        />
+
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 4.5,
+                                alignItems: 'flex-end'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/genderNotice2.png')}
+                                style={{
+                                    flex: 1,
+                                    resizeMode: 'contain',
+                                    width: width / 1.2
+                                }}
+                            />
+                        </ImageBackground>
+                        <Image
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 70
+                            }}
+                        />
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 6,
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Image
+                                source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/twoPeopleNotice3.png')}
+                                style={
+                                    height >= 700
+                                        ? {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6,
+                                              bottom: height / 20
+                                          }
+                                        : {
+                                              flex: 1,
+                                              resizeMode: 'contain',
+                                              width: width / 1.6
+                                          }
+                                }
+                            />
+                            {/* <NoticeCancelBtn onPress={clickCancelNotice} />
+                            <NoticeNeverBtn onPress={clickNeverNotice} /> */}
+                        </ImageBackground>
+                        <ImageBackground
+                            source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
+                            style={{
+                                width: width,
+                                height: height / 3,
+                                alignItems: 'flex-start',
+                                flexDirection: 'row-reverse'
+                            }}
+                        >
+                            <NoticeCancelBtn onPress={clickCancelNotice} />
+                            <NoticeNeverBtn onPress={clickNeverNotice} />
+                        </ImageBackground>
+                    </HowToPage>
+                )}
+            </CenterView>
+        );
+    } else if (hasPermission === false) {
+        return (
+            <CenterView>
+                <Text>Don't have permission for this</Text>
+            </CenterView>
+        );
+    } else {
+        return (
+            <CenterView>
+                <ActivityIndicator />
+            </CenterView>
+        );
+    }
 }
