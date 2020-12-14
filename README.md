@@ -37,6 +37,9 @@
 
   - openCV
   - Crawling
+  - Flask
+  - gunicorn
+  - nginx
     
 
 - HTML / CSS / JS
@@ -47,8 +50,7 @@
   - expo-camera
 
 - API
-  
-  - Flask
+
   - Docker
   - nvidia-cuda
   
