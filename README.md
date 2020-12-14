@@ -40,6 +40,7 @@
   - Flask
   - gunicorn
   - nginx
+  - locust
   - dlib
   - Pytorch
     
