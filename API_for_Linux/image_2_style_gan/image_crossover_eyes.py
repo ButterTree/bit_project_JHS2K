@@ -131,36 +131,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     for i in range(ingredient_eyes.shape[1]):
         ingredient_eyes[0, i, ..., ...] = ingredient_eyes[0, idx, ..., ...]
     img_1 = (img_1 * blur_mask2) + ingredient_eyes
-    # img_1 = img_1.to(device)  # (1,3,1024,1024)
 
-        # if hist_abs_mean < 0.0001:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*16000), 0, 1)
-        # elif hist_abs_mean >= 0.0001 and hist_abs_mean < 0.0009:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*17000), 0, 1)
-        # elif hist_abs_mean >= 0.0009 and hist_abs_mean < 0.0015:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*18500), 0, 1)
-        # elif hist_abs_mean >= 0.0015 and hist_abs_mean < 0.002:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*20500), 0, 1)
-        # elif hist_abs_mean >= 0.002 and hist_abs_mean < 0.0025:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*22500), 0, 1)
-        # elif hist_abs_mean >= 0.0025 and hist_abs_mean < 0.003:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*25000), 0, 1)
-        # else:
-        #     img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*27500), 0, 1)
-    
-    # hist_bias_r = torch.mean(
-    #     img_1[0, 0, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 0, ..., ...]*blur_mask0_1)
-    # hist_bias_g = torch.mean(
-    #     img_1[0, 1, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 1, ..., ...]*blur_mask0_1)
-    # hist_bias_b = torch.mean(
-    #     img_1[0, 2, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, 2, ..., ...]*blur_mask0_1)
-
-    # img_0[0, 0, ..., ...] = torch.clamp(
-    #     img_0[0, 0, ..., ...] + hist_bias_r*abs(hist_bias_r*19000), 0, 1)
-    # img_0[0, 1, ..., ...] = torch.clamp(
-    #     img_0[0, 1, ..., ...] + hist_bias_g*abs(hist_bias_g*19000), 0, 1)
-    # img_0[0, 2, ..., ...] = torch.clamp(
-    #     img_0[0, 2, ..., ...] + hist_bias_b*abs(hist_bias_b*19000), 0, 1)
 
     MSE_Loss = nn.MSELoss(reduction="mean")
     upsample2d = torch.nn.Upsample(scale_factor=0.5, mode='nearest')
