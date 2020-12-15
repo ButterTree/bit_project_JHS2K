@@ -159,8 +159,6 @@ export default function App() {
         LightDefaultColor
     } = useLightState();
 
-
-
     useEffect(() => {
         (async () => {
             const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -266,6 +264,8 @@ export default function App() {
 
             setIsLoading(false);
             // Image Transformation End
+
+            console.log(`=========   ${resultPhotoList[2]}   =========`);
 
             firstPhoto = '';
             secondPhoto = '';
@@ -432,7 +432,6 @@ export default function App() {
                         )}
 
                         {imageSelected && (
-
                             <Image
                                 style={
                                     height >= 700
@@ -451,7 +450,6 @@ export default function App() {
                                 }
                                 source={{ uri: albumPhoto.uri }}
                             />
-
                         )}
 
                         {isAfterView && (
@@ -470,7 +468,7 @@ export default function App() {
                                             height: width * 0.9,
                                             // alignItems: 'center',
                                             marginTop: '20%',
-                                            marginBottom: "20%",
+                                            marginBottom: '20%',
                                             marginLeft: width * 0.05
                                         }
                                 }
