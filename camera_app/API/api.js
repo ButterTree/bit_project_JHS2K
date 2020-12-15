@@ -15,8 +15,8 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
             // 보내는 파일의 타입 설정
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
+                'Access-Control-Allow-Origin': '*'
+            }
         };
 
         await axios
@@ -26,7 +26,7 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
                     label: 'Image',
                     origin: firstPhoto,
                     custom: secondPhoto,
-                    gender: sex,
+                    gender: sex
                 },
                 config
             ) // 해당 URL로 POST
@@ -35,11 +35,12 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
                 const {
                     data: {
                         results: { imgID_1, imgID_2 },
-                    },
+                        target_number
+                    }
                 } = res;
                 const origin = `data:image/png;base64,${res && imgID_1}`;
                 const after = `data:image/png;base64,${res && imgID_2}`;
-                tempResult = [origin, after];
+                tempResult = [origin, after, target_number];
             })
             // POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
             // 이를 getResultURL 함수로 보낸다.
@@ -60,7 +61,7 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
         console.log(`imageTransfer Error: ${e}`);
     } finally {
         const result = tempResult;
-        if (result.length === 2) {
+        if (result.length >= 2) {
             return result;
         } else {
             return false;
