@@ -431,7 +431,9 @@ export default function App() {
                                             onToggle={onToggleTwoPeople}
                                         />
                                     </ChangeBtnBox >
-                                    <ChangeBtnBox ></ChangeBtnBox >
+                                    <ChangeBtnBox >
+                                        <ModeBtn onPress={onPressMode} Text={isMode} />
+                                    </ChangeBtnBox >
                                 </ChangeBtnContainer >
                             </Camera>
                         )}
