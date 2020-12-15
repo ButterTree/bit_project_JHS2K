@@ -8,7 +8,7 @@ const URL = `http://${SERVER_IP}:${SERVER_PORT}/let_me_shine`;
 
 let tempResult = [];
 
-export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
+export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
     try {
         console.log('[1] Post Start!');
         const config = {
@@ -26,7 +26,8 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
                     label: 'Image',
                     origin: firstPhoto,
                     custom: secondPhoto,
-                    gender: sex
+                    gender,
+                    mode
                 },
                 config
             ) // 해당 URL로 POST

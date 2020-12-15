@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
         width: width / 8,
         height: height / 13,
         top: '2%',
-        right: '5%',
+        right: '5%'
     },
 
     imgStyle: {
         width: width / 8,
         height: height / 13,
-        resizeMode: 'contain',
-    },
+        resizeMode: 'contain'
+    }
 });
 export default NextBtn;
