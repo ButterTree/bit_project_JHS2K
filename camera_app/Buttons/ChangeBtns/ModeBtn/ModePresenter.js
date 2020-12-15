@@ -8,7 +8,7 @@ const View = styled.View`
     background-color: black;
     width: 55px;
     height: 55px;
-    borderRadius: 50;
+    borderRadius: ${55 / 2}px;
 `;
 
 const ModeBtn = memo((props) => (
