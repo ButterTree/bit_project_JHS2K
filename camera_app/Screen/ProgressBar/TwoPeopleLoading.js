@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { Component } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import Texts from './Texts';
@@ -52,9 +50,9 @@ export default class MyComponent extends Component {
                                     {
                                         translateX: SlideInLeft.interpolate({
                                             inputRange: [0, 1],
-                                            outputRange: [-95, 0],
-                                        }),
-                                    },
+                                            outputRange: [-95, 0]
+                                        })
+                                    }
                                 ],
                                 opacity: animation,
                                 height: height / 4,
@@ -63,7 +61,6 @@ export default class MyComponent extends Component {
                                 borderWidth: 5,
                                 borderColor: '#D69999',
                                 position: 'absolute'
-
                             }}
                             source={{ uri: this.props.firstPhoto }}
                         ></Animated.Image>
@@ -73,16 +70,16 @@ export default class MyComponent extends Component {
                                     {
                                         translateX: slideInRight.interpolate({
                                             inputRange: [0, 1],
-                                            outputRange: [95, 0],
-                                        }),
-                                    },
+                                            outputRange: [95, 0]
+                                        })
+                                    }
                                 ],
                                 opacity: animation,
                                 height: height / 4,
                                 width: width / 2.5,
                                 borderRadius: 12,
                                 borderWidth: 5,
-                                borderColor: '#D69999',
+                                borderColor: '#D69999'
                             }}
                             source={{ uri: this.props.secondPhoto }}
                         ></Animated.Image>

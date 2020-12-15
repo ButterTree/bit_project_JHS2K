@@ -1,5 +1,3 @@
-/** @format */
-
 import axios from 'axios';
 import { Alert } from 'react-native';
 import { SERVER_IP, SERVER_PORT } from './apiAddress';
@@ -8,15 +6,15 @@ const URL = `http://${SERVER_IP}:${SERVER_PORT}/let_me_shine`;
 
 let tempResult = [];
 
-export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
+export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
     try {
         console.log('[1] Post Start!');
         const config = {
             // 보내는 파일의 타입 설정
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
+                'Access-Control-Allow-Origin': '*'
+            }
         };
 
         await axios
@@ -26,7 +24,8 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
                     label: 'Image',
                     origin: firstPhoto,
                     custom: secondPhoto,
-                    gender: sex,
+                    gender,
+                    mode
                 },
                 config
             ) // 해당 URL로 POST
@@ -34,8 +33,8 @@ export const imageTransfer = async (firstPhoto, secondPhoto, sex) => {
                 // console.log(res.data.results);
                 const {
                     data: {
-                        results: { imgID_1, imgID_2 },
-                    },
+                        results: { imgID_1, imgID_2 }
+                    }
                 } = res;
                 const origin = `data:image/png;base64,${res && imgID_1}`;
                 const after = `data:image/png;base64,${res && imgID_2}`;
