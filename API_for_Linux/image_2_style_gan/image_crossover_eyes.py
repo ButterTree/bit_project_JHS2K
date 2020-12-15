@@ -151,7 +151,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
     loss_list = []
 
-    print("Start ---------------------------------------------------------------------------------------")
+    print("Start ---------------------------------------------------------------------------------------------")
     # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
     for i in range(ITERATION):
         optimizer.zero_grad()
@@ -193,7 +193,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)
 
-    print("Complete ---------------------------------------------------------------------------------------------")
+    print("Complete -------------------------------------------------------------------------------------")
 
     return origin_name, final_name
 
