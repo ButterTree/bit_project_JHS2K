@@ -55,7 +55,6 @@ import OrderLight from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsPrese
 import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLightsContainer';
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
-import { View } from 'native-base';
 
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
@@ -264,7 +263,9 @@ export default function App() {
 
             setIsLoading(false);
             // Image Transformation End
-            console.log(resultPhotoList[2]);
+
+            console.log(`=========   ${resultPhotoList[2]}   =========`);
+
             firstPhoto = '';
             secondPhoto = '';
             setIsAfterView(true);
