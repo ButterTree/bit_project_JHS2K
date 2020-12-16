@@ -55,7 +55,7 @@ const twoPopup = () => {
                         <TouchableHighlight
                             style={{
                                 ...styles.openButton,
-                                backgroundColor: '#4d4d4d'
+                                backgroundColor: '#fff9a3'
                             }}
                             onPress={() => {
                                 setModalVisible(false);
