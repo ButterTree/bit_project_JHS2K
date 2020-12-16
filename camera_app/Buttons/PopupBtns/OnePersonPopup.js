@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '700',
         lineHeight: 25,
-
+        padding: 10
     }
 });
 
