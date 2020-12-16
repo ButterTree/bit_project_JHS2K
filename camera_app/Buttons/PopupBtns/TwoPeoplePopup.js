@@ -48,8 +48,9 @@ const twoPopup = () => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>
-                            {`1. 첫번째는 변화를 원하는 사진을 선택하세요.\n2. 두번째는 합성할 사진을 선택하세요.\n`}
+                            {`※ 2인 모드 ※`}
                         </Text>
+                        <Text style={styles.modalText}>{`1. '첫번째 사진' 눈에 '두번째 사진' 눈의\n    쌍꺼풀이 적용되어 나옵니다.\n\n 2. 고화질 사진이 더 좋은 결과를 보여줍니다.`}</Text>
 
                         <TouchableHighlight
                             style={{

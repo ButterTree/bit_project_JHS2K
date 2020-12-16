@@ -19,7 +19,7 @@ export default ProgressBarMain = () => {
         <>
             <View style={styles.container}>
                 <Loading />
-                <View style={{ marginBottom: "20%" }}>
+                <View style={{ marginBottom: "30%" }}>
                     <Texts />
                 </View>
             </View>
