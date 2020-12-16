@@ -56,14 +56,13 @@ import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLigh
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 
-import ModeBtn from './Buttons/ChangeBtns/ModeBtn/ModePresenter';
 import { useModeState } from './Buttons/ChangeBtns/ModeBtn/ModeContainer';
 
 const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
     flex: 1;
-    background-color: #fadbdb;
+    background-color: #fff9a3;
 `;
 const MainBtnContainer = styled.View`
     flex: 1;
@@ -177,6 +176,19 @@ export default function App() {
             noticeStatus !== null
                 ? setIsNotice(JSON.parse(noticeStatus))
                 : false;
+
+            const photo = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: false,
+                quality: 1,
+                base64: true,
+            });
+            if (photo.uri) {
+                setImageSelected(true);
+                setAlbumPhoto({
+                    uri: photo.uri,
+                    base64: photo.base64,
+                });
+            }
         })();
     }, []);
 
@@ -432,7 +444,6 @@ export default function App() {
                                         />
                                     </ChangeBtnBox >
                                     <ChangeBtnBox >
-                                        <ModeBtn onPress={onPressMode} Text={isMode} />
                                     </ChangeBtnBox >
                                 </ChangeBtnContainer >
                             </Camera>
@@ -508,7 +519,7 @@ export default function App() {
                                     )}
                             </MainBtnContainer>
                         )}
-                        {isNotice && (
+                        {isNotice && !imageSelected && !isAfterView && (
                             <NoticeContainer >
                                 <ImageBackground
                                     source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
@@ -519,23 +530,7 @@ export default function App() {
                                         position: 'relative'
                                     }}
                                 >
-                                    <Image
-                                        source={require('./Buttons/MainScreenBtns/NoticeBtns/Image/faceLineNotice.png')}
-                                        style={
-                                            height >= 700
-                                                ? {
-                                                    flex: 1,
-                                                    resizeMode: 'contain',
-                                                    width: width / 1.5,
-                                                    top: height / 15
-                                                }
-                                                : {
-                                                    flex: 1,
-                                                    resizeMode: 'contain',
-                                                    width: width / 1.5
-                                                }
-                                        }
-                                    />
+
                                     {/* <FaceLine style={{ position: 'absolute' }} /> */}
                                 </ImageBackground>
                                 <Image

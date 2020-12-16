@@ -61,7 +61,7 @@ export default class MyComponent extends Component {
                                 width: width / 2.5,
                                 borderRadius: 12,
                                 borderWidth: 5,
-                                borderColor: '#D69999',
+                                borderColor: '#FFDE66',
                                 position: 'absolute'
 
                             }}
@@ -82,7 +82,7 @@ export default class MyComponent extends Component {
                                 width: width / 2.5,
                                 borderRadius: 12,
                                 borderWidth: 5,
-                                borderColor: '#D69999',
+                                borderColor: '#FF8868',
                             }}
                             source={{ uri: this.props.secondPhoto }}
                         ></Animated.Image>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: width,
         height: height,
-        backgroundColor: '#fadbdb',
+        backgroundColor: '#fff9a3',
         flexDirection: 'column',
         justifyContent: 'space-around',
         alignItems: 'center',

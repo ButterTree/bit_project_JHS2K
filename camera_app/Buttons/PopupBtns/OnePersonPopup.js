@@ -30,21 +30,21 @@ const onePopup = () => {
             style={
                 deviceHeight >= 700
                     ? {
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: deviceHeight / 1.3,
-                          left: deviceWidth / 25,
-                          position: 'absolute'
-                      }
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: deviceHeight / 1.3,
+                        left: deviceWidth / 25,
+                        position: 'absolute'
+                    }
                     : {
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: deviceHeight / 1.05,
-                          left: deviceWidth / 25,
-                          position: 'absolute'
-                      }
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: deviceHeight / 1.05,
+                        left: deviceWidth / 25,
+                        position: 'absolute'
+                    }
             }
         >
             <Modal
@@ -58,7 +58,7 @@ const onePopup = () => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>
-                            {`1. 정면을 바라보고 눈을 바르게 뜨세요.\n2. 아래 버튼으로 성별을 바꿀 수 있어요.\n`}
+                            {`1. <1인모드>에서는 여성, 남성 각각\n    6개의 다른 스타일 쌍꺼풀이 랜덤하게\n    선택되어 나옵니다.\n\n2. <2인모드>에서는 '첫번째 사진' 눈에\n    '두번째 사진' 눈의 쌍꺼풀이 적용되어\n    나옵니다.\n\n3. 고화질 사진이 더 좋은 결과를 보여줍니다.\n\n4. 아래 버튼으로 성별을 바꿀 수 있어요.`}
                         </Text>
                         <TipContainer>
                             <Image
@@ -75,11 +75,12 @@ const onePopup = () => {
                                     height: 40
                                 }}
                             />
+
                         </TipContainer>
                         <TouchableHighlight
                             style={{
                                 ...styles.openButton,
-                                backgroundColor: '#FADBDB'
+                                backgroundColor: '#fff9a3'
                             }}
                             onPress={() => {
                                 setModalVisible(false);
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 30,
+        padding: 20,
         alignItems: 'center',
         shadowColor: 'transparent',
         shadowOffset: {
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     openButton: {
-        backgroundColor: '#FADBDB',
+        backgroundColor: '#fff9a3',
         borderRadius: 20,
         padding: 10,
         elevation: 2
@@ -145,11 +146,12 @@ const styles = StyleSheet.create({
         textAlign: 'justify'
     },
     modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-        fontSize: 12,
+        marginBottom: 35,
+        textAlign: 'left',
+        fontSize: 15,
         fontWeight: '700',
-        lineHeight: 25
+        lineHeight: 25,
+        padding: 10
     }
 });
 

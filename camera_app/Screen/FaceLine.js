@@ -15,7 +15,7 @@ export default () => {
                 borderRadius: 100,
                 borderWidth: 7.5,
                 opacity: 0.3,
-                borderColor: 'white',
+                borderColor: 'transparent',
                 backgroundColor: 'transparent',
                 position: 'absolute'
             }}

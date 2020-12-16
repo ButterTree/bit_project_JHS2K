@@ -8,7 +8,7 @@ import Texts from './Texts';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fadbdb',
+        backgroundColor: '#fff9a3',
         justifyContent: 'center',
         alignContent: 'center'
     }

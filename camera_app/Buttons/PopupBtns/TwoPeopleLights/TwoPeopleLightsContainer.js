@@ -1,8 +1,8 @@
 export const useLightState = () => {
     return {
-        firstLightColor: '#FADBDB',
+        firstLightColor: '#fff9a3',
         firstLightText: '1st',
-        secondLightColor: '#FADBDB',
+        secondLightColor: '#fff9a3',
         secondLightText: '2nd',
         LightDefaultColor: 'transparent'
     };
