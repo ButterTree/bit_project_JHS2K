@@ -5,10 +5,10 @@
 		"platforms": ["ios", "android", "web"],
 		"version": "1.0.1",
 		"orientation": "portrait",
-		"icon": "./assets/app_logo.png",
+		"icon": "./assets/app_logo_lemon.png",
 		"primaryColor": "#ffffff",
 		"splash": {
-			"image": "./assets/mainImage.png",
+			"image": "./assets/mainImage_lemon.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -25,7 +25,7 @@
 			"versionCode": 1
 		},
 		"web": {
-			"favicon": "./assets/app_logo.png"
+			"favicon": "./assets/app_logo_lemon.png"
 		},
 		"androidStatusBar": {
 			"barStyle": "dark-content",
