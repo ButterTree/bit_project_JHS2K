@@ -177,18 +177,18 @@ export default function App() {
                 ? setIsNotice(JSON.parse(noticeStatus))
                 : false;
 
-            // const photo = await ImagePicker.launchImageLibraryAsync({
-            //     allowsEditing: false,
-            //     quality: 1,
-            //     base64: true,
-            // });
-            // if (photo.uri) {
-            //     setImageSelected(true);
-            //     setAlbumPhoto({
-            //         uri: photo.uri,
-            //         base64: photo.base64,
-            //     });
-            // }
+            const photo = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: false,
+                quality: 1,
+                base64: true,
+            });
+            if (photo.uri) {
+                setImageSelected(true);
+                setAlbumPhoto({
+                    uri: photo.uri,
+                    base64: photo.base64,
+                });
+            }
         })();
     }, []);
 
