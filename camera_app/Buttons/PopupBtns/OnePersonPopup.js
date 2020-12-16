@@ -148,10 +148,10 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 35,
         textAlign: 'left',
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: '700',
         lineHeight: 25,
-        padding: 10
+
     }
 });
 
