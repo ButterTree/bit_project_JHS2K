@@ -1,0 +1,396 @@
+[2020-12-15 15:31:00 +0900] [16492] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:31:00 +0900] [16492] [INFO] Listening at: unix:connector/center_api.sock (16492)
+[2020-12-15 15:31:00 +0900] [16492] [INFO] Using worker: sync
+[2020-12-15 15:31:00 +0900] [16524] [INFO] Booting worker with pid: 16524
+[2020-12-15 15:31:00 +0900] [16525] [INFO] Booting worker with pid: 16525
+[2020-12-15 15:32:55 +0900] [16525] [INFO] Worker exiting (pid: 16525)
+[2020-12-15 15:32:55 +0900] [16524] [INFO] Worker exiting (pid: 16524)
+[2020-12-15 15:32:55 +0900] [16492] [INFO] Handling signal: term
+[2020-12-15 15:32:57 +0900] [16492] [INFO] Shutting down: Master
+[2020-12-15 15:32:57 +0900] [16792] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:32:57 +0900] [16792] [INFO] Listening at: unix:connector/center_api.sock (16792)
+[2020-12-15 15:32:57 +0900] [16792] [INFO] Using worker: sync
+[2020-12-15 15:32:57 +0900] [16822] [INFO] Booting worker with pid: 16822
+[2020-12-15 15:32:57 +0900] [16823] [INFO] Booting worker with pid: 16823
+[2020-12-15 15:33:57 +0900] [16823] [INFO] Worker exiting (pid: 16823)
+[2020-12-15 15:33:57 +0900] [16822] [INFO] Worker exiting (pid: 16822)
+[2020-12-15 15:33:57 +0900] [16792] [INFO] Handling signal: term
+[2020-12-15 15:33:59 +0900] [16792] [INFO] Shutting down: Master
+[2020-12-15 15:33:59 +0900] [17085] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:33:59 +0900] [17085] [INFO] Listening at: unix:connector/center_api.sock (17085)
+[2020-12-15 15:33:59 +0900] [17085] [INFO] Using worker: sync
+[2020-12-15 15:33:59 +0900] [17115] [INFO] Booting worker with pid: 17115
+[2020-12-15 15:33:59 +0900] [17115] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 119, in init_process
+    self.load_wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 144, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 49, in load
+    return self.load_wsgiapp()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 39, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/util.py", line 358, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 965, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'center_api'
+[2020-12-15 15:33:59 +0900] [17115] [INFO] Worker exiting (pid: 17115)
+[2020-12-15 15:33:59 +0900] [17085] [INFO] Shutting down: Master
+[2020-12-15 15:33:59 +0900] [17085] [INFO] Reason: Worker failed to boot.
+[2020-12-15 15:34:50 +0900] [17250] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:34:50 +0900] [17250] [INFO] Listening at: http://127.0.0.1:8000 (17250)
+[2020-12-15 15:34:50 +0900] [17250] [INFO] Using worker: sync
+[2020-12-15 15:34:50 +0900] [17281] [INFO] Booting worker with pid: 17281
+[2020-12-15 15:34:50 +0900] [17281] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 119, in init_process
+    self.load_wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 144, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 49, in load
+    return self.load_wsgiapp()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 39, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/util.py", line 358, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 965, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'center_api'
+[2020-12-15 15:34:50 +0900] [17281] [INFO] Worker exiting (pid: 17281)
+[2020-12-15 15:34:50 +0900] [17250] [INFO] Shutting down: Master
+[2020-12-15 15:34:50 +0900] [17250] [INFO] Reason: Worker failed to boot.
+[2020-12-15 15:36:37 +0900] [17606] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:36:37 +0900] [17606] [INFO] Listening at: http://192.168.1.44:45015 (17606)
+[2020-12-15 15:36:37 +0900] [17606] [INFO] Using worker: sync
+[2020-12-15 15:36:37 +0900] [17638] [INFO] Booting worker with pid: 17638
+[2020-12-15 15:36:37 +0900] [17638] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 119, in init_process
+    self.load_wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 144, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 49, in load
+    return self.load_wsgiapp()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 39, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/util.py", line 358, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 965, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'wsgi'
+[2020-12-15 15:36:37 +0900] [17638] [INFO] Worker exiting (pid: 17638)
+[2020-12-15 15:36:37 +0900] [17606] [INFO] Shutting down: Master
+[2020-12-15 15:36:37 +0900] [17606] [INFO] Reason: Worker failed to boot.
+[2020-12-15 15:37:01 +0900] [17748] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:37:01 +0900] [17748] [INFO] Listening at: http://192.168.1.44:45015 (17748)
+[2020-12-15 15:37:01 +0900] [17748] [INFO] Using worker: sync
+[2020-12-15 15:37:01 +0900] [17778] [INFO] Booting worker with pid: 17778
+[2020-12-15 15:37:01 +0900] [17778] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 119, in init_process
+    self.load_wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 144, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 49, in load
+    return self.load_wsgiapp()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 39, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/util.py", line 358, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 965, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'wsgi'
+[2020-12-15 15:37:01 +0900] [17778] [INFO] Worker exiting (pid: 17778)
+[2020-12-15 15:37:01 +0900] [17779] [INFO] Booting worker with pid: 17779
+[2020-12-15 15:37:01 +0900] [17779] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/arbiter.py", line 583, in spawn_worker
+    worker.init_process()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 119, in init_process
+    self.load_wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/workers/base.py", line 144, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 49, in load
+    return self.load_wsgiapp()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/app/wsgiapp.py", line 39, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/gunicorn/util.py", line 358, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/local/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 965, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'wsgi'
+[2020-12-15 15:37:01 +0900] [17779] [INFO] Worker exiting (pid: 17779)
+[2020-12-15 15:37:01 +0900] [17748] [INFO] Shutting down: Master
+[2020-12-15 15:37:01 +0900] [17748] [INFO] Reason: Worker failed to boot.
+[2020-12-15 15:38:25 +0900] [17905] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:38:25 +0900] [17905] [INFO] Listening at: http://192.168.1.44:45015 (17905)
+[2020-12-15 15:38:25 +0900] [17905] [INFO] Using worker: sync
+[2020-12-15 15:38:25 +0900] [17937] [INFO] Booting worker with pid: 17937
+[2020-12-15 15:38:25 +0900] [17938] [INFO] Booting worker with pid: 17938
+[2020-12-15 15:38:41,138] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:41,980] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:42,819] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:43,678] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:44,489] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:45,348] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:46,199] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:38:47,072] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:39:45 +0900] [17938] [INFO] Worker exiting (pid: 17938)
+[2020-12-15 15:39:45 +0900] [17937] [INFO] Worker exiting (pid: 17937)
+[2020-12-15 15:39:45 +0900] [17905] [INFO] Handling signal: term
+[2020-12-15 15:39:45 +0900] [17905] [INFO] Shutting down: Master
+[2020-12-15 15:39:45 +0900] [18255] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:39:45 +0900] [18255] [INFO] Listening at: http://192.168.1.44:45015 (18255)
+[2020-12-15 15:39:45 +0900] [18255] [INFO] Using worker: sync
+[2020-12-15 15:39:45 +0900] [18287] [INFO] Booting worker with pid: 18287
+[2020-12-15 15:39:45 +0900] [18289] [INFO] Booting worker with pid: 18289
+[2020-12-15 15:40:00,761] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:40:01,626] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:40:02,484] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:40:03,351] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:40:04,171] ERROR in app: Exception on /let_me_shine [POST]
+Traceback (most recent call last):
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1953, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 1968, in finalize_request
+    response = self.make_response(rv)
+  File "/home/tazo/Workspace/bit_project_JHS2K/API_for_Linux/connector/env/lib/python3.7/site-packages/flask/app.py", line 2098, in make_response
+    "The view function did not return a valid response. The"
+TypeError: The view function did not return a valid response. The function either returned None or ended without a return statement.
+[2020-12-15 15:41:21 +0900] [18287] [INFO] Worker exiting (pid: 18287)
+[2020-12-15 15:41:21 +0900] [18289] [INFO] Worker exiting (pid: 18289)
+[2020-12-15 15:41:21 +0900] [18255] [INFO] Handling signal: term
+[2020-12-15 15:41:21 +0900] [18255] [INFO] Shutting down: Master
+[2020-12-15 15:41:22 +0900] [18573] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 15:41:22 +0900] [18573] [INFO] Listening at: http://192.168.1.44:45015 (18573)
+[2020-12-15 15:41:22 +0900] [18573] [INFO] Using worker: sync
+[2020-12-15 15:41:22 +0900] [18603] [INFO] Booting worker with pid: 18603
+[2020-12-15 15:41:22 +0900] [18604] [INFO] Booting worker with pid: 18604
+[2020-12-15 17:24:42 +0900] [18604] [INFO] Worker exiting (pid: 18604)
+[2020-12-15 17:24:42 +0900] [18603] [INFO] Worker exiting (pid: 18603)
+[2020-12-15 17:24:42 +0900] [18573] [INFO] Handling signal: term
+[2020-12-15 17:24:42 +0900] [18573] [INFO] Shutting down: Master
+[2020-12-15 17:24:42 +0900] [28180] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 17:24:42 +0900] [28180] [INFO] Listening at: http://127.0.0.1:5000 (28180)
+[2020-12-15 17:24:42 +0900] [28180] [INFO] Using worker: sync
+[2020-12-15 17:24:42 +0900] [28210] [INFO] Booting worker with pid: 28210
+[2020-12-15 17:24:42 +0900] [28214] [INFO] Booting worker with pid: 28214
+[2020-12-15 17:33:09 +0900] [28210] [INFO] Worker exiting (pid: 28210)
+[2020-12-15 17:33:09 +0900] [28214] [INFO] Worker exiting (pid: 28214)
+[2020-12-15 17:33:09 +0900] [28180] [INFO] Handling signal: term
+[2020-12-15 17:33:09 +0900] [28180] [INFO] Shutting down: Master
+[2020-12-15 17:33:10 +0900] [29009] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 17:33:10 +0900] [29009] [INFO] Listening at: http://127.0.0.1:5000 (29009)
+[2020-12-15 17:33:10 +0900] [29009] [INFO] Using worker: sync
+[2020-12-15 17:33:10 +0900] [29039] [INFO] Booting worker with pid: 29039
+[2020-12-15 17:33:10 +0900] [29040] [INFO] Booting worker with pid: 29040
+[2020-12-15 17:57:46 +0900] [29040] [INFO] Worker exiting (pid: 29040)
+[2020-12-15 17:57:46 +0900] [29039] [INFO] Worker exiting (pid: 29039)
+[2020-12-15 17:57:46 +0900] [29009] [INFO] Handling signal: term
+[2020-12-15 17:57:47 +0900] [29009] [INFO] Shutting down: Master
+[2020-12-15 17:57:47 +0900] [31723] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 17:57:47 +0900] [31723] [INFO] Listening at: http://127.0.0.1:5000 (31723)
+[2020-12-15 17:57:47 +0900] [31723] [INFO] Using worker: sync
+[2020-12-15 17:57:47 +0900] [31753] [INFO] Booting worker with pid: 31753
+[2020-12-15 17:57:47 +0900] [31754] [INFO] Booting worker with pid: 31754
+[2020-12-15 17:57:54 +0900] [31753] [INFO] Worker exiting (pid: 31753)
+[2020-12-15 17:57:54 +0900] [31754] [INFO] Worker exiting (pid: 31754)
+[2020-12-15 17:57:54 +0900] [31723] [INFO] Handling signal: term
+[2020-12-15 17:57:54 +0900] [31723] [INFO] Shutting down: Master
+[2020-12-15 17:57:54 +0900] [31863] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 17:57:54 +0900] [31863] [INFO] Listening at: unix:connector/center_api.sock (31863)
+[2020-12-15 17:57:54 +0900] [31863] [INFO] Using worker: sync
+[2020-12-15 17:57:54 +0900] [31895] [INFO] Booting worker with pid: 31895
+[2020-12-15 17:57:54 +0900] [31896] [INFO] Booting worker with pid: 31896
+[2020-12-15 18:11:05 +0900] [31896] [INFO] Worker exiting (pid: 31896)
+[2020-12-15 18:11:05 +0900] [31895] [INFO] Worker exiting (pid: 31895)
+[2020-12-15 18:11:05 +0900] [31863] [INFO] Handling signal: term
+[2020-12-15 18:11:06 +0900] [31863] [INFO] Shutting down: Master
+[2020-12-15 18:11:06 +0900] [1323] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 18:11:06 +0900] [1323] [INFO] Listening at: unix:connector/center_api.sock (1323)
+[2020-12-15 18:11:06 +0900] [1323] [INFO] Using worker: sync
+[2020-12-15 18:11:06 +0900] [1334] [INFO] Booting worker with pid: 1334
+[2020-12-15 18:11:06 +0900] [1335] [INFO] Booting worker with pid: 1335
+[2020-12-15 18:37:29 +0900] [1334] [INFO] Worker exiting (pid: 1334)
+[2020-12-15 18:37:29 +0900] [1335] [INFO] Worker exiting (pid: 1335)
+[2020-12-15 18:37:29 +0900] [1323] [INFO] Handling signal: term
+[2020-12-15 18:37:31 +0900] [1323] [INFO] Shutting down: Master
+[2020-12-15 18:37:31 +0900] [5835] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 18:37:31 +0900] [5835] [INFO] Listening at: unix:connector/center_api.sock (5835)
+[2020-12-15 18:37:31 +0900] [5835] [INFO] Using worker: sync
+[2020-12-15 18:37:31 +0900] [5865] [INFO] Booting worker with pid: 5865
+[2020-12-15 18:37:31 +0900] [5866] [INFO] Booting worker with pid: 5866
+[2020-12-15 18:37:38 +0900] [5866] [INFO] Worker exiting (pid: 5866)
+[2020-12-15 18:37:38 +0900] [5865] [INFO] Worker exiting (pid: 5865)
+[2020-12-15 18:37:38 +0900] [5835] [INFO] Handling signal: term
+[2020-12-15 18:37:38 +0900] [5835] [INFO] Shutting down: Master
+[2020-12-15 18:38:14 +0900] [6087] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 18:38:14 +0900] [6087] [INFO] Listening at: unix:connector/center_api.sock (6087)
+[2020-12-15 18:38:14 +0900] [6087] [INFO] Using worker: gevent
+[2020-12-15 18:38:14 +0900] [6119] [INFO] Booting worker with pid: 6119
+[2020-12-15 18:38:14 +0900] [6120] [INFO] Booting worker with pid: 6120
+[2020-12-15 19:01:55 +0900] [6087] [INFO] Handling signal: term
+[2020-12-15 19:01:55 +0900] [6119] [INFO] Worker exiting (pid: 6119)
+[2020-12-15 19:01:55 +0900] [6120] [INFO] Worker exiting (pid: 6120)
+[2020-12-15 19:01:57 +0900] [6087] [INFO] Shutting down: Master
+[2020-12-15 19:01:57 +0900] [7536] [INFO] Starting gunicorn 20.0.4
+[2020-12-15 19:01:57 +0900] [7536] [INFO] Listening at: unix:connector/center_api.sock (7536)
+[2020-12-15 19:01:57 +0900] [7536] [INFO] Using worker: gevent
+[2020-12-15 19:01:57 +0900] [7566] [INFO] Booting worker with pid: 7566
+[2020-12-15 19:01:57 +0900] [7567] [INFO] Booting worker with pid: 7567
