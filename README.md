@@ -1,95 +1,37 @@
-# GroupWork - Make your eyes double eyelids
+# Template for deploying ML models using Flask + Gunicorn + Nginx inside Docker
 
+## Running the solution
 
+In order to run this solution, you just have to install Docker, Docker compose, then clone this repository, and then:
+```
+bash run_docker.sh
+```
 
-## 🔹프로젝트 목표 
+For Docker installation instructions follow:
 
-- 무쌍꺼풀인 사용자가 자신의 사진을 업로드하면 쌍꺼풀이 생긴 모습으로 자연스럽게 보여주는 것.
-- 성형 수술 상담이나 수술을 받지 않고도 본인 스스로 수술 유무와 결과를 판단 할 수 있어 시간적 고민을 덜어준다.
+— [Docker installation](https://docs.docker.com/engine/install/ubuntu/)
 
+— [Make Docker run without root](https://docs.docker.com/engine/install/linux-postinstall/)
 
-## 👋 팀구성
+— [Docker Compose installation](https://docs.docker.com/compose/install/)
 
-- 팀장
-  - 손진수
-- 팀원
-  - 정상준 
-  - 홍승현
-  - 김혁
-  - 강민주
+## Understanding the solution
 
+— The detailed way: check [my Medium post](https://towardsdatascience.com/how-to-deploy-ml-models-using-flask-gunicorn-nginx-docker-9b32055b3d0) regarding this solution. 
 
-
-## 🔶기술 스택
-
-- DeepLearning
-
-  - Image2styleGAN
-  - StyleGAN1
-  - StyleGAN2
-  - StarGAN
-  - BeautyGAN
-  - DFDNet (이미지 화질 향상)
-  - First-Order-Model (이미지 동적화)
-
-- Python 3.x
-
-  - openCV
-  - Crawling
-  - request
-  - Flask
-  - gunicorn
-  - nginx
-  - locust
-  - dlib
-  - Pytorch
-    
-
-- HTML / CSS / JS
-
-- React-Native
+— The fast way: the project is structured as follows: Flask app and WSGI entry point are localed in flask_app directory. Nginx and project configuration files are located in nginx directory. Both directories contain Docker files that are connected using docker_compose.yml file in the main directory. 
   
-  - expo
-  - expo-camera
-  - expo-image-picker
-  - expo-media-library
-  - styled-components
-
-- API
-
-  - Docker
-  - nvidia-cuda
-  
-- Linux (ubuntu 18.04, CentOS 7)
-
-- Naver GPU Cloud
-
-
-## 🔶프로젝트 기간
-
-​	🔶 10월 4주 ~ 12월 5주
-
-​	🔶 12주 가량의 기간
-
-
-
-## 📃 프로젝트 설명
-
-#### 📢 차별점
-
-쌍꺼풀 수술에 관한 후기나 할인 이벤트들을 모아놓은 사이트나 어플은 많이 있지만 우리는 직접 성형외과에 발걸음을 해야하고 의사가 손으로 그려주는 그림과 내가 아닌 사람들의 수술 결과만으로 짐작하여 상담을 받아야한다. 이 프로젝트는 <u>**현재 사용자의 모습을 기반**</u>으로 쌍꺼풀을 생성해주는 이미지를 제공하고 더 나아가 원하는 스타일을 다양하게 골라 결과를 즉시 받아 볼 수 있다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   For simplicity, I also added run_docker.sh file for an even easier setting-up and running this solution. 
+```
+.
+├── flask_app 
+│   ├── app.py          
+│   ├── wsgi.py
+│   └── Dockerfile
+├── nginx
+│   ├── nginx.conf          
+│   ├── project.conf
+│   └── Dockerfile
+├── docker-compose.yml
+└── run_docker.sh
+```
