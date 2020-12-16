@@ -1,5 +1,5 @@
 import os
-import cv2
+# import cv2
 # import sys
 # import bz2
 # from keras.utils import get_file

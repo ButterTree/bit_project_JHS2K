@@ -12,7 +12,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
-from image_2_style_gan.mask_makers.precision_mask_maker import precision_eye_masks
+from image_2_style_gan.mask_makers.eyebrows_mask_maker import precision_eye_masks
 from image_2_style_gan.read_image import *
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
@@ -53,7 +53,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     # parser.add_argument('--resolution', default=model_resolution, type=int)
     # parser.add_argument('--src_im1', default=TARGET_IMAGE_DIR)
     # parser.add_argument('--src_im2', default=ALIGNED_IMAGE_DIR)
-    # # parser.add_argument('--mask', default=MASK_DIR)
+    # parser.add_argument('--mask', default=MASK_DIR)
     # parser.add_argument(
     #     '--weight_file', default=f"../image_2_style_gan/torch_weight_files/karras2019stylegan-ffhq-{model_resolution}x{model_resolution}.pt", type=str)
     # parser.add_argument('--iteration', default=150, type=int)
@@ -69,7 +69,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
         aligned_image_name = ALIGNED_IMAGE_DIR + \
             os.listdir(ALIGNED_IMAGE_DIR)[0]
-        mask_name, eyes_mask_name, lids_mask_name = precision_eye_masks(
+        mask_name, face_mask_name, eyes_mask_name, brows_mask_name, lids_mask_name = precision_eye_masks(
             aligned_image_name, MASK_DIR)
 
         ingredient_name = ALIGNED_IMAGE_DIR + os.listdir(ALIGNED_IMAGE_DIR)[0]
@@ -104,8 +104,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     blur_mask0_1 = image_reader_gray(mask_name).to(device)
     blur_mask0_2 = image_reader_gray(eyes_mask_name).to(device)
     blur_mask0_3 = image_reader_gray(lids_mask_name).to(device)
+    blur_mask0_4 = image_reader_gray(face_mask_name).to(device)
     # blur_mask0_4=image_reader_gray(brows_mask_name).to(device)
-    # blur_mask0_5=image_reader_gray(face_mask_name).to(device)
+    
     blur_mask1 = 1-blur_mask0_1
     blur_mask2 = 1-blur_mask0_2
     blur_mask_eyes = blur_mask0_1-blur_mask0_2
@@ -114,12 +115,18 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     hist_bias = torch.Tensor([0, 0, 0])
 
     for i in range(3):
-        bias = 0
         hist_bias[i] = torch.mean(img_1[0, i, ..., ...]*blur_mask0_1) - torch.mean(img_0[0, i, ..., ...]*blur_mask0_1)
+        multiplier = 1
         if hist_bias[i] < 0:
-            bias = hist_bias[i] * 77
+            if hist_bias[i] >= -0.002:
+                img_0 += hist_bias[i]*10
+            elif hist_bias[i] >= -0.003 and hist_bias[i] < -0.002:
+                img_0 += hist_bias[i]*20
+            else:
+                img_0 += hist_bias[i]*30
+            multiplier = -1
+        img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*multiplier, 0, 1)
         print('{:.5f}'.format(hist_bias[i]))
-        img_0[0, i, ..., ...] = torch.clamp(img_0[0, i, ..., ...] + hist_bias[i]*abs(hist_bias[i]*(15000 + hist_bias[i]*(10 ** 6))), 0, 1) + bias
     
     save_image(img_0, '../image_2_style_gan/source/histadjs.png')
     
@@ -127,7 +134,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     e_mean = []
     for i in range(ingredient_eyes.shape[1]):
         e_mean.append(torch.mean(ingredient_eyes[0, i, ..., ...]))
-    idx = e_mean.index(min(e_mean))
+    idx = e_mean.index(max(e_mean))
     for i in range(ingredient_eyes.shape[1]):
         ingredient_eyes[0, i, ..., ...] = ingredient_eyes[0, idx, ..., ...]
     img_1 = (img_1 * blur_mask2) + ingredient_eyes
@@ -158,12 +165,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         synth_img = g_synthesis(dlatent)
         synth_img = (synth_img + 1) / 2
 
-        loss_wl0 = caluclate_loss(
-            synth_img, img_0, perceptual_net, img_p0, blur_mask_eyes, MSE_Loss, upsample2d)
-        loss_wl1 = caluclate_loss(
-            synth_img, img_1, perceptual_net, img_p1, blur_mask_lids, MSE_Loss, upsample2d)
-        # loss_wl2=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask0_2,MSE_Loss,upsample2d)
-        loss = loss_wl0 #+ loss_wl1  # + loss_wl2
+        loss_wl0 = caluclate_loss(synth_img, img_0, perceptual_net, img_p0, blur_mask_eyes, MSE_Loss, upsample2d)
+        loss_wl1 = caluclate_loss(synth_img, img_1, perceptual_net, img_p1, blur_mask_lids, MSE_Loss, upsample2d)
+        loss = loss_wl0 + loss_wl1
         loss.backward()
 
         optimizer.step()
@@ -171,18 +175,13 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         loss_np = loss.detach().cpu().numpy()
         loss_0 = loss_wl0.detach().cpu().numpy()
         loss_1 = loss_wl1.detach().cpu().numpy()
-        # loss_2=loss_wl2.detach().cpu().numpy()
 
         loss_list.append(loss_np)
 
         if i % 10 == 0:
-            # print("iter{}: loss --{},  loss0 --{},  loss1 --{},  loss2 --{}".format(i, loss_np, loss_0, loss_1, loss_2))
-            print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i,
-                                                                       loss_np, loss_0, loss_1))
-            # print("iter{}: loss --{},  loss0 --{}".format(i, loss_np, loss_0))
+            print("iter{}: loss --{},  loss0 --{},  loss1 --{}".format(i, loss_np, loss_0, loss_1))
         elif i == (ITERATION - 1):
             save_image(img_1*blur_mask1 + synth_img*blur_mask0_1, final_name)
-            # save_image(synth_img.clamp(0, 1), final_name)
 
     compare_result = imread(final_name).astype(np.uint8)
     compare_origin = imread(ingredient_name).astype(np.uint8)
