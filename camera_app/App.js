@@ -56,6 +56,9 @@ import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLigh
 
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 
+import ModeBtn from './Buttons/ChangeBtns/ModeBtn/ModePresenter';
+import { useModeState } from './Buttons/ChangeBtns/ModeBtn/ModeContainer';
+
 const { width, height } = Dimensions.get('window');
 const CenterView = styled.View`
     flex: 1;
@@ -157,6 +160,7 @@ export default function App() {
         secondLightText,
         LightDefaultColor
     } = useLightState();
+    const { isMode, setIsMode, onPressMode } = useModeState();
 
     useEffect(() => {
         (async () => {
@@ -176,7 +180,7 @@ export default function App() {
     }, []);
 
     console.log(
-        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}`
+        `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
     );
 
     // 2인일 때, 2번째 사진으로 넘어가는 버튼
@@ -219,6 +223,8 @@ export default function App() {
         setIsTwoPeople(false);
         setTwoPeopleToggleValue(false);
 
+        setIsMode('eyes');
+
         setIsAfterView(false);
         firstPhoto = '';
         secondPhoto = '';
@@ -258,7 +264,8 @@ export default function App() {
             resultPhotoList = await imageTransfer(
                 firstPhoto,
                 secondPhoto,
-                isGender
+                isGender,
+                isMode
             );
 
             setIsLoading(false);
@@ -422,7 +429,9 @@ export default function App() {
                                     onToggle={onToggleTwoPeople}
                                 />
                             </ChangeButtonContainer>
-                            <ChangeButtonContainer></ChangeButtonContainer>
+                            <ChangeButtonContainer>
+                                <ModeBtn onPress={onPressMode} Text={isMode} />
+                            </ChangeButtonContainer>
                         </ChangeFunctionContainer>
                     </Camera>
                 )}

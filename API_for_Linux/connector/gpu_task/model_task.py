@@ -7,9 +7,10 @@ import shutil
 
 def main_processing(data, rand_uuid):
     try:
-        scope = 'eyes'
+        mode = data['mode']
         gender = data['gender']
         process_selection = 0
+
         # 전송받은 데이터와 프로세스 선택 변수 넘겨주기
         BASE_DIR, RAW_DIR = origin_image_control(
             data, process_selection, rand_uuid)
@@ -18,7 +19,8 @@ def main_processing(data, rand_uuid):
             custom_image_control(data, process_selection, rand_uuid)
 
         print("\n********** Image processing succeed, send to model **********\n")
-        if scope == 'eyes':
+        print(f"[Condition]\nMode: {mode}\nGender: {gender}\n")
+        if mode == 'eyes':
             input_image, output_image = image_crossover_eyes(
                 BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender)
         else:

@@ -1,5 +1,3 @@
-/** @format */
-
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Loading from './Loading';
@@ -19,7 +17,7 @@ export default ProgressBarMain = () => {
         <>
             <View style={styles.container}>
                 <Loading />
-                <View style={{ marginBottom: "20%" }}>
+                <View style={{ marginBottom: '20%' }}>
                     <Texts />
                 </View>
             </View>
