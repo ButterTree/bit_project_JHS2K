@@ -20,21 +20,21 @@ const twoPopup = () => {
             style={
                 deviceHeight >= 700
                     ? {
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: deviceHeight / 1.3,
-                          left: deviceWidth / 25,
-                          position: 'absolute'
-                      }
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: deviceHeight / 1.3,
+                        left: deviceWidth / 25,
+                        position: 'absolute'
+                    }
                     : {
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: deviceHeight / 1.05,
-                          left: deviceWidth / 25,
-                          position: 'absolute'
-                      }
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: deviceHeight / 1.05,
+                        left: deviceWidth / 25,
+                        position: 'absolute'
+                    }
             }
         >
             <Modal
@@ -120,10 +120,12 @@ const styles = StyleSheet.create({
         textAlign: 'justify'
     },
     modalText: {
+        marginBottom: 35,
         textAlign: 'left',
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: '700',
-        lineHeight: 25
+        lineHeight: 25,
+        padding: 5
     }
 });
 
