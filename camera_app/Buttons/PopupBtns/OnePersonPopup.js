@@ -30,21 +30,21 @@ const onePopup = () => {
             style={
                 deviceHeight >= 700
                     ? {
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: deviceHeight / 1.3,
-                        left: deviceWidth / 25,
-                        position: 'absolute'
-                    }
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.3,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
                     : {
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: deviceHeight / 1.05,
-                        left: deviceWidth / 25,
-                        position: 'absolute'
-                    }
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: deviceHeight / 1.05,
+                          left: deviceWidth / 25,
+                          position: 'absolute'
+                      }
             }
         >
             <Modal
@@ -58,7 +58,7 @@ const onePopup = () => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>
-                            {`1. 정면을 바라보고 눈을 바르게 뜨세요.\n\n2. <1인모드>에서는 여성, 남성 각각\n    6개의 다른 스타일 쌍꺼풀이 랜덤하게\n    선택되어 나옵니다.\n\n3. <2인모드>에서는 '첫번째 사진' 눈에\n    '두번째 사진' 눈의 쌍꺼풀이 적용되어\n    나옵니다.\n\n4. 고화질 사진이 더 좋은 결과를\n    보여줍니다.\n\n5. 아래 버튼으로 성별을 바꿀 수 있어요.`}
+                            {`정면을 바라보고 눈을 바르게 뜨세요.\n\n<1인모드>에서는 여성, 남성 각각\n6개의 다른 스타일 쌍꺼풀이 랜덤하게\n선택되어 나옵니다.\n\n<2인모드>에서는 '첫번째 사진' 눈에\n'두번째 사진' 눈의 쌍꺼풀이 적용되어\n나옵니다.\n\n고화질 사진이 더 좋은 결과를\n보여줍니다.\n\n아래 버튼으로 성별을 바꿀 수 있어요.`}
                         </Text>
                         <TipContainer>
                             <Image
