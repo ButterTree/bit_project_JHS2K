@@ -143,8 +143,8 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
         elif i == (ITERATION - 1):
             save_image(img_1*blur_mask1 + synth_img*blur_mask0_1, final_name)
 
-    if gender == 'male':
-        color_histogram_matching(final_name, ingredient_name, final_name)
+    # if gender == 'male':
+    #     color_histogram_matching(final_name, ingredient_name, final_name)
 
     origin_name = '{}{}_origin.png'.format(FINAL_IMAGE_DIR, str(rand_uuid))
     os.replace(ingredient_name, origin_name)

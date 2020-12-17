@@ -41,11 +41,11 @@ def target_channel_manipulator(img_trg, img_org, blur_mask):
             if hist_bias[i] >= -0.001:
                 img_trg += hist_bias[i]*0
             elif hist_bias[i] >= -0.002 and hist_bias[i] < -0.001:
-                img_trg += hist_bias[i]*10
+                img_trg += hist_bias[i]*3
             elif hist_bias[i] >= -0.003 and hist_bias[i] < -0.002:
-                img_trg += hist_bias[i]*20
+                img_trg += hist_bias[i]*5
             else:
-                img_trg += hist_bias[i]*30
+                img_trg += hist_bias[i]*8
             multiplier = -1
         img_trg[0, i, ..., ...] = torch.clamp(img_trg[0, i, ..., ...] + hist_bias[i]*multiplier, 0, 1)
         print('{:.5f}'.format(hist_bias[i]))
@@ -70,10 +70,24 @@ def eyes_channel_matching(img_org, blur_mask_eyes):
         e_mean.append(torch.mean(ingredient_eyes[0, i, ..., ...]))
     idx_min = e_mean.index(min(e_mean))
     idx_max = e_mean.index(max(e_mean))
-    for i in range(ingredient_eyes.shape[1]):
-        ingredient_eyes[0, i, ..., ...] = torch.clamp(
-            ingredient_eyes[0, idx_min, ..., ...] + ingredient_eyes[0, idx_max, ..., ...]**((i+1)*3),
-            0, 1)
+    print('HIST_MIN : {:.6f}, HIST_MAX : {:.6f}'.format(min(e_mean), max(e_mean)))
+
+    if min(e_mean) > 0.001:
+        for i in range(ingredient_eyes.shape[1]):
+            ingredient_eyes[0, i, ..., ...] = torch.clamp(
+                ingredient_eyes[0, idx_min, ..., ...] + ingredient_eyes[0, idx_min, ..., ...]**(i+4), 0, 1)
+    elif min(e_mean) > 0.0005 and min(e_mean) < 0.001:
+        for i in range(ingredient_eyes.shape[1]):
+            ingredient_eyes[0, i, ..., ...] = torch.clamp(
+                ingredient_eyes[0, idx_min, ..., ...] + ingredient_eyes[0, idx_max, ..., ...]**(i+3), 0, 1)
+    else:
+        for i in range(ingredient_eyes.shape[1]):
+            ingredient_eyes[0, i, ..., ...] = torch.clamp(
+                ingredient_eyes[0, idx_min, ..., ...] + ingredient_eyes[0, idx_max, ..., ...]**(i+2), 0, 1)
+
+    # for i in range(ingredient_eyes.shape[1]):
+    #     ingredient_eyes[0, i, ..., ...] += torch.clamp(ingredient_eyes[0, idx_max, ..., ...]**((i+1)*multiplier), 0, 1)
+    #         #ingredient_eyes[0, idx_min, ..., ...] + 
             
     img_org = (img_org * blur_mask_invt) + ingredient_eyes
 
