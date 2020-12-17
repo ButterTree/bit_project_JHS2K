@@ -64,7 +64,7 @@ const onePopup = () => {
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>
-                                {`✦ <1인모드>에서는 여성, 남성 각각\n    6개의 다른 스타일 쌍꺼풀이 랜덤하게\n    선택되어 나옵니다.\n\n✦ <2인모드>에서는 '첫번째 사진' 눈에\n    '두번째 사진' 눈의 쌍꺼풀이 적용되어\n    나옵니다.\n\n✦ 고화질 사진이 더 좋은 결과를\n    보여줍니다.\n\n✦ 아래 버튼으로 성별을 바꿀 수 있어요.`}
+                                {`<1인모드>에서는 여성, 남성 각각 6개의 다른 스타일 쌍꺼풀이 랜덤하게 선택되어 나옵니다.\n\n<2인모드>에서는 '첫번째 사진' 눈에 '두번째 사진' 눈의 쌍꺼풀이 적용되어 나옵니다.\n\n고화질 사진이 더 좋은 결과를 보여줍니다.\n\n아래 버튼으로 성별을 바꿀 수 있어요.`}
                             </Text>
                             <TipContainer>
                                 <Image
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'SeoulNamsanM',
         lineHeight: 25,
-        padding: 10
+
 
     }
 });

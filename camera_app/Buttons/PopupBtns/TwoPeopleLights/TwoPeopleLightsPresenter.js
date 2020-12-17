@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         color: '#4d4d4d',
-        fontWeight: 'bold',
+        fontFamily: 'SeoulNamsanvert',
         textAlign: 'justify'
     }
 });
