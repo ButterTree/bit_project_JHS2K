@@ -10,6 +10,8 @@ import {
     Image
 } from 'react-native';
 import styled from 'styled-components';
+import AppLoading from 'expo-app-loading';
+import { useFonts } from 'expo-font';
 
 const TipContainer = styled.View`
     flex-direction: row;
@@ -24,84 +26,89 @@ const deviceHeight = Dimensions.get('window').height;
 
 const onePopup = () => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [setfont] = useFonts({ 'SeoulNamsanM': require('../../assets/fonts/SeoulNamsanM.ttf'), 'SeoulNamsanvert': require('../../assets/fonts/SeoulNamsanvert.ttf') });
 
-    return (
-        <View
-            style={
-                deviceHeight >= 700
-                    ? {
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: deviceHeight / 1.3,
-                        left: deviceWidth / 25,
-                        position: 'absolute'
-                    }
-                    : {
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: deviceHeight / 1.05,
-                        left: deviceWidth / 25,
-                        position: 'absolute'
-                    }
-            }
-        >
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                }}
+    if (!setfont) {
+        return <AppLoading />
+    } else {
+        return (
+            <View
+                style={
+                    deviceHeight >= 700
+                        ? {
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: deviceHeight / 1.3,
+                            left: deviceWidth / 25,
+                            position: 'absolute'
+                        }
+                        : {
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: deviceHeight / 1.05,
+                            left: deviceWidth / 25,
+                            position: 'absolute'
+                        }
+                }
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>
-                            {`1. <1인모드>에서는 여성, 남성 각각\n    6개의 다른 스타일 쌍꺼풀이 랜덤하게\n    선택되어 나옵니다.\n\n2. <2인모드>에서는 '첫번째 사진' 눈에\n    '두번째 사진' 눈의 쌍꺼풀이 적용되어\n    나옵니다.\n\n3. 고화질 사진이 더 좋은 결과를\n    보여줍니다.\n\n4. 아래 버튼으로 성별을 바꿀 수 있어요.`}
-                        </Text>
-                        <TipContainer>
-                            <Image
-                                source={require('../../images/genderImages/woman.png')}
-                                style={{
-                                    width: 40,
-                                    height: 40
-                                }}
-                            />
-                            <Image
-                                source={require('../../images/genderImages/man.png')}
-                                style={{
-                                    width: 40,
-                                    height: 40
-                                }}
-                            />
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>
+                                {`✦ <1인모드>에서는 여성, 남성 각각\n    6개의 다른 스타일 쌍꺼풀이 랜덤하게\n    선택되어 나옵니다.\n\n✦ <2인모드>에서는 '첫번째 사진' 눈에\n    '두번째 사진' 눈의 쌍꺼풀이 적용되어\n    나옵니다.\n\n✦ 고화질 사진이 더 좋은 결과를\n    보여줍니다.\n\n✦ 아래 버튼으로 성별을 바꿀 수 있어요.`}
+                            </Text>
+                            <TipContainer>
+                                <Image
+                                    source={require('../../images/genderImages/woman.png')}
+                                    style={{
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                />
+                                <Image
+                                    source={require('../../images/genderImages/man.png')}
+                                    style={{
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                />
 
-                        </TipContainer>
-                        <TouchableHighlight
-                            style={{
-                                ...styles.openButton,
-                                backgroundColor: '#fff9a3'
-                            }}
-                            onPress={() => {
-                                setModalVisible(false);
-                            }}
-                        >
-                            <Text style={styles.textStyle}>닫기</Text>
-                        </TouchableHighlight>
+                            </TipContainer>
+                            <TouchableHighlight
+                                style={{
+                                    ...styles.openButton,
+                                    backgroundColor: '#fff9a3'
+                                }}
+                                onPress={() => {
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <Text style={styles.textStyle}>닫기</Text>
+                            </TouchableHighlight>
+                        </View>
                     </View>
-                </View>
-            </Modal>
-            <TouchableHighlight
-                style={styles.openButton}
-                onPress={() => {
-                    setModalVisible(true);
-                }}
-            >
-                <Text style={styles.textStyle}>Tip!</Text>
-            </TouchableHighlight>
-        </View>
-    );
-};
+                </Modal>
+                <TouchableHighlight
+                    style={styles.openButton}
+                    onPress={() => {
+                        setModalVisible(true);
+                    }}
+                >
+                    <Text style={styles.textStyle}>Tip!</Text>
+                </TouchableHighlight>
+            </View>
+        );
+    };
+}
 
 const styles = StyleSheet.create({
     centeredView: {
@@ -142,14 +149,14 @@ const styles = StyleSheet.create({
     closeButton: {},
     textStyle: {
         color: '#4d4d4d',
-        fontWeight: 'bold',
+        fontFamily: 'SeoulNamsanvert',
         textAlign: 'justify'
     },
     modalText: {
         marginBottom: 35,
         textAlign: 'left',
         fontSize: 14,
-        fontWeight: '700',
+        fontFamily: 'SeoulNamsanM',
         lineHeight: 25,
         padding: 10
 
