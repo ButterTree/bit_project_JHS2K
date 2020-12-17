@@ -37,9 +37,6 @@
   - openCV
   - Crawling
   - request
-  - Flask
-  - gunicorn
-  - nginx
   - locust
   - dlib
   - Pytorch
@@ -58,11 +55,15 @@
 - API
 
   - Docker
+  - Docker-compose
   - nvidia-cuda
+  - Flask
+  - gunicorn
+  - nginx
   
-- Linux (ubuntu 18.04, CentOS 7)
+- Linux (CentOS 7)
 
-- Naver GPU Cloud
+- GPU Cloud Server
 
 
 ## 🔶프로젝트 기간
@@ -78,18 +79,3 @@
 #### 📢 차별점
 
 쌍꺼풀 수술에 관한 후기나 할인 이벤트들을 모아놓은 사이트나 어플은 많이 있지만 우리는 직접 성형외과에 발걸음을 해야하고 의사가 손으로 그려주는 그림과 내가 아닌 사람들의 수술 결과만으로 짐작하여 상담을 받아야한다. 이 프로젝트는 <u>**현재 사용자의 모습을 기반**</u>으로 쌍꺼풀을 생성해주는 이미지를 제공하고 더 나아가 원하는 스타일을 다양하게 골라 결과를 즉시 받아 볼 수 있다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
