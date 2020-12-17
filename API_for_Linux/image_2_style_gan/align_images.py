@@ -1,28 +1,9 @@
 import os
-# import cv2
-# import sys
-# import bz2
-# from keras.utils import get_file
 from image_2_style_gan.face_alignment import face_align
 from image_2_style_gan.landmarks_detector import LandmarksDetector
 
 
-# def unpack_bz2(src_path):
-#     data = bz2.BZ2File(src_path).read()
-#     dst_path = src_path[:-4]
-#     with open(dst_path, 'wb') as fp:
-#         fp.write(data)
-#     return dst_path
-
-
 def align_images(RAW_IMAGE_DIR, ALIGNED_IMAGE_DIR):
-    """
-    Extracts and aligns all faces from images using DLib and a function from original FFHQ dataset preparation step
-    python align_images.py /raw_images /aligned_images
-    """
-
-    # landmarks_model_path = unpack_bz2(get_file('shape_predictor_68_face_landmarks.dat.bz2',
-    #                                            LANDMARKS_MODEL_URL, cache_subdir='temp'))
     landmarks_model_path = '../image_2_style_gan/landmark_model/shape_predictor_68_face_landmarks.dat'
     landmarks_detector = LandmarksDetector(landmarks_model_path)
     alinged_files = []

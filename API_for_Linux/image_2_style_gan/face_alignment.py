@@ -1,5 +1,5 @@
 import os
-
+import math
 import PIL.Image
 import numpy as np
 import scipy.ndimage
@@ -22,15 +22,31 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     lm_mouth_inner   = lm[60 : 68]  # left-clockwise
 
     # Calculate auxiliary vectors.
-    eye_left     = np.mean(lm_eye_left, axis=0)
-    eye_right    = np.mean(lm_eye_right, axis=0)
-    eye_avg      = (eye_left + eye_right) * 0.5
-    eye_to_eye   = eye_right - eye_left
-    mouth_left   = lm_mouth_outer[0]
-    mouth_right  = lm_mouth_outer[6]
-    mouth_avg    = (mouth_left + mouth_right) * 0.5
-    eye_to_mouth = mouth_avg - eye_avg
-    eye_to_mouth[0] = eye_to_eye[1] * -1
+    eye_left      = np.mean(lm_eye_left, axis=0)
+    eye_right     = np.mean(lm_eye_right, axis=0)
+    eye_avg       = (eye_left + eye_right) * 0.5
+    eye_to_eye    = eye_right - eye_left
+    print(eye_to_eye)
+    ete_tilt_rate = round(eye_to_eye[1], 5) / round(eye_to_eye[0], 5)
+    print(ete_tilt_rate)
+    ete_length    = np.hypot(*eye_to_eye)
+    print(f'Eye to Eye : {ete_length}')
+    mouth_left    = lm_mouth_outer[0]
+    mouth_right   = lm_mouth_outer[6]
+    mouth_length  = np.hypot(*(mouth_right - mouth_left))
+    print(f'Mouth Length : {mouth_length}')
+    mouth_avg = (mouth_left + mouth_right) * 0.5
+    eye_to_mouth  = mouth_avg - eye_avg
+    print(f'Eyes-to-Mouth Gap Raw : {np.hypot(*eye_to_mouth)}')
+    print(mouth_length > ete_length*0.95)
+    # if mouth_length > ete_length*0.95:
+    #     mouth_avg[1] = eye_to_eye[0] * math.sqrt(1.1)
+    #     mouth_avg[0] = mouth_avg[1] * ete_tilt_rate
+    eye_to_mouth  = mouth_avg - eye_avg
+    eye_to_mouth[0] = eye_to_mouth[1] * -ete_tilt_rate
+    print(f'Eyes-to-Mouth Gap : {np.hypot(*eye_to_mouth)}')
+    
+    
 
     # Choose oriented crop rectangle.
     x = eye_to_eye - np.flipud(eye_to_mouth) * [-1, 1]
