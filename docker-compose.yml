@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+    centOS:
+        container_name: centOS
+        restart: always
+        build: ./centOS
+        privileged: true
+        network: host
+        environment:
+            - NVIDIA_VISIBLE_DEVICES=all
+        runtime: nvidia
+        command: /bin/bash
+
     flask_app:
         container_name: flask_app
         restart: always
@@ -8,6 +19,8 @@ services:
         ports:
             - '8000:8000'
         command: gunicorn -w 2 -k gevent -b 0.0.0.0:8000 -m 007 wsgi:server --timeout 9999
+        depends_on:
+            - centOS
 
     nginx:
         container_name: nginx

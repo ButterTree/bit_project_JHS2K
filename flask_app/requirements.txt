@@ -11,11 +11,12 @@ cycler==0.10.0
 dataclasses==0.6
 decorator==4.4.2
 dlib==19.21.0
-Flask==1.1.2
+Flask
 future==0.18.2
 gast==0.2.2
 google-pasta==0.2.0
 grpcio==1.33.2
+gunicorn
 h5py==3.1.0
 idna==2.10
 imageio==2.9.0
@@ -53,10 +54,6 @@ scikit-image==0.17.2
 scikit-learn==0.23.2
 scipy==1.5.4
 six==1.15.0
-tensorboard==1.15.0
-tensorflow==1.15.0
-tensorflow-estimator==1.15.1
-tensorflow-gpu==1.15.0
 termcolor==1.1.0
 threadpoolctl==2.1.0
 tifffile==2020.10.1

@@ -1,3 +1,6 @@
-FROM rhange0511/model-api:private-v3
+FROM python:3.7.9
 
 WORKDIR usr/src/flask_app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
