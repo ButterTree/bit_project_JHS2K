@@ -3,9 +3,9 @@ from flask import Flask, request
 
 import uuid
 
-app = Flask(__name__)
+server = Flask(__name__)
 
-@app.route("/", methods=['POST'])
+@server.route("/", methods=['POST'])
 def let_me_shine():
     rand_uuid = uuid.uuid4()
     data = request.get_json(silent=True)
