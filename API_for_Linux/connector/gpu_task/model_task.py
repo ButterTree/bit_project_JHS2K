@@ -7,7 +7,11 @@ import shutil
 
 def main_processing(data, rand_uuid):
     try:
-        mode = data['mode']
+        if 'mode' in data:
+            mode = data['mode']
+        else:
+            mode = 'eyes'
+
         gender = data['gender']
         process_selection = 0
 
