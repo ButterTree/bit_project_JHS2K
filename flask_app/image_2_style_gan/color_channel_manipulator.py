@@ -1,5 +1,5 @@
-from image_2_style_gan.read_image import image_reader_color
-from image_2_style_gan.align_images import align_images
+from .read_image import image_reader_color
+from .align_images import align_images
 from torchvision.utils import save_image
 import numpy as np
 import argparse

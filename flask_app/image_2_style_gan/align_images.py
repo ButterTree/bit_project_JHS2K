@@ -1,19 +1,6 @@
 import os
-# import cv2
-# import sys
-# import bz2
-# from keras.utils import get_file
-from image_2_style_gan.face_alignment import face_align
-from image_2_style_gan.landmarks_detector import LandmarksDetector
-
-
-# def unpack_bz2(src_path):
-#     data = bz2.BZ2File(src_path).read()
-#     dst_path = src_path[:-4]
-#     with open(dst_path, 'wb') as fp:
-#         fp.write(data)
-#     return dst_path
-
+from .face_alignment import face_align
+from .landmarks_detector import LandmarksDetector
 
 def align_images(RAW_IMAGE_DIR, ALIGNED_IMAGE_DIR):
     """

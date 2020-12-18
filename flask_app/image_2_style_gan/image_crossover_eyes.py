@@ -11,11 +11,11 @@ from skimage.exposure import match_histograms
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from image_2_style_gan.align_images import align_images
-from image_2_style_gan.mask_makers.eyebrows_mask_maker import precision_eye_masks
-from image_2_style_gan.read_image import *
-from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
-from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
+from .align_images import align_images
+from .mask_makers.eyebrows_mask_maker import precision_eye_masks
+from .read_image import *
+from .perceptual_model import VGG16_for_Perceptual
+from .stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'

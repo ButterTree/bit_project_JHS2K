@@ -1,4 +1,4 @@
-from image_2_style_gan.align_images import align_images
+from ...image_2_style_gan.align_images import align_images
 import cv2
 import os
 

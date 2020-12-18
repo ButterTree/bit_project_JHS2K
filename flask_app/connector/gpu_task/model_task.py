@@ -1,7 +1,7 @@
-from image_2_style_gan.image_crossover_face import image_crossover_face
-from image_2_style_gan.image_crossover_eyes import image_crossover_eyes
-from connector.img_processing_manage.path_manager import *
-from connector.result_manage.result_processing import *
+from ...image_2_style_gan.image_crossover_face import image_crossover_face
+from ...image_2_style_gan.image_crossover_eyes import image_crossover_eyes
+from ..img_processing_manage.path_manager import *
+from ..result_manage.result_processing import *
 import shutil
 
 

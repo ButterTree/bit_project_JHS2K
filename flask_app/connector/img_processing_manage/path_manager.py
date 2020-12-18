@@ -1,6 +1,6 @@
 import shutil
-from ..img_processing_manage.transform_manager import *
-from ..img_processing_manage.save_photo import save_jpg
+from .transform_manager import *
+from .save_photo import save_jpg
 import os
 
 
