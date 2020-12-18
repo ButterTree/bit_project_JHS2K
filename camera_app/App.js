@@ -57,7 +57,6 @@ import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLigh
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 
 import { useModeState } from './Buttons/ChangeBtns/ModeBtn/ModeContainer';
-import { useFonts } from 'expo-font';
 
 const { width, height } = Dimensions.get('window');
 
@@ -115,7 +114,6 @@ export default function App() {
     const [isAfterView, setIsAfterView] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
     const [hasAlbumPermission, setHasAlbumPermission] = useState(false);
-    const [setfont] = useFonts({ 'SeoulNamsanM': require('./assets/fonts/SeoulNamsanM.ttf'), 'SeoulNamsanvert': require('./assets/fonts/SeoulNamsanvert.ttf') });
 
     const {
         isTwoPeople,
@@ -179,6 +177,9 @@ export default function App() {
                 ? setIsNotice(JSON.parse(noticeStatus))
                 : false;
 
+            const { status: saveStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+            if (saveStatus === 'granted');
             const photo = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: false,
                 quality: 1,
@@ -358,7 +359,7 @@ export default function App() {
             />
         ) : (
                     <CenterView>
-                        {!imageSelected && !isAfterView && setfont && (
+                        {!imageSelected && !isAfterView && (
                             <Camera
                                 style={
                                     height >= 700
@@ -379,9 +380,8 @@ export default function App() {
                                 autoFocus={Camera.Constants.AutoFocus.on}
                                 ref={cameraRef}
                             ><Text style={{
-
                                 textAlign: 'justify',
-                                marginTop: "10%",
+                                marginTop: "20%",
                                 color: '#ffffff',
                                 fontSize: 20,
                                 opacity: 0.8
