@@ -41,7 +41,7 @@ def target_channel_manipulator(img_trg, img_org, blur_mask):
             if hist_bias[i] >= -0.001:
                 img_trg += hist_bias[i]*0
             elif hist_bias[i] >= -0.002 and hist_bias[i] < -0.001:
-                img_trg += hist_bias[i]*3
+                img_trg += hist_bias[i]*2
             elif hist_bias[i] >= -0.003 and hist_bias[i] < -0.002:
                 img_trg += hist_bias[i]*5
             else:
