@@ -1,2 +1,2 @@
-export const SERVER_IP = '192.168.1.46';
-export const SERVER_PORT = '45095';
+export const SERVER_IP = '192.168.1.47';
+export const SERVER_PORT = '45045';
