@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.optim as optim
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_makers.mask_maker import mask_maker
-from image_2_style_gan.read_image import image_reader
+from image_2_style_gan.read_image import image_reader_color
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
@@ -82,13 +82,13 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     g_all.to(device)
     g_mapping,g_synthesis=g_all[0],g_all[1]
 
-    img_0=image_reader(target_name) #(1,3,1024,1024) -1~1
+    img_0=image_reader_color(target_name) #(1,3,1024,1024) -1~1
     img_0=img_0.to(device)
 
-    img_1=image_reader(ingredient_name)
+    img_1=image_reader_color(ingredient_name)
     img_1=img_1.to(device) #(1,3,1024,1024)
 
-    blur_mask0=image_reader(mask_name).to(device)
+    blur_mask0=image_reader_color(mask_name).to(device)
     blur_mask0=blur_mask0[:,0,:,:].unsqueeze(0)
     blur_mask1=blur_mask0.clone()
     blur_mask1=1-blur_mask0
