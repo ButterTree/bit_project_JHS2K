@@ -57,6 +57,7 @@ import { useLightState } from './Buttons/PopupBtns/TwoPeopleLights/TwoPeopleLigh
 import TwoPeopleLoading from './Screen/ProgressBar/TwoPeopleLoading';
 
 import { useModeState } from './Buttons/ChangeBtns/ModeBtn/ModeContainer';
+import { useFonts } from 'expo-font';
 
 const { width, height } = Dimensions.get('window');
 
@@ -114,6 +115,7 @@ export default function App() {
     const [isAfterView, setIsAfterView] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
     const [hasAlbumPermission, setHasAlbumPermission] = useState(false);
+    const [setfont] = useFonts({ 'SeoulNamsanM': require('./assets/fonts/SeoulNamsanM.ttf'), 'SeoulNamsanvert': require('./assets/fonts/SeoulNamsanvert.ttf') });
 
     const {
         isTwoPeople,
@@ -356,7 +358,7 @@ export default function App() {
             />
         ) : (
                     <CenterView>
-                        {!imageSelected && !isAfterView && (
+                        {!imageSelected && !isAfterView && setfont && (
                             <Camera
                                 style={
                                     height >= 700
@@ -376,7 +378,16 @@ export default function App() {
                                 type={cameraType}
                                 autoFocus={Camera.Constants.AutoFocus.on}
                                 ref={cameraRef}
-                            >
+                            ><Text style={{
+
+                                textAlign: 'justify',
+                                marginTop: "10%",
+                                color: '#ffffff',
+                                fontSize: 20,
+                                opacity: 0.8
+                            }}>
+                                    {`갤러리에서 증명사진을 선택해주세요`}
+                                </Text>
                                 <FaceLine />
                                 {!isTwoPeople ? (
                                     <OnePersonPopup />

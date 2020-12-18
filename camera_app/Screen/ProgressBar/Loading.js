@@ -21,7 +21,7 @@ export default function Loading() {
                         width: width,
                         resizeMode: 'contain'
                     }}
-                    source={require('../../assets/Loading.gif')}
+                    source={require('../../assets/lemon_loading.gif')}
                 />
             </View>
         )
