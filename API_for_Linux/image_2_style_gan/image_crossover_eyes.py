@@ -26,7 +26,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     TARGET_IMAGE_DIR = f'{BASE_DIR}target/'
     os.mkdir(TARGET_IMAGE_DIR)
 
-    ITERATION = 150
+    ITERATION = 200
     BATCH_SIZE = 1  # Not in usage.
 
     if process_selection == 0 and gender == 'female':
