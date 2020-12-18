@@ -1,15 +1,25 @@
 version: '3'
 
 services:
-  flask_app:
-    container_name: flask_app
-    restart: always
-    build: ./flask_app
+  model:
+    container_name: model
+    build: ./model
     runtime: nvidia
     privileged: true
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
+    command: >
+      bash -c "
+      cd API_for_Linux/connect
+      && python center_api.py"
+    depends_on:
+      - nginx
+
+  flask_app:
+    container_name: flask_app
+    restart: always
+    build: ./flask_app
     ports:
       - '8000:8000'
     command: >
