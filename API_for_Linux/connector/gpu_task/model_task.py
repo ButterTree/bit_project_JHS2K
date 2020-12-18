@@ -11,7 +11,6 @@ def main_processing(data, rand_uuid):
             mode = data['mode']
         else:
             mode = 'eyes'
-        # mode = 'face'
 
         gender = data['gender']
         process_selection = 0
