@@ -21,7 +21,7 @@ export default function Loading() {
             width: width,
             resizeMode: 'contain',
           }}
-          source={require('../../assets/Loading.gif')}
+          source={require('../../assets/loading.gif')}
         />
       </View>
     )

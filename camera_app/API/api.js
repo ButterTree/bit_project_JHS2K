@@ -6,7 +6,7 @@ const URL = `http://${SERVER_IP}:${SERVER_PORT}`;
 
 let tempResult = [];
 
-export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
+export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode = 'eyes') => {
   try {
     console.log('[1] Post Start!');
     const config = {
