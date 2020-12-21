@@ -41,11 +41,11 @@ def target_channel_manipulator(img_trg, img_org, blur_mask):
             if hist_bias[i] >= -0.001:
                 img_trg += hist_bias[i]*0
             elif hist_bias[i] >= -0.002 and hist_bias[i] < -0.001:
-                img_trg += hist_bias[i]*2
+                img_trg += hist_bias[i]
             elif hist_bias[i] >= -0.003 and hist_bias[i] < -0.002:
-                img_trg += hist_bias[i]*5
+                img_trg += hist_bias[i]*2
             else:
-                img_trg += hist_bias[i]*8
+                img_trg += hist_bias[i]*5
             multiplier = -1
         img_trg[0, i, ..., ...] = torch.clamp(img_trg[0, i, ..., ...] + hist_bias[i]*multiplier, 0, 1)
         print('{:.5f}'.format(hist_bias[i]))
