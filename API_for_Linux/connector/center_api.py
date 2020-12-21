@@ -7,7 +7,7 @@ import uuid
 app = Flask(__name__)
 
 
-@app.route("/let_me_shine", methods=['POST'])
+@app.route("/", methods=['POST'])
 def let_me_shine():
     rand_uuid = uuid.uuid4()
     data = request.get_json(silent=True)
