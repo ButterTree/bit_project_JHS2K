@@ -86,6 +86,9 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     img_1 = image_reader_color(ingredient_name)
     img_1 = img_1.to(device)  # (1,3,1024,1024)
 
+    img_noise = image_reader_color('../image_2_style_gan/source/noise/random_noise_r.png')
+    img_noise = img_noise.to(device)
+
     blur_mask0_1 = image_reader_gray(mask_name).to(device)
     blur_mask0_2 = image_reader_gray(eyes_mask_name).to(device)
     blur_mask0_3 = image_reader_gray(lids_mask_name).to(device)
@@ -123,7 +126,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     for i in range(ITERATION):
         optimizer.zero_grad()
         synth_img = g_synthesis(dlatent)
-        synth_img = (synth_img + 1) / 2
+        synth_img = (synth_img*0.75 + img_noise*0.25) / 2
 
         loss_wl0 = caluclate_loss(synth_img, img_0, perceptual_net, img_p0, blur_mask_eyes, MSE_Loss, upsample2d)
         loss_wl1 = caluclate_loss(synth_img, img_1, perceptual_net, img_p1, blur_mask_lids, MSE_Loss, upsample2d)
@@ -158,12 +161,12 @@ def caluclate_loss(synth_img, img, perceptual_net, img_p, blur_mask, MSE_Loss, u
     # calculate MSE Loss
     mse_loss = MSE_Loss(synth_img*blur_mask.expand(1, 3, 1024, 1024),
                         img*blur_mask.expand(1, 3, 1024, 1024))  # (lamda_mse/N)*||G(w)-I||^2
+                        
     # calculate Perceptual Loss
     real_0, real_1, real_2, real_3 = perceptual_net(img_p)
     synth_p = upsample2d(synth_img)  # (1,3,256,256)
     synth_p = upsample2d(synth_p)
     synth_0, synth_1, synth_2, synth_3 = perceptual_net(synth_p)
-    # print(synth_0.size(),synth_1.size(),synth_2.size(),synth_3.size())
 
     perceptual_loss = 0
     blur_mask = upsample2d(blur_mask)

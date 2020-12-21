@@ -88,6 +88,12 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     img_1=image_reader_color(ingredient_name)
     img_1=img_1.to(device) #(1,3,1024,1024)
 
+    save_image(img_0, '../image_2_style_gan/source/trghistadjs.png')
+    save_image(img_1, '../image_2_style_gan/source/orghistadjs.png')
+
+    img_noise = image_reader_color('../image_2_style_gan/source/noise/random_noise.png')
+    img_noise = img_noise.to(device)
+
     blur_mask0=image_reader_color(mask_name).to(device)
     blur_mask0=blur_mask0[:,0,:,:].unsqueeze(0)
     blur_mask1=blur_mask0.clone()
@@ -114,7 +120,7 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     for i in range(ITERATION):  # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
-        synth_img=(synth_img + 1) / 2  # random.uniform(1.0, 1.3)
+        synth_img=(synth_img*0.9 + img_noise*0.1) / 2
 
         loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask0,MSE_Loss,upsample2d)
         loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask1,MSE_Loss,upsample2d)
