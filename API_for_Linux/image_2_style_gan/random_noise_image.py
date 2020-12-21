@@ -1,5 +1,4 @@
 import argparse
-import random
 import torch
 import os
 from torchvision.utils import save_image
