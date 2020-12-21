@@ -8,12 +8,6 @@ from torchvision.utils import save_image
 def random_pixel_image(trg_dir, min_float=0.0, max_float=1.0):
     random_tensor = torch.rand((1, 3, 1024, 1024))
     random_tensor = torch.clamp(random_tensor, min_float, max_float)
-    # temp = torch.zeros((1, 3, 1024, 1024))
-    # temp = temp.to(device)
-    # for ch in range(3):
-    #     for i in range(1024):
-    #         for j in range(1024):
-    #             temp[0, ch, i, j] = random.uniform(min_float, max_float)
     
     save_image(random_tensor, trg_dir + 'random_noise.png')
 
