@@ -1,35 +1,27 @@
 version: '3'
 
 services:
-  model:
-    container_name: model
-    build: ./model
-    runtime: nvidia
-    privileged: true
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=all
-    command: >
-      bash -c "
-      cd API_for_Linux/connect
-      && python center_api.py"
-    depends_on:
-      - nginx
-
   flask_app:
     container_name: flask_app
     restart: always
     build: ./flask_app
+    user: server
     ports:
       - '8000:8000'
     command: >
-      bash -c "gunicorn -w 2 -k gevent -b 0.0.0.0:8000 -m 007 --preload wsgi:server --timeout 9999"
+      bash -c "
+      whoami
+      && ls -la
+      && cd /home/server/API_for_Linux/connector
+      && ls -la
+      && python --version
+      && /home/server/.local/bin/gunicorn -w 2 -k gevent -b 0.0.0.0:8000 -m 007 wsgi:server --timeout 9999"
 
   nginx:
     container_name: nginx
     restart: always
     build: ./nginx
     ports:
-      - '45045:80'
+      - '45055:80'
     depends_on:
       - flask_app
