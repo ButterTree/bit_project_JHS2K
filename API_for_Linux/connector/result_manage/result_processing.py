@@ -6,9 +6,6 @@ import json
 URL_IP = '192.168.1.46'
 URL_PORT = '45095'
 
-url_base = f"http://{URL_IP}:{URL_PORT}/let_me_shine/results/?uid="
-
-
 def result_processing(input_image, output_image, rand_uuid):
     try:
         usr_ID = f'{rand_uuid}'

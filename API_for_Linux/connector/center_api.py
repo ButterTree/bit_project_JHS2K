@@ -7,13 +7,15 @@ import uuid
 app = Flask(__name__)
 
 
-@app.route("/", methods=['POST'])
+@app.route("/", methods=['POST', 'GET'])
 def let_me_shine():
-    rand_uuid = uuid.uuid4()
-    data = request.get_json(silent=True)
-    json_data = main_processing(data, rand_uuid)
-    return json_data
-
+    if request.method == 'POST':
+        rand_uuid = uuid.uuid4()
+        data = request.get_json(silent=True)
+        json_data = main_processing(data, rand_uuid)
+        return json_data
+    else:
+        return 'You entered GET site'
 
 if __name__ == "__main__":
     print("Server Initiative")
