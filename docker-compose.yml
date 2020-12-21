@@ -22,6 +22,6 @@ services:
     restart: always
     build: ./nginx
     ports:
-      - '45055:80'
+      - '80:80'
     depends_on:
       - flask_app
