@@ -28,8 +28,8 @@ const TwoPeopleBtn = memo((props) => (
       />
     }
     thumbButton={{
-      width: 100,
-      height: 100,
+      width: 85,
+      height: 85,
       radius: 0,
     }}
     trackBar={{
@@ -37,8 +37,8 @@ const TwoPeopleBtn = memo((props) => (
       inActiveBackgroundColor: 'transparent',
       borderActiveColor: 'white',
       borderInActiveColor: 'white',
-      width: 100,
-      height: 100,
+      width: 85,
+      height: 85,
     }}
     trackBarStyle={{
       opacity: 0.9,
