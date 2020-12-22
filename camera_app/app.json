@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Change-your-eyes",
-    "slug": "change-your-eyes",
+    "name": "쌍토끼:Pink",
+    "slug": "Pink",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.1",
     "orientation": "portrait",
@@ -18,10 +18,10 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "bit.doublefoldeyes"
+      "bundleIdentifier": "buttertree.ssangtokki.pink"
     },
     "android": {
-      "package": "bit.doublefoldeyes",
+      "package": "buttertree.ssangtokki.pink",
       "versionCode": 1
     },
     "web": {
