@@ -57,7 +57,7 @@
   - Docker
   - Docker-compose
   - nvidia-cuda
-  - Flask
+  - flask
   - gunicorn
   - nginx
   
@@ -65,6 +65,15 @@
 
 - GPU Cloud Server
 
+  - AWS EC2 P3 (Tesla v100)
+  
+- Tools
+
+  - Git
+  - Github
+  - Locust
+  - Postman
+  
 
 ## 🔶프로젝트 기간
 
