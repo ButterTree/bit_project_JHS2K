@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "쌍토끼:Lemon",
-    "slug": "쌍토끼:Lemon",
+    "slug": "Lemon",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",

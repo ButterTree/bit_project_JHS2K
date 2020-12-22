@@ -55,7 +55,8 @@ const twoPopup = () => {
               <TouchableHighlight
                 style={{
                   ...styles.openButton,
-                  backgroundColor: '#fff9a3',
+                  backgroundColor: '#4d4d4d',
+                  marginTop: '5%',
                 }}
                 onPress={() => {
                   setModalVisible(false);
@@ -110,13 +111,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   openButton: {
-    backgroundColor: '#fff9a3',
+    backgroundColor: '#4d4d4d',
     borderRadius: 20,
     padding: 10,
     elevation: 2,
   },
   textStyle: {
-    color: '#4d4d4d',
+    color: '#fff9a3',
     fontFamily: 'SeoulNamsanvert',
     textAlign: 'justify',
   },

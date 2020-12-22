@@ -88,6 +88,7 @@ const onePopup = () => {
                 style={{
                   ...styles.openButton,
                   backgroundColor: '#fff9a3',
+                  marginTop: '5%',
                 }}
                 onPress={() => {
                   setModalVisible(false);
