@@ -14,7 +14,25 @@ const Notice = memo((props) => (
         alignItems: 'center',
         position: 'relative',
       }}
-    ></ImageBackground>
+    >
+      <Image
+        source={require('../components/Buttons/MainScreenBtns/NoticeBtns/Image/faceLineNotice.png')}
+        style={
+          height >= 700
+            ? {
+                flex: 1,
+                resizeMode: 'contain',
+                width: width / 1.5,
+                top: height / 15,
+              }
+            : {
+                flex: 1,
+                resizeMode: 'contain',
+                width: width / 1.5,
+              }
+        }
+      />
+    </ImageBackground>
     <Image
       source={require('../components/Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
       style={{
@@ -112,9 +130,8 @@ const Notice = memo((props) => (
         alignItems: 'flex-start',
         flexDirection: 'row-reverse',
       }}
-    >
-      <NoticeCancelBtn onPress={props.onPress} />
-    </ImageBackground>
+    ></ImageBackground>
+    <NoticeCancelBtn onPress={props.onPress} />
   </>
 ));
 

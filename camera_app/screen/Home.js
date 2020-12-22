@@ -11,6 +11,7 @@ import * as Sharing from 'expo-sharing';
 
 import { imageTransfer } from '../API/api';
 
+import FaceLine from './FaceLine';
 import ProgressBarMain from '../components/ProgressBar/ProgressBarMain';
 
 import TwoPeopleBtn from '../components/Buttons/ChangeBtns/TwoPeopleBtn/TwoPeoplePresenter';
@@ -53,7 +54,7 @@ const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
   flex: 1;
-  background-color: #fff9a3;
+  background-color: #fadbdb;
 `;
 const MainBtnContainer = styled.View`
   flex: 1;
@@ -85,14 +86,9 @@ const NoticeContainer = styled.View`
   flex: 1;
 `;
 const LightContainer = styled.View`
-  width: 100%;
-  flex: 1;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 3%;
-  margin-top: 10%;
-  position: absolute;
 `;
 
 // Image Temporary Storage
@@ -151,7 +147,7 @@ export default function Home() {
     secondLightText,
     LightDefaultColor,
   } = useLightState();
-  const { isMode, setIsMode, onPressMode } = useModeState();
+  const { isMode } = useModeState();
 
   useEffect(() => {
     (async () => {
@@ -162,26 +158,6 @@ export default function Home() {
       setHasAlbumPermission(albumStatus === 'granted');
     })();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (hasPermission) {
-        const photo = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: false,
-          quality: 1,
-          base64: true,
-        });
-
-        if (photo.uri) {
-          setImageSelected(true);
-          setAlbumPhoto({
-            uri: photo.uri,
-            base64: photo.base64,
-          });
-        }
-      }
-    })();
-  }, [hasPermission]);
 
   console.log(
     `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
@@ -352,28 +328,16 @@ export default function Home() {
             <Text
               style={{
                 textAlign: 'justify',
-                marginTop: '20%',
-                color: '#ffffff',
-                fontSize: 20,
-                opacity: 0.8,
+                marginTop: '15%',
+                color: '#FFFFFF',
+                fontSize: 14,
+                opacity: 0.6,
               }}
             >
-              {`갤러리에서 증명사진을 선택해주세요`}
+              {`밝은 곳에서 눈을 크게 뜨고 촬영해주세요`}
             </Text>
+            <FaceLine />
             {!isTwoPeople ? <OnePersonPopup /> : <TwoPeopleMainPopup />}
-            {!isTwoPeople || isPreview ? (
-              <></>
-            ) : !firstPhoto ? (
-              <LightContainer>
-                <OrderLight backgroundColor={firstLightColor} text={firstLightText} />
-                <OrderLight backgroundColor={LightDefaultColor} text={secondLightText} />
-              </LightContainer>
-            ) : (
-              <LightContainer>
-                <OrderLight backgroundColor={LightDefaultColor} text={firstLightText} />
-                <OrderLight backgroundColor={secondLightColor} text={secondLightText} />
-              </LightContainer>
-            )}
             {imageSelected && (
               <Image
                 style={
@@ -394,12 +358,22 @@ export default function Home() {
             )}
             <ChangeBtnContainer>
               <ChangeBtnBox>
-                {!isTwoPeople && !isPreview && (
+                {!isTwoPeople && !isPreview ? (
                   <GenderBtn
                     onPress={onPressGender}
                     value={genderValue}
                     onToggle={onToggleGender}
                   />
+                ) : !firstPhoto ? (
+                  <LightContainer>
+                    <OrderLight backgroundColor={firstLightColor} text={firstLightText} />
+                    <OrderLight backgroundColor={LightDefaultColor} text={secondLightText} />
+                  </LightContainer>
+                ) : (
+                  <LightContainer>
+                    <OrderLight backgroundColor={LightDefaultColor} text={firstLightText} />
+                    <OrderLight backgroundColor={secondLightColor} text={secondLightText} />
+                  </LightContainer>
                 )}
               </ChangeBtnBox>
               <ChangeBtnBox>
