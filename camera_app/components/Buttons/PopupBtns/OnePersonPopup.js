@@ -21,8 +21,7 @@ const TipContainer = styled.View`
   margin-bottom: 3%;
 `;
 
-const deviceWidth = Dimensions.get('window').width;
-const deviceHeight = Dimensions.get('window').height;
+const { width, height } = Dimensions.get('window');
 
 const onePopup = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,21 +36,21 @@ const onePopup = () => {
     return (
       <View
         style={
-          deviceHeight >= 700
+          height >= 700
             ? {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: deviceHeight / 1.3,
-                left: deviceWidth / 25,
+                height: height / 1.3,
+                left: width / 25,
                 position: 'absolute',
               }
             : {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: deviceHeight / 1.05,
-                left: deviceWidth / 25,
+                height: height / 1.05,
+                left: width / 25,
                 position: 'absolute',
               }
         }
@@ -123,8 +122,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: deviceHeight / 1.1,
-    left: deviceWidth / 25,
+    height: height / 1.1,
+    left: width / 25,
     position: 'absolute',
   },
   modalView: {

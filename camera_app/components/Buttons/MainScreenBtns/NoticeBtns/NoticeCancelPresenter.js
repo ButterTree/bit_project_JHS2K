@@ -5,7 +5,13 @@ import { StyleSheet } from 'react-native';
 const NoticeCancelBtn = memo((props) => (
   <TouchableOpacity
     onPress={props.onPress}
-    style={{ justifyContent: 'center', alignItems: 'center', width: '100%' }}
+    style={{
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      position: 'absolute',
+      bottom: '2%',
+    }}
   >
     <Image source={require('./closeBtnImage.png')} style={styles.imgStyle} />
   </TouchableOpacity>

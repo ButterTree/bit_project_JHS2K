@@ -85,14 +85,9 @@ const NoticeContainer = styled.View`
   flex: 1;
 `;
 const LightContainer = styled.View`
-  width: 100%;
-  flex: 1;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 3%;
-  margin-top: 10%;
-  position: absolute;
 `;
 
 // Image Temporary Storage
@@ -142,7 +137,7 @@ export default function Home() {
 
   const { cameraType, switchCameraType } = useCameraTypeState();
 
-  const { isNotice, setIsNotice, onPressNotice } = useNoticeState();
+  const { isNotice, onPressNotice } = useNoticeState();
 
   const {
     firstLightColor,
@@ -151,7 +146,7 @@ export default function Home() {
     secondLightText,
     LightDefaultColor,
   } = useLightState();
-  const { isMode, setIsMode, onPressMode } = useModeState();
+  const { isMode } = useModeState();
 
   useEffect(() => {
     (async () => {
@@ -361,19 +356,6 @@ export default function Home() {
               {`갤러리에서 증명사진을 선택해주세요`}
             </Text>
             {!isTwoPeople ? <OnePersonPopup /> : <TwoPeopleMainPopup />}
-            {!isTwoPeople || isPreview ? (
-              <></>
-            ) : !firstPhoto ? (
-              <LightContainer>
-                <OrderLight backgroundColor={firstLightColor} text={firstLightText} />
-                <OrderLight backgroundColor={LightDefaultColor} text={secondLightText} />
-              </LightContainer>
-            ) : (
-              <LightContainer>
-                <OrderLight backgroundColor={LightDefaultColor} text={firstLightText} />
-                <OrderLight backgroundColor={secondLightColor} text={secondLightText} />
-              </LightContainer>
-            )}
             {imageSelected && (
               <Image
                 style={
@@ -394,12 +376,22 @@ export default function Home() {
             )}
             <ChangeBtnContainer>
               <ChangeBtnBox>
-                {!isTwoPeople && !isPreview && (
+                {!isTwoPeople && !isPreview ? (
                   <GenderBtn
                     onPress={onPressGender}
                     value={genderValue}
                     onToggle={onToggleGender}
                   />
+                ) : !firstPhoto ? (
+                  <LightContainer>
+                    <OrderLight backgroundColor={firstLightColor} text={firstLightText} />
+                    <OrderLight backgroundColor={LightDefaultColor} text={secondLightText} />
+                  </LightContainer>
+                ) : (
+                  <LightContainer>
+                    <OrderLight backgroundColor={LightDefaultColor} text={firstLightText} />
+                    <OrderLight backgroundColor={secondLightColor} text={secondLightText} />
+                  </LightContainer>
                 )}
               </ChangeBtnBox>
               <ChangeBtnBox>

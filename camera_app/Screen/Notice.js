@@ -112,9 +112,8 @@ const Notice = memo((props) => (
         alignItems: 'flex-start',
         flexDirection: 'row-reverse',
       }}
-    >
-      <NoticeCancelBtn onPress={props.onPress} />
-    </ImageBackground>
+    ></ImageBackground>
+    <NoticeCancelBtn onPress={props.onPress} />
   </>
 ));
 

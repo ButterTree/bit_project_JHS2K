@@ -3,8 +3,7 @@ import { Text, View, Modal, TouchableHighlight, StyleSheet, Dimensions, Alert } 
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 
-const deviceWidth = Dimensions.get('window').width;
-const deviceHeight = Dimensions.get('window').height;
+const { width, height } = Dimensions.get('window');
 
 const twoPopup = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,21 +18,21 @@ const twoPopup = () => {
     return (
       <View
         style={
-          deviceHeight >= 700
+          height >= 700
             ? {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: deviceHeight / 1.3,
-                left: deviceWidth / 25,
+                height: height / 1.3,
+                left: width / 25,
                 position: 'absolute',
               }
             : {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: deviceHeight / 1.05,
-                left: deviceWidth / 25,
+                height: height / 1.05,
+                left: width / 25,
                 position: 'absolute',
               }
         }
@@ -91,9 +90,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // top: deviceHeight / 2.39,
-    height: deviceHeight,
-    left: deviceWidth / 25,
+    height: height,
+    left: width / 25,
     position: 'absolute',
   },
   modalView: {

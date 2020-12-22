@@ -1,39 +1,39 @@
 {
-	"expo": {
-		"name": "Change-your-eyes",
-		"slug": "change-your-eyes",
-		"platforms": ["ios", "android", "web"],
-		"version": "1.0.1",
-		"orientation": "portrait",
-		"icon": "./assets/app_logo_lemon.png",
-		"primaryColor": "#ffffff",
-		"splash": {
-			"image": "./assets/mainImage_lemon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"updates": {
-			"enabled": false
-		},
-		"assetBundlePatterns": ["**/*"],
-		"ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "bit.doublefoldeyes"
-		},
-		"android": {
-			"package": "bit.doublefoldeyes",
-			"versionCode": 1
-		},
-		"web": {
-			"favicon": "./assets/app_logo_lemon.png"
-		},
-		"androidStatusBar": {
-			"barStyle": "dark-content",
-			"backgroundColor": "#FFFFFF"
-		},
-		"androidNavigationBar": {
-			"barStyle": "dark-content",
-			"backgroundColor": "#FFFFFF"
-		}
-	}
+  "expo": {
+    "name": "쌍토끼:Lemon",
+    "slug": "쌍토끼:Lemon",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/app_logo_lemon.png",
+    "primaryColor": "#ffffff",
+    "splash": {
+      "image": "./assets/mainImage_lemon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "enabled": false
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "buttertree.ssangtokki.lemon"
+    },
+    "android": {
+      "package": "buttertree.ssangtokki.lemon",
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/app_logo_lemon.png"
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF"
+    },
+    "androidNavigationBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#FFFFFF"
+    }
+  }
 }

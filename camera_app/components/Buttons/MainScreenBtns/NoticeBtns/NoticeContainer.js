@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export const useNoticeState = () => {
-  const [isNotice, setIsNotice] = useState(true);
+  const [isNotice, setIsNotice] = useState(false);
 
   return {
     isNotice,
