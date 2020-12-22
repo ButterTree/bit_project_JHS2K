@@ -170,9 +170,9 @@ export default function App() {
                 );
                 setHasPermission(status == 'granted');
 
-                const {
-                    status: albumStatus
-                } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                const { status: albumStatus } = await Permissions.askAsync(
+                    Permissions.CAMERA_ROLL
+                );
                 setHasAlbumPermission(albumStatus === 'granted');
             }
 
