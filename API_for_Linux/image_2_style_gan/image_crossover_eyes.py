@@ -159,8 +159,7 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
 def caluclate_loss(synth_img, img, perceptual_net, img_p, blur_mask, MSE_Loss, upsample2d):  # W_l
     # calculate MSE Loss
-    mse_loss = MSE_Loss(synth_img*blur_mask.expand(1, 3, 1024, 1024),
-                        img*blur_mask.expand(1, 3, 1024, 1024))  # (lamda_mse/N)*||G(w)-I||^2
+    mse_loss = MSE_Loss(synth_img*blur_mask.expand(1, 3, 1024, 1024), img*blur_mask.expand(1, 3, 1024, 1024))  # (lamda_mse/N)*||G(w)-I||^2
                         
     # calculate Perceptual Loss
     real_0, real_1, real_2, real_3 = perceptual_net(img_p)
@@ -172,16 +171,14 @@ def caluclate_loss(synth_img, img, perceptual_net, img_p, blur_mask, MSE_Loss, u
     blur_mask = upsample2d(blur_mask)
     blur_mask = upsample2d(blur_mask)  # (256,256)
 
-    perceptual_loss += MSE_Loss(synth_0*blur_mask.expand(1,
-                                                         64, 256, 256), real_0*blur_mask.expand(1, 64, 256, 256))
-    perceptual_loss += MSE_Loss(synth_1*blur_mask.expand(1,
-                                                         64, 256, 256), real_1*blur_mask.expand(1, 64, 256, 256))
+    perceptual_loss += MSE_Loss(synth_0*blur_mask.expand(1, 64, 256, 256), real_0*blur_mask.expand(1, 64, 256, 256))
+    perceptual_loss += MSE_Loss(synth_1*blur_mask.expand(1, 64, 256, 256), real_1*blur_mask.expand(1, 64, 256, 256))
+
     blur_mask = upsample2d(blur_mask)
     blur_mask = upsample2d(blur_mask)  # (64,64)
-    perceptual_loss += MSE_Loss(synth_2*blur_mask.expand(1,
-                                                         256, 64, 64), real_2*blur_mask.expand(1, 256, 64, 64))
+    perceptual_loss += MSE_Loss(synth_2*blur_mask.expand(1, 256, 64, 64), real_2*blur_mask.expand(1, 256, 64, 64))
+
     blur_mask = upsample2d(blur_mask)  # (64,64)
-    perceptual_loss += MSE_Loss(synth_3*blur_mask.expand(1,
-                                                         512, 32, 32), real_3*blur_mask.expand(1, 512, 32, 32))
+    perceptual_loss += MSE_Loss(synth_3*blur_mask.expand(1, 512, 32, 32), real_3*blur_mask.expand(1, 512, 32, 32))
 
     return mse_loss+perceptual_loss

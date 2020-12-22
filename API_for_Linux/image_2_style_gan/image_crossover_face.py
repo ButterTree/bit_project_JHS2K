@@ -120,7 +120,7 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     for i in range(ITERATION):  # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
-        synth_img=(synth_img*0.9 + img_noise*0.1) / 2
+        synth_img=(synth_img*0.85 + img_noise*0.15) / 2
 
         loss_wl0=caluclate_loss(synth_img,img_0,perceptual_net,img_p0,blur_mask0,MSE_Loss,upsample2d)
         loss_wl1=caluclate_loss(synth_img,img_1,perceptual_net,img_p1,blur_mask1,MSE_Loss,upsample2d)
@@ -163,12 +163,13 @@ def caluclate_loss(synth_img,img,perceptual_net,img_p,blur_mask,MSE_Loss,upsampl
     perceptual_loss=0
     blur_mask=upsample2d(blur_mask)
     blur_mask=upsample2d(blur_mask) #(256,256)
-
     perceptual_loss+=MSE_Loss(synth_0*blur_mask.expand(1,64,256,256),real_0*blur_mask.expand(1,64,256,256))
     perceptual_loss+=MSE_Loss(synth_1*blur_mask.expand(1,64,256,256),real_1*blur_mask.expand(1,64,256,256))
+
     blur_mask=upsample2d(blur_mask)
     blur_mask=upsample2d(blur_mask) #(64,64)
     perceptual_loss+=MSE_Loss(synth_2*blur_mask.expand(1,256,64,64),real_2*blur_mask.expand(1,256,64,64))
+    
     blur_mask=upsample2d(blur_mask) #(64,64)
     perceptual_loss+=MSE_Loss(synth_3*blur_mask.expand(1,512,32,32),real_3*blur_mask.expand(1,512,32,32))
 
