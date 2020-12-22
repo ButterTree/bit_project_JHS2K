@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, Text, Image, Dimensions, Alert, ImageBackground } from 'react-native';
 import styled from 'styled-components';
 
-import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
@@ -152,7 +151,7 @@ export default function App() {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       setHasPermission(status == 'granted');
 
-      const { status: albumStatus } = await ImagePicker.requestCameraPermissionsAsync();
+      const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       setHasAlbumPermission(albumStatus === 'granted');
 
       const noticeStatus = await AsyncStorage.getItem('Notice');
