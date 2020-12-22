@@ -28,8 +28,8 @@ const GenderBtn = memo((props) => (
       />
     }
     thumbButton={{
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       radius: 0,
     }}
     trackBar={{
@@ -37,8 +37,8 @@ const GenderBtn = memo((props) => (
       inActiveBackgroundColor: 'transparent',
       borderActiveColor: 'white',
       borderInActiveColor: 'white',
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
     }}
     trackBarStyle={{
       opacity: 0.9,
