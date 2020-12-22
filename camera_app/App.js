@@ -155,36 +155,33 @@ export default function App() {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       setHasPermission(status === 'granted');
 
-      const { status: albumStatus } = await ImagePicker.requestCameraPermissionsAsync();
+      const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       setHasAlbumPermission(albumStatus === 'granted');
-
-      const saveStatus = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      setHasAlbumPermission(saveStatus === 'granted');
 
       const noticeStatus = await AsyncStorage.getItem('Notice');
       noticeStatus !== null ? setIsNotice(JSON.parse(noticeStatus)) : false;
     })();
   }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     if (hasAlbumPermission) {
-  //       const photo = await ImagePicker.launchImageLibraryAsync({
-  //         allowsEditing: false,
-  //         quality: 1,
-  //         base64: true,
-  //       });
+  useEffect(() => {
+    (async () => {
+      if (hasPermission) {
+        const photo = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: false,
+          quality: 1,
+          base64: true,
+        });
 
-  //       if (photo.uri) {
-  //         setImageSelected(true);
-  //         setAlbumPhoto({
-  //           uri: photo.uri,
-  //           base64: photo.base64,
-  //         });
-  //       }
-  //     }
-  //   })();
-  // }, [hasAlbumPermission]);
+        if (photo.uri) {
+          setImageSelected(true);
+          setAlbumPhoto({
+            uri: photo.uri,
+            base64: photo.base64,
+          });
+        }
+      }
+    })();
+  }, [hasPermission]);
 
   console.log(
     `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
@@ -259,8 +256,9 @@ export default function App() {
       setIsLoading(true);
 
       console.log(`getTransfer Check: ${isGender}`);
+      console.log(`getTransfer Check: ${isMode}`);
 
-      resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender);
+      resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender, isMode);
 
       setIsLoading(false);
       // Image Transformation End
