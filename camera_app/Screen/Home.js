@@ -91,9 +91,9 @@ const LightContainer = styled.View`
 `;
 
 // Image Temporary Storage
-let firstPhoto = ''; // base64
-let secondPhoto = ''; // base64
-let resultPhotoList = []; // [origin png, resultpng]
+let FIRST_PHOTO = ''; // base64
+let SECOND_PHOTO = ''; // base64
+let RESULT_PHOTO_LIST = []; // [origin png, resultpng]
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -146,37 +146,37 @@ export default function Home() {
     secondLightText,
     LightDefaultColor,
   } = useLightState();
+
   const { isMode } = useModeState();
 
   useEffect(() => {
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       setHasPermission(status === 'granted');
+      console.log(hasPermission);
 
       const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       setHasAlbumPermission(albumStatus === 'granted');
-    })();
-  }, []);
+      console.log(hasAlbumPermission);
 
-  useEffect(() => {
-    (async () => {
-      if (hasPermission) {
+      if (albumStatus === 'granted') {
         const photo = await ImagePicker.launchImageLibraryAsync({
           allowsEditing: false,
           quality: 1,
           base64: true,
         });
-
         if (photo.uri) {
           setImageSelected(true);
           setAlbumPhoto({
             uri: photo.uri,
             base64: photo.base64,
           });
+        } else {
+          return '';
         }
       }
     })();
-  }, [hasPermission]);
+  }, []);
 
   console.log(
     `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
@@ -193,7 +193,7 @@ export default function Home() {
       setImageSelected(false);
     }
 
-    firstPhoto = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
+    FIRST_PHOTO = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
 
     setIsTwoPeople(true);
     setTwoPeopleToggleValue(true);
@@ -221,8 +221,8 @@ export default function Home() {
     setTwoPeopleToggleValue(false);
 
     setIsAfterView(false);
-    firstPhoto = '';
-    secondPhoto = '';
+    FIRST_PHOTO = '';
+    SECOND_PHOTO = '';
     setTakePhoto({});
     setAlbumPhoto({});
   };
@@ -235,16 +235,18 @@ export default function Home() {
       if (isPreview) {
         await cameraRef.current.resumePreview();
         setIsPreview(false);
+        setTakePhoto({});
       }
 
       if (imageSelected) {
         setImageSelected(false);
+        setAlbumPhoto({});
       }
 
-      if (!firstPhoto) {
-        firstPhoto = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
+      if (!FIRST_PHOTO) {
+        FIRST_PHOTO = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
       } else {
-        secondPhoto = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
+        SECOND_PHOTO = (takePhoto && takePhoto.base64) || (albumPhoto && albumPhoto.base64);
       }
 
       // Image Transformation Start
@@ -253,15 +255,15 @@ export default function Home() {
       console.log(`getTransfer Check: ${isGender}`);
       console.log(`getTransfer Check: ${isMode}`);
 
-      resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender, isMode);
+      RESULT_PHOTO_LIST = await imageTransfer(FIRST_PHOTO, SECOND_PHOTO, isGender, isMode);
 
       setIsLoading(false);
       // Image Transformation End
 
-      console.log(`=========   ${resultPhotoList[2]}   =========`);
+      console.log(`=========   ${RESULT_PHOTO_LIST[2]}   =========`);
 
-      firstPhoto = '';
-      secondPhoto = '';
+      FIRST_PHOTO = '';
+      SECOND_PHOTO = '';
       setIsAfterView(true);
     } catch (e) {
       alert(`getTransferImage Error: ${e}`);
@@ -272,14 +274,14 @@ export default function Home() {
   const onPressSave = async () => {
     try {
       // original Image path 설정
-      const originalImg = resultPhotoList[0].split('data:image/png;base64,')[1];
+      const originalImg = RESULT_PHOTO_LIST[0].split('data:image/png;base64,')[1];
       const originalFileName = FileSystem.documentDirectory + 'original.png';
       await FileSystem.writeAsStringAsync(originalFileName, originalImg, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
       // changed Image path 설정
-      const changedImg = resultPhotoList[1].split('data:image/png;base64,')[1];
+      const changedImg = RESULT_PHOTO_LIST[1].split('data:image/png;base64,')[1];
       const changedFileName = FileSystem.documentDirectory + 'changed.png';
       await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
         encoding: FileSystem.EncodingType.Base64,
@@ -299,7 +301,7 @@ export default function Home() {
   const onPressShare = async () => {
     try {
       // changed Image path 설정
-      const changedImg = resultPhotoList[1].split('data:image/png;base64,')[1];
+      const changedImg = RESULT_PHOTO_LIST[1].split('data:image/png;base64,')[1];
       const changedFileName = FileSystem.documentDirectory + 'changed.png';
       await FileSystem.writeAsStringAsync(changedFileName, changedImg, {
         encoding: FileSystem.EncodingType.Base64,
@@ -314,12 +316,12 @@ export default function Home() {
 
   // View
   if (hasPermission === true) {
-    return isLoading && !isTwoPeople && !secondPhoto ? (
+    return isLoading && !isTwoPeople && !SECOND_PHOTO ? (
       <ProgressBarMain />
-    ) : isTwoPeople && secondPhoto ? (
+    ) : isTwoPeople && SECOND_PHOTO ? (
       <TwoPeopleLoading
-        firstPhoto={`data:image/png;base64,${firstPhoto}`}
-        secondPhoto={`data:image/png;base64,${secondPhoto}`}
+        FIRST_PHOTO={`data:image/png;base64,${FIRST_PHOTO}`}
+        SECOND_PHOTO={`data:image/png;base64,${SECOND_PHOTO}`}
       />
     ) : (
       <CenterView>
@@ -356,24 +358,7 @@ export default function Home() {
               {`갤러리에서 증명사진을 선택해주세요`}
             </Text>
             {!isTwoPeople ? <OnePersonPopup /> : <TwoPeopleMainPopup />}
-            {imageSelected && (
-              <Image
-                style={
-                  height >= 700
-                    ? {
-                        width: width,
-                        height: width / 0.75,
-                        marginTop: 50,
-                      }
-                    : {
-                        width: width,
-                        height: width / 0.75,
-                        marginTop: 25,
-                      }
-                }
-                source={{ uri: albumPhoto.uri }}
-              />
-            )}
+
             <ChangeBtnContainer>
               <ChangeBtnBox>
                 {!isTwoPeople && !isPreview ? (
@@ -382,7 +367,7 @@ export default function Home() {
                     value={genderValue}
                     onToggle={onToggleGender}
                   />
-                ) : !firstPhoto ? (
+                ) : !FIRST_PHOTO ? (
                   <LightContainer>
                     <OrderLight backgroundColor={firstLightColor} text={firstLightText} />
                     <OrderLight backgroundColor={LightDefaultColor} text={secondLightText} />
@@ -436,20 +421,18 @@ export default function Home() {
                 ? {
                     width: width * 0.9,
                     height: width * 0.9,
-                    // alignItems: 'center',
                     marginTop: '40%',
                     marginLeft: width * 0.05,
                   }
                 : {
                     width: width * 0.9,
                     height: width * 0.9,
-                    // alignItems: 'center',
                     marginTop: '20%',
                     marginBottom: '20%',
                     marginLeft: width * 0.05,
                   }
             }
-            source={{ uri: resultPhotoList[1] }}
+            source={{ uri: RESULT_PHOTO_LIST[1] }}
           />
         )}
 
@@ -471,7 +454,7 @@ export default function Home() {
           <MainBtnContainer>
             <CancelBtn onPress={onPressCancel} />
 
-            {!isTwoPeople || (isTwoPeople && firstPhoto) ? (
+            {!isTwoPeople || (isTwoPeople && FIRST_PHOTO) ? (
               <TransferBtn onPress={getTransferImage} />
             ) : (
               <NextBtn onPress={onPressNext} />

@@ -6,7 +6,7 @@ import { SERVER_IP, SERVER_PORT } from './apiAddress';
 
 const URL = `http://${SERVER_IP}:${SERVER_PORT}`;
 
-let tempResult = [];
+let TEMP_RESULT = [];
 
 export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
   try {
@@ -41,7 +41,7 @@ export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
         } = res;
         const origin = `data:image/png;base64,${res && imgID_1}`;
         const after = `data:image/png;base64,${res && imgID_2}`;
-        tempResult = [origin, after, target_number];
+        TEMP_RESULT = [origin, after, target_number];
       })
       // POST의 결과(res)로부터 모델 결과 위치(res.data) 얻음
       // 이를 getResultURL 함수로 보낸다.
@@ -58,7 +58,7 @@ export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
   } catch (e) {
     console.log(`imageTransfer Error: ${e}`);
   } finally {
-    const result = tempResult;
+    const result = TEMP_RESULT;
     if (result.length >= 2) {
       return result;
     } else {
