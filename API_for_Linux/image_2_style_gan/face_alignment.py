@@ -26,7 +26,7 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     eye_right     = np.mean(lm_eye_right, axis=0)
     eye_avg       = (eye_left + eye_right) * 0.5
     eye_to_eye    = eye_right - eye_left
-    ete_tilt_rate = round(eye_to_eye[1], 6) / round(eye_to_eye[0] if round(eye_to_eye[0], 6) != 0 else 0.000001, 6)
+    ete_tilt_rate = round(eye_to_eye[1], 6) if round(eye_to_eye[1], 6) != 0 else 0.000001 / round(eye_to_eye[0], 6)
     ete_length    = np.hypot(*eye_to_eye)
 
     mouth_left    = lm_mouth_outer[0]

@@ -48,7 +48,6 @@ def target_channel_manipulator(img_trg, img_org, blur_mask):
                 img_trg += hist_bias[i]*5
             multiplier = -1
         img_trg[0, i, ..., ...] = torch.clamp(img_trg[0, i, ..., ...] + hist_bias[i]*multiplier, 0, 1)
-        print('{:.5f}'.format(hist_bias[i]))
     
     return img_trg
 
@@ -70,7 +69,6 @@ def eyes_channel_matching(img_org, blur_mask_eyes):
         e_mean.append(torch.mean(ingredient_eyes[0, i, ..., ...]))
     idx_min = e_mean.index(min(e_mean))
     idx_max = e_mean.index(max(e_mean))
-    print('HIST_MIN : {:.6f}, HIST_MAX : {:.6f}'.format(min(e_mean), max(e_mean)))
 
     if min(e_mean) > 0.001:
         for i in range(ingredient_eyes.shape[1]):
