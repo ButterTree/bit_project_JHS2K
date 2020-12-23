@@ -26,24 +26,27 @@ def face_align(src_file, dst_file, face_landmarks, output_size=1024, transform_s
     eye_right     = np.mean(lm_eye_right, axis=0)
     eye_avg       = (eye_left + eye_right) * 0.5
     eye_to_eye    = eye_right - eye_left
-    ete_tilt_rate = round(eye_to_eye[1], 6) / round(eye_to_eye[0] if round(eye_to_eye[0], 6) != 0 else 0.000001, 6)
+    try:
+        ete_tilt_rate = eye_to_eye[1] / eye_to_eye[0]
+    except ZeroDivisionError as e:
+        ete_tilt_rate = 10**-30
     ete_length    = np.hypot(*eye_to_eye)
 
     mouth_left    = lm_mouth_outer[0]
     mouth_right   = lm_mouth_outer[6]
     mouth_length  = np.hypot(*(mouth_right - mouth_left))
     mouth_avg = (mouth_left + mouth_right) * 0.5
-   
-    eye_to_mouth  = mouth_avg - eye_avg
 
-    print(f'Mouth-Eyes-Rate Corruption : {mouth_length > ete_length*0.65}')
-    if mouth_length > ete_length*0.65:
+    print(f'Mouth-Eyes-Rate Corruption : {mouth_length > ete_length*0.85}')
+    if mouth_length > ete_length*0.85 and ete_tilt_rate != 0:
         x = math.sqrt((1.2*(ete_length**2))/(1+(1/ete_tilt_rate**2))) * (np.sign(ete_tilt_rate)*-1)
         y = abs(x * (1/ete_tilt_rate))
         mouth_avg[0] = int(eye_avg[0]) + x
         mouth_avg[1] = int(eye_avg[1]) + y
-        eye_to_mouth  = mouth_avg - eye_avg
-    
+    elif mouth_length > ete_length*0.85 and ete_tilt_rate == 0:
+        mouth_avg[1] = int(eye_avg[1]) + ete_length
+
+    eye_to_mouth = mouth_avg - eye_avg
     eye_to_mouth[0] = eye_to_mouth[1] * -ete_tilt_rate
 
     # Choose oriented crop rectangle.
