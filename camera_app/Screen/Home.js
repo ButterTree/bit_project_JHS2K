@@ -171,8 +171,6 @@ export default function Home() {
             uri: photo.uri,
             base64: photo.base64,
           });
-        } else {
-          return '';
         }
       }
     })();
