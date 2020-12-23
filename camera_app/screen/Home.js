@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, Text, Image, Dimensions, Alert } from 'react-native';
 import styled from 'styled-components';
 
-import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
@@ -110,6 +109,7 @@ export default function Home() {
     setTwoPeopleToggleValue,
     onToggleTwoPeople,
   } = useTwoPeopleState();
+
   const {
     isGender,
     setIsGender,
@@ -147,6 +147,7 @@ export default function Home() {
     secondLightText,
     LightDefaultColor,
   } = useLightState();
+
   const { isMode } = useModeState();
 
   useEffect(() => {
@@ -338,24 +339,6 @@ export default function Home() {
             </Text>
             <FaceLine />
             {!isTwoPeople ? <OnePersonPopup /> : <TwoPeopleMainPopup />}
-            {imageSelected && (
-              <Image
-                style={
-                  height >= 700
-                    ? {
-                        width: width,
-                        height: width / 0.75,
-                        marginTop: 50,
-                      }
-                    : {
-                        width: width,
-                        height: width / 0.75,
-                        marginTop: 25,
-                      }
-                }
-                source={{ uri: albumPhoto.uri }}
-              />
-            )}
             <ChangeBtnContainer>
               <ChangeBtnBox>
                 {!isTwoPeople && !isPreview ? (
@@ -418,14 +401,12 @@ export default function Home() {
                 ? {
                     width: width * 0.9,
                     height: width * 0.9,
-                    // alignItems: 'center',
                     marginTop: '40%',
                     marginLeft: width * 0.05,
                   }
                 : {
                     width: width * 0.9,
                     height: width * 0.9,
-                    // alignItems: 'center',
                     marginTop: '20%',
                     marginBottom: '20%',
                     marginLeft: width * 0.05,
