@@ -208,8 +208,6 @@ export default function Home() {
   // AI Server로 전송하는 버튼
   const getTransferImage = async () => {
     try {
-      console.log(`getTransferImage start!`);
-
       if (isPreview) {
         await cameraRef.current.resumePreview();
         setIsPreview(false);
@@ -228,15 +226,10 @@ export default function Home() {
       // Image Transformation Start
       setIsLoading(true);
 
-      console.log(`getTransfer Check: ${isGender}`);
-      console.log(`getTransfer Check: ${isMode}`);
-
       resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender, isMode);
 
       setIsLoading(false);
       // Image Transformation End
-
-      console.log(`=========   ${resultPhotoList[2]}   =========`);
 
       firstPhoto = '';
       secondPhoto = '';
