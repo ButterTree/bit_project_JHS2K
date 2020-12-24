@@ -176,10 +176,6 @@ export default function Home() {
     })();
   }, []);
 
-  console.log(
-    `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
-  );
-
   // 2인일 때, 2번째 사진으로 넘어가는 버튼
   const onPressNext = async () => {
     if (isPreview) {
@@ -250,15 +246,10 @@ export default function Home() {
       // Image Transformation Start
       setIsLoading(true);
 
-      console.log(`getTransfer Check: ${isGender}`);
-      console.log(`getTransfer Check: ${isMode}`);
-
       RESULT_PHOTO_LIST = await imageTransfer(FIRST_PHOTO, SECOND_PHOTO, isGender, isMode);
 
       setIsLoading(false);
       // Image Transformation End
-
-      console.log(`=========   ${RESULT_PHOTO_LIST[2]}   =========`);
 
       FIRST_PHOTO = '';
       SECOND_PHOTO = '';

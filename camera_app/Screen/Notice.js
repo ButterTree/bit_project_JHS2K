@@ -10,7 +10,7 @@ const Notice = memo((props) => (
       source={require('../components/Buttons/MainScreenBtns/NoticeBtns/Image/icon_invisible.png')}
       style={{
         width: width,
-        height: height / 3.5,
+        height: heights / 3.5,
         alignItems: 'center',
         position: 'relative',
       }}
