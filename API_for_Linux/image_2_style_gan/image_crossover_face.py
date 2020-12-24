@@ -10,6 +10,7 @@ import torch.optim as optim
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_makers.mask_maker import mask_maker
 from image_2_style_gan.read_image import image_reader_color
+from image_2_style_gan.random_noise_image import random_pixel_image
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
@@ -91,9 +92,6 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     save_image(img_0, '../image_2_style_gan/source/trghistadjs.png')
     save_image(img_1, '../image_2_style_gan/source/orghistadjs.png')
 
-    img_noise = image_reader_color('../image_2_style_gan/source/noise/random_noise.png')
-    img_noise = img_noise.to(device)
-
     blur_mask0=image_reader_color(mask_name).to(device)
     blur_mask0=blur_mask0[:,0,:,:].unsqueeze(0)
     blur_mask1=blur_mask0.clone()
@@ -118,6 +116,7 @@ def image_crossover_face(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
 
     print("Start ---------------------------------------------------------------------------------------------")
     for i in range(ITERATION):  # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
+        img_noise = random_pixel_image(min_float=0.2, max_float=0.8).to(device)
         optimizer.zero_grad()
         synth_img=g_synthesis(dlatent)
         synth_img=(synth_img*0.8 + img_noise*0.2) / 2

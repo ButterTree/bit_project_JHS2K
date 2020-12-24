@@ -10,11 +10,11 @@ import torch.optim as optim
 from image_2_style_gan.align_images import align_images
 from image_2_style_gan.mask_makers.precision_facial_mask_maker import precision_facial_masks
 from image_2_style_gan.color_channel_manipulator import *
+from image_2_style_gan.random_noise_image import random_pixel_image
 from image_2_style_gan.read_image import *
 from image_2_style_gan.perceptual_model import VGG16_for_Perceptual
 from image_2_style_gan.stylegan_layers import G_mapping, G_synthesis
 from torchvision.utils import save_image
-from skimage.io import imsave
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
@@ -86,9 +86,6 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     img_1 = image_reader_color(ingredient_name)
     img_1 = img_1.to(device)  # (1,3,1024,1024)
 
-    img_noise = image_reader_color('../image_2_style_gan/source/noise/random_noise_r.png')
-    img_noise = img_noise.to(device)
-
     blur_mask0_1 = image_reader_gray(mask_name).to(device)
     blur_mask0_2 = image_reader_gray(eyes_mask_name).to(device)
     blur_mask0_3 = image_reader_gray(lids_mask_name).to(device)
@@ -115,15 +112,17 @@ def image_crossover_eyes(BASE_DIR, RAW_DIR, rand_uuid, process_selection, gender
     img_p1 = upsample2d(img_p1)
     img_p1 = upsample2d(img_p1)  # (1,3,256,256)
 
+    # img_noise = random_pixel_image(min_float=0.3, max_float=0.7).to(device)
+
     perceptual_net = VGG16_for_Perceptual(n_layers=[2, 4, 14, 21]).to(device)  # conv1_1,conv1_2,conv2_2,conv3_3
     dlatent = torch.zeros((1, 18, 512), requires_grad=True, device=device)
     optimizer = optim.Adam({dlatent}, lr=0.01, betas=(0.9, 0.999), eps=1e-8)
-
     loss_list = []
 
     print("Start ---------------------------------------------------------------------------------------------")
     # [img_0 : Target IMG] / [img_1 : Ingredient IMG]
     for i in range(ITERATION):
+        img_noise = random_pixel_image(min_float=0.3, max_float=0.7).to(device)
         optimizer.zero_grad()
         synth_img = g_synthesis(dlatent)
         synth_img = (synth_img*0.75 + img_noise*0.25) / 2
