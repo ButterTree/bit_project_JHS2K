@@ -8,7 +8,6 @@ let tempResult = [];
 
 export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
   try {
-    console.log('[1] Post Start!');
     const config = {
       // 보내는 파일의 타입 설정
       headers: {
@@ -52,9 +51,7 @@ export const imageTransfer = async (firstPhoto, secondPhoto, gender, mode) => {
           Alert.alert('사람을 찍어주세요🤣', '만약 사람이라면 눈을 조금만 더 크게 떠주세요😍');
         }
       });
-    console.log('[1] Post End!');
   } catch (e) {
-    console.log(`imageTransfer Error: ${e}`);
   } finally {
     const result = tempResult;
     if (result.length >= 2) {

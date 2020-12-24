@@ -1,5 +1,3 @@
-/** @format */
-
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Loading from './Loading';

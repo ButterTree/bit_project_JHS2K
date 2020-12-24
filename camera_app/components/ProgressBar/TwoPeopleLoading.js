@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { Component } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import Texts from './Texts';

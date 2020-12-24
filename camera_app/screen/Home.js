@@ -138,7 +138,7 @@ export default function Home() {
 
   const { cameraType, switchCameraType } = useCameraTypeState();
 
-  const { isNotice, setIsNotice, onPressNotice } = useNoticeState();
+  const { isNotice, onPressNotice } = useNoticeState();
 
   const {
     firstLightColor,
@@ -159,10 +159,6 @@ export default function Home() {
       setHasAlbumPermission(albumStatus === 'granted');
     })();
   }, []);
-
-  console.log(
-    `isTwoPeople: ${isTwoPeople}, twoPeopleToggle: ${twoPeopleToggleValue}, genderValue: ${genderValue}, isGender: ${isGender}, isMode: ${isMode}`
-  );
 
   // 2인일 때, 2번째 사진으로 넘어가는 버튼
   const onPressNext = async () => {
