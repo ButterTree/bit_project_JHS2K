@@ -350,7 +350,7 @@ export default function Home() {
 
             <ChangeBtnContainer>
               <ChangeBtnBox>
-                {!isTwoPeople && !isPreview ? (
+                {!isTwoPeople ? (
                   <GenderBtn
                     onPress={onPressGender}
                     value={genderValue}
