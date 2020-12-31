@@ -3,7 +3,7 @@
     "name": "쌍토끼:Pink",
     "slug": "Pink",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app_logo_pink.png",
     "primaryColor": "#ffffff",
