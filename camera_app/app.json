@@ -5,7 +5,7 @@
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app_logo_pink.png",
+    "icon": "./assets/Pink_logo.png",
     "primaryColor": "#ffffff",
     "splash": {
       "image": "./assets/mainImage_pink.png",
