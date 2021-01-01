@@ -13,7 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "enabled": false
+      "enabled": true
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
