@@ -2,9 +2,9 @@
 
 import axios from 'axios';
 import { Alert } from 'react-native';
-import { SERVER_IP } from './apiAddress';
+import { SERVER_IP, SERVER_PORT } from './apiAddress';
 
-const URL = `http://${SERVER_IP}`;
+const URL = `http://${SERVER_IP}:${SERVER_PORT}`;
 
 let TEMP_RESULT = [];
 
