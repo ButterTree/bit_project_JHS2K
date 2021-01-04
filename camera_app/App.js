@@ -17,7 +17,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { imageTransfer } from './API/api';
+import { getServerState, imageTransfer } from './API/api';
 
 import ProgressBarMain from './Screen/ProgressBar/ProgressBarMain';
 import FaceLine from './Screen/FaceLine';
@@ -259,6 +259,21 @@ export default function App() {
             // Image Transformation Start
             setIsLoading(true);
 
+            // 대기 인원 경고창 추가
+            const waiting_num = await getServerState();
+            if (waiting_num > 20) {
+                Alert.alert(
+                    `현재 ${waiting_num} 명 대기중입니다. 🕺💃`,
+                    `예상 대기시간은 ${Math.round(
+                        (waiting_num * 23) / 4 / 60
+                    )} 분 입니다. ⏰`
+                );
+            }
+
+            console.log(
+                `현재 ${waiting_num} 명 대기중입니다. 🕺💃`,
+                `예상 대기시간은 ${(waiting_num * 20) / 60} 분 입니다. ⏰}`
+            );
             console.log(`getTransfer Check: ${isGender}`);
 
             resultPhotoList = await imageTransfer(
