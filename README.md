@@ -36,3 +36,19 @@ For simplicity, I also added run_docker.sh file for an even easier setting-up an
 │   └── project.conf
 └── run_docker.sh
 ```
+
+# aws hostOS .vimrc 수정
+```
+set tabstop=5
+set background=dark
+set autoindent
+set smartindent
+set ruler
+set shiftwidth=4
+set hlsearch
+set number
+set paste!
+set title
+set history=200
+set ignorecase
+```
