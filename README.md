@@ -26,14 +26,29 @@ For simplicity, I also added run_docker.sh file for an even easier setting-up an
 
 ```
 .
-├── flask_app
-│   ├── app.py
-│   ├── wsgi.py
-│   └── Dockerfile
-├── nginx
-│   ├── nginx.conf
-│   ├── project.conf
-│   └── Dockerfile
 ├── docker-compose.yml
+├── flask_app
+│   ├── Dockerfile
+│   └── README.md
+├── nginx
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── project.conf
 └── run_docker.sh
+```
+
+# aws hostOS .vimrc configuration
+```
+set tabstop=5
+set background=dark
+set autoindent
+set smartindent
+set ruler
+set shiftwidth=4
+set hlsearch
+set number
+set paste!
+set title
+set history=200
+set ignorecase
 ```
