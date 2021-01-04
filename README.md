@@ -37,7 +37,7 @@ For simplicity, I also added run_docker.sh file for an even easier setting-up an
 └── run_docker.sh
 ```
 
-# aws hostOS .vimrc 수정
+# aws hostOS .vimrc configuration
 ```
 set tabstop=5
 set background=dark
