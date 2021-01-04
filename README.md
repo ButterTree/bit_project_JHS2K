@@ -72,16 +72,92 @@
 쌍꺼풀 수술에 관한 후기나 할인 이벤트들을 모아놓은 사이트나 어플은 많이 있지만 우리는 직접 성형외과에 발걸음을 해야하고 의사가 손으로 그려주는 그림과 내가 아닌 사람들의 수술 결과만으로 짐작하여 상담을 받아야한다. 이 프로젝트는 <u>**현재 사용자의 모습을 기반**</u>으로 쌍꺼풀을 생성해주는 이미지를 제공하고 더 나아가 원하는 스타일을 다양하게 골라 결과를 즉시 받아 볼 수 있다.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+└── camera_app
+    ├── API
+    │   ├── api.js
+    │   └── apiAddress.js
+    ├── App.js
+    ├── README.md
+    ├── Screen
+    │   ├── Home.js
+    │   └── Notice.js
+    ├── app.json
+    ├── assets
+    │   ├── Lemon_logo.png
+    │   ├── app_intro.png
+    │   ├── fonts
+    │   │   ├── SeoulNamsanM.ttf
+    │   │   └── SeoulNamsanvert.ttf
+    │   ├── lemon_loading.gif
+    │   └── mainImage_lemon.png
+    ├── babel.config.js
+    ├── components
+    │   ├── Buttons
+    │   │   ├── ChangeBtns
+    │   │   │   ├── GenderBtn
+    │   │   │   │   ├── GenderContainer.js
+    │   │   │   │   ├── GenderPresenter.js
+    │   │   │   │   ├── man.png
+    │   │   │   │   └── woman.png
+    │   │   │   ├── ModeBtn
+    │   │   │   │   └── ModeContainer.js
+    │   │   │   ├── NextBtn
+    │   │   │   │   ├── NextBtn.png
+    │   │   │   │   └── NextPresenter.js
+    │   │   │   └── TwoPeopleBtn
+    │   │   │       ├── TwoPeopleContainer.js
+    │   │   │       ├── TwoPeoplePresenter.js
+    │   │   │       ├── one_person.png
+    │   │   │       └── two_people.png
+    │   │   ├── MainScreenBtns
+    │   │   │   ├── GetPhotoBtn
+    │   │   │   │   ├── GalleryBtn2.png
+    │   │   │   │   ├── GetPhotoContainer.js
+    │   │   │   │   └── GetPhotoPresenter.js
+    │   │   │   ├── NoticeBtns
+    │   │   │   │   ├── Image
+    │   │   │   │   ├── NoticeCancelPresenter.js
+    │   │   │   │   ├── NoticeContainer.js
+    │   │   │   │   ├── NoticePresenter.js
+    │   │   │   │   ├── closeBtnImage.png
+    │   │   │   │   └── qMark.png
+    │   │   │   ├── SwitchCameraBtn
+    │   │   │   │   ├── SwitchBtn2.png
+    │   │   │   │   ├── SwitchCameraContainer.js
+    │   │   │   │   └── SwitchCameraPresenter.js
+    │   │   │   └── TakePhotoBtn
+    │   │   │       ├── ShotBtn.png
+    │   │   │       ├── TakePhotoContainer.js
+    │   │   │       └── TakePhotoPresenter.js
+    │   │   ├── PopupBtns
+    │   │   │   ├── OnePersonPopup.js
+    │   │   │   ├── TwoPeopleLights
+    │   │   │   │   ├── TwoPeopleLightsContainer.js
+    │   │   │   │   └── TwoPeopleLightsPresenter.js
+    │   │   │   ├── TwoPeoplePopup.js
+    │   │   │   ├── man.png
+    │   │   │   └── woman.png
+    │   │   ├── SaveShareBtns
+    │   │   │   ├── SaveBtn
+    │   │   │   │   ├── SaveBtn.png
+    │   │   │   │   └── SavePresenter.js
+    │   │   │   └── ShareBtn
+    │   │   │       ├── ShareBtn.png
+    │   │   │       └── SharePresenter.js
+    │   │   └── TransferCancelBtns
+    │   │       ├── CancelBtn
+    │   │       │   ├── CancelBtn.png
+    │   │       │   └── CancelPresenter.js
+    │   │       └── TransferBtn
+    │   │           ├── SendBtn.png
+    │   │           └── TransferPresenter.js
+    │   └── ProgressBar
+    │       ├── Loading.js
+    │       ├── ProgressBarMain.js
+    │       ├── Texts.js
+    │       └── TwoPeopleLoading.js
+    ├── package-lock.json
+    ├── package.json
+    └── yarn.lock
+```
