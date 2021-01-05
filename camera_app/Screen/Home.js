@@ -254,7 +254,7 @@ export default function Home() {
       if (waiting_num >= 20) {
         Alert.alert(
           `현재 ${waiting_num} 명 대기중입니다. 🕺💃`,
-          `예상 대기시간은 ${Math.round((waiting_num * 25) / 4 / 60)} '분' 입니다. ⏰`
+          `예상 대기시간은 ${Math.round((waiting_num * 25) / 4 / 60)} 분 입니다. ⏰`
         );
       }
 
