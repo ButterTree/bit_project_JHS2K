@@ -49,6 +49,9 @@ import TwoPeopleLoading from '../components/ProgressBar/TwoPeopleLoading';
 
 import { useModeState } from '../components/Buttons/ChangeBtns/ModeBtn/ModeContainer';
 
+import AdBtn from '../components/Buttons/AdBtn/AdPresenter';
+import { useOpenUrlState } from '../components/Buttons/AdBtn/AdContainer';
+
 const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
@@ -93,7 +96,7 @@ const LightContainer = styled.View`
 // Image Temporary Storage
 let FIRST_PHOTO = ''; // base64
 let SECOND_PHOTO = ''; // base64
-let RESULT_PHOTO_LIST = []; // [origin png, resultpng]
+let RESULT_PHOTO_LIST = []; // [origin png, result png]
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -149,15 +152,15 @@ export default function Home() {
 
   const { isMode } = useModeState();
 
+  const { openUrl } = useOpenUrlState();
+
   useEffect(() => {
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       setHasPermission(status === 'granted');
-      console.log(hasPermission);
 
       const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       setHasAlbumPermission(albumStatus === 'granted');
-      console.log(hasAlbumPermission);
 
       if (albumStatus === 'granted') {
         const photo = await ImagePicker.launchImageLibraryAsync({
@@ -413,25 +416,29 @@ export default function Home() {
         )}
 
         {isAfterView && (
-          <Image
-            style={
-              height >= 700
-                ? {
-                    width: width * 0.9,
-                    height: width * 0.9,
-                    marginTop: '40%',
-                    marginLeft: width * 0.05,
-                  }
-                : {
-                    width: width * 0.9,
-                    height: width * 0.9,
-                    marginTop: '20%',
-                    marginBottom: '20%',
-                    marginLeft: width * 0.05,
-                  }
-            }
-            source={{ uri: RESULT_PHOTO_LIST[1] }}
-          />
+          <>
+            <AdBtn onPress={openUrl} />
+            <Image
+              style={
+                height >= 700
+                  ? {
+                      width: width * 0.9,
+                      height: width * 0.9,
+                      marginTop: '50%',
+                      marginBottom: '0%',
+                      marginLeft: width * 0.05,
+                    }
+                  : {
+                      width: width * 0.9,
+                      height: width * 0.9,
+                      marginTop: '50%',
+                      marginBottom: '0%',
+                      marginLeft: width * 0.05,
+                    }
+              }
+              source={{ uri: RESULT_PHOTO_LIST[1] }}
+            />
+          </>
         )}
 
         {!isPreview && !imageSelected && !isAfterView && (
