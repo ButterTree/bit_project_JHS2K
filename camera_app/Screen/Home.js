@@ -251,10 +251,10 @@ export default function Home() {
 
       // 대기 인원 알림창 추가
       const waiting_num = await getServerState();
-      if (waiting_num > 20) {
+      if (waiting_num >= 20) {
         Alert.alert(
           `현재 ${waiting_num} 명 대기중입니다. 🕺💃`,
-          `예상 대기시간은 ${Math.round((waiting_num * 23) / 4 / 60)} 분 입니다. ⏰`
+          `예상 대기시간은 ${Math.round((waiting_num * 25) / 4 / 60)} '분' 입니다. ⏰`
         );
       }
 
