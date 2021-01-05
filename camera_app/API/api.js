@@ -14,8 +14,8 @@ export const getServerState = async () => {
       .get(`${URL}/server-status`)
       .then((res) => {
         const { data } = res;
-        const splitData = data.split('');
-        WAITING_NUMBER = Number(splitData.slice(-3, -2));
+        const splitData = data.split(' ');
+        WAITING_NUMBER = Number(splitData.slice(2, 3));
       })
       .catch((error) => console.log(error));
   } catch (e) {
