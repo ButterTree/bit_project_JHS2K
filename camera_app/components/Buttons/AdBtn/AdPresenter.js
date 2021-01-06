@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('window');
 
 const AdBtn = memo((props) => (
   <TouchableOpacity onPress={props.onPress} style={styles.container}>
-    <Image source={require('./goodocAd9.png')} style={styles.cover} />
+    <Image source={require('./goodocAd9v2.png')} style={styles.cover} />
   </TouchableOpacity>
 ));
 
