@@ -412,14 +412,14 @@ export default function Home() {
                   ? {
                       width: width * 0.9,
                       height: width * 0.9,
-                      marginTop: '50%',
+                      marginTop: '45%',
                       marginBottom: '0%',
                       marginLeft: width * 0.05,
                     }
                   : {
                       width: width * 0.9,
                       height: width * 0.9,
-                      marginTop: '50%',
+                      marginTop: '45%',
                       marginBottom: '0%',
                       marginLeft: width * 0.05,
                     }
