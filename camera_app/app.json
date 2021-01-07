@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "buttertree.ssangtokki.lemon",
-      "versionCode": 1
+      "versionCode": 1.1
     },
     "web": {
       "favicon": "./assets/app_logo_lemon.png"
