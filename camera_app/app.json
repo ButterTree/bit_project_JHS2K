@@ -3,7 +3,7 @@
     "name": "쌍토끼:Lemon",
     "slug": "Lemon",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/Lemon_logo.png",
     "primaryColor": "#ffffff",
@@ -22,7 +22,8 @@
     },
     "android": {
       "package": "buttertree.ssangtokki.lemon",
-      "versionCode": 2
+      "versionCode": 3,
+      "permissons" : []
     },
     "web": {
       "favicon": "./assets/app_logo_lemon.png"
