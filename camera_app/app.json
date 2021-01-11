@@ -21,7 +21,7 @@
       "bundleIdentifier": "buttertree.ssangtokki.lemon"
     },
     "android": {
-      "package": "buttertree.ssangtokki.pink",
+      "package": "buttertree.ssangtokki.lemon",
       "versionCode": 4,
       "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     },
