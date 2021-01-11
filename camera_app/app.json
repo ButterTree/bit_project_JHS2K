@@ -21,9 +21,9 @@
       "bundleIdentifier": "buttertree.ssangtokki.lemon"
     },
     "android": {
-      "package": "buttertree.ssangtokki.lemon",
-      "versionCode": 3,
-      "permissons" : []
+      "package": "buttertree.ssangtokki.pink",
+      "versionCode": 4,
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
       "favicon": "./assets/app_logo_lemon.png"
