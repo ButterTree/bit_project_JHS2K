@@ -3,7 +3,7 @@
     "name": "쌍토끼:Pink",
     "slug": "Pink",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/Pink_logo.png",
     "primaryColor": "#ffffff",
@@ -22,7 +22,8 @@
     },
     "android": {
       "package": "buttertree.ssangtokki.pink",
-      "versionCode": 1
+      "versionCode": 4,
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
       "favicon": "./assets/app_logo_pink.png"
