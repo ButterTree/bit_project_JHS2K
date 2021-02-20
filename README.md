@@ -2,7 +2,7 @@
 
 ## 쌍토끼 어플
 - https://play.google.com/store/apps/details?id=buttertree.ssangtokki.pink
-- [프로젝트 발표 영상](https://www.youtube.com/watch?v=vmcRRyRrAGI&t=140s)
+- [프로젝트 발표 영상](https://youtu.be/vmcRRyRrAGI)
 
 ## 🔹프로젝트 목표 
 
