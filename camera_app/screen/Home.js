@@ -52,6 +52,8 @@ import { useModeState } from '../components/Buttons/ChangeBtns/ModeBtn/ModeConta
 import AdBtn from '../components/Buttons/AdBtn/AdPresenter';
 import { useOpenUrlState } from '../components/Buttons/AdBtn/AdContainer';
 
+import { AdMobInterstitial, setTestDeviceIDAsync } from 'expo-ads-admob';
+
 const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
@@ -164,6 +166,13 @@ export default function Home() {
 
       const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       mounted && setHasAlbumPermission(albumStatus === 'granted');
+    })();
+
+    (async () => {
+      // Display an interstitial
+      await AdMobInterstitial.setAdUnitID('ca-app-pub-7808799631738977/7802279225'); // Test ID, Replace with your-admob-unit-id
+      await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true });
+      await AdMobInterstitial.showAdAsync();
     })();
 
     return () => {

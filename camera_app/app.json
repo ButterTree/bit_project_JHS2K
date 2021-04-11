@@ -22,8 +22,11 @@
     },
     "android": {
       "package": "buttertree.ssangtokki.pink",
-      "versionCode": 4,
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+      "versionCode": 5,
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-7808799631738977~3567555164"
+      }
     },
     "web": {
       "favicon": "./assets/app_logo_pink.png"
