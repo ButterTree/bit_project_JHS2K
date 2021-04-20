@@ -38,7 +38,7 @@ numpy==1.19.4
 opencv-contrib-python==4.4.0.46
 opt-einsum==3.3.0
 pandas==1.1.4
-Pillow==8.0.1
+Pillow>=8.1.1
 protobuf==3.13.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
