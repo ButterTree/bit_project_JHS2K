@@ -43,7 +43,7 @@ opencv-contrib-python==4.4.0.46
 opencv-python==4.4.0.46
 opt-einsum==3.3.0
 pandas==1.1.4
-Pillow==8.0.1
+Pillow>=8.1.1
 protobuf==3.13.0
 pylint==2.6.0
 pyparsing==2.4.7
