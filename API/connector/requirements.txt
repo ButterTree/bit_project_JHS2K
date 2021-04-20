@@ -24,7 +24,7 @@ imageio-ffmpeg==0.4.2
 importlib-metadata==2.0.0
 imutils==0.5.3
 itsdangerous==1.1.0
-Jinja2==2.11.2
+jinja2>=2.11.3
 joblib==0.17.0
 Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.2
