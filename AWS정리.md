@@ -1,10 +1,5 @@
 ## AWS
 
-계정 ID : 088944302557
-사용자 이름 : jinsoo_son
-Passwd : Bit0*1(2biT
-private key : 파일로 받아야함
-
 ---
 
 ## 접속 순서
