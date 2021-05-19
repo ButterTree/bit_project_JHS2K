@@ -252,17 +252,17 @@ export default function Home() {
 
       RESULT_PHOTO_LIST = await imageTransfer(FIRST_PHOTO, SECOND_PHOTO, isGender, isMode);
 
-      setIsLoading(false);
       // Image Transformation End
-
-      // adMob 보상광고 실행
-      await AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
-      await AdMobRewarded.requestAdAsync();
-      await AdMobRewarded.showAdAsync();
 
       FIRST_PHOTO = '';
       SECOND_PHOTO = '';
       setIsAfterView(true);
+      setIsLoading(false);
+
+      // adMob 보상광고 실행
+      await AdMobRewarded.setAdUnitID('ca-app-pub-7808799631738977/8274997455'); // Test ID, Replace with your-admob-unit-id
+      await AdMobRewarded.requestAdAsync();
+      await AdMobRewarded.showAdAsync();
     } catch (e) {
       alert(`getTransferImage Error: ${e}`);
     }
