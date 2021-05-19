@@ -52,7 +52,13 @@ import { useModeState } from '../components/Buttons/ChangeBtns/ModeBtn/ModeConta
 import AdBtn from '../components/Buttons/AdBtn/AdPresenter';
 import { useOpenUrlState } from '../components/Buttons/AdBtn/AdContainer';
 
-import { AdMobInterstitial, setTestDeviceIDAsync } from 'expo-ads-admob';
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded,
+  setTestDeviceIDAsync,
+} from 'expo-ads-admob';
 
 const { width, height } = Dimensions.get('window');
 
@@ -115,43 +121,21 @@ export default function Home() {
     onToggleTwoPeople,
   } = useTwoPeopleState();
 
-  const {
-    isGender,
-    setIsGender,
-    onPressGender,
-    genderValue,
-    setGenderValue,
-    onToggleGender,
-  } = useGenderState();
+  const { isGender, setIsGender, onPressGender, genderValue, setGenderValue, onToggleGender } =
+    useGenderState();
 
-  const {
-    cameraRef,
-    isPreview,
-    setIsPreview,
-    takePhoto,
-    setTakePhoto,
-    onPressTakePhoto,
-  } = useTakePhotoState();
+  const { cameraRef, isPreview, setIsPreview, takePhoto, setTakePhoto, onPressTakePhoto } =
+    useTakePhotoState();
 
-  const {
-    imageSelected,
-    setImageSelected,
-    onPressGetPhoto,
-    albumPhoto,
-    setAlbumPhoto,
-  } = useGetPhotoState();
+  const { imageSelected, setImageSelected, onPressGetPhoto, albumPhoto, setAlbumPhoto } =
+    useGetPhotoState();
 
   const { cameraType, switchCameraType } = useCameraTypeState();
 
   const { isNotice, onPressNotice } = useNoticeState();
 
-  const {
-    firstLightColor,
-    firstLightText,
-    secondLightColor,
-    secondLightText,
-    LightDefaultColor,
-  } = useLightState();
+  const { firstLightColor, firstLightText, secondLightColor, secondLightText, LightDefaultColor } =
+    useLightState();
 
   const { isMode } = useModeState();
 
@@ -257,12 +241,17 @@ export default function Home() {
 
       resultPhotoList = await imageTransfer(firstPhoto, secondPhoto, isGender, isMode);
 
-      setIsLoading(false);
       // Image Transformation End
 
       firstPhoto = '';
       secondPhoto = '';
       setIsAfterView(true);
+      setIsLoading(false);
+
+      // Display a rewarded ad
+      await AdMobRewarded.setAdUnitID('ca-app-pub-7808799631738977/2966830455');
+      await AdMobRewarded.requestAdAsync();
+      await AdMobRewarded.showAdAsync();
     } catch (e) {
       alert(`getTransferImage Error: ${e}`);
     }
