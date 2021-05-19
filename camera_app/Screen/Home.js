@@ -52,6 +52,14 @@ import { useModeState } from '../components/Buttons/ChangeBtns/ModeBtn/ModeConta
 import AdBtn from '../components/Buttons/AdBtn/AdPresenter';
 import { useOpenUrlState } from '../components/Buttons/AdBtn/AdContainer';
 
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded,
+  setTestDeviceIDAsync,
+} from 'expo-ads-admob';
+
 const { width, height } = Dimensions.get('window');
 
 const CenterView = styled.View`
@@ -112,55 +120,35 @@ export default function Home() {
     setTwoPeopleToggleValue,
     onToggleTwoPeople,
   } = useTwoPeopleState();
-  const {
-    isGender,
-    setIsGender,
-    onPressGender,
-    genderValue,
-    setGenderValue,
-    onToggleGender,
-  } = useGenderState();
+  const { isGender, setIsGender, onPressGender, genderValue, setGenderValue, onToggleGender } =
+    useGenderState();
 
-  const {
-    cameraRef,
-    isPreview,
-    setIsPreview,
-    takePhoto,
-    setTakePhoto,
-    onPressTakePhoto,
-  } = useTakePhotoState();
+  const { cameraRef, isPreview, setIsPreview, takePhoto, setTakePhoto, onPressTakePhoto } =
+    useTakePhotoState();
 
-  const {
-    imageSelected,
-    setImageSelected,
-    onPressGetPhoto,
-    albumPhoto,
-    setAlbumPhoto,
-  } = useGetPhotoState();
+  const { imageSelected, setImageSelected, onPressGetPhoto, albumPhoto, setAlbumPhoto } =
+    useGetPhotoState();
 
   const { cameraType, switchCameraType } = useCameraTypeState();
 
   const { isNotice, onPressNotice } = useNoticeState();
 
-  const {
-    firstLightColor,
-    firstLightText,
-    secondLightColor,
-    secondLightText,
-    LightDefaultColor,
-  } = useLightState();
+  const { firstLightColor, firstLightText, secondLightColor, secondLightText, LightDefaultColor } =
+    useLightState();
 
   const { isMode } = useModeState();
 
   const { openUrl } = useOpenUrlState();
 
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
-      setHasPermission(status === 'granted');
+      mounted && setHasPermission(status === 'granted');
 
       const { status: albumStatus } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      setHasAlbumPermission(albumStatus === 'granted');
+      mounted && setHasAlbumPermission(albumStatus === 'granted');
 
       if (albumStatus === 'granted') {
         const photo = await ImagePicker.launchImageLibraryAsync({
@@ -177,6 +165,10 @@ export default function Home() {
         }
       }
     })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // 2인일 때, 2번째 사진으로 넘어가는 버튼
@@ -262,6 +254,11 @@ export default function Home() {
 
       setIsLoading(false);
       // Image Transformation End
+
+      // adMob 보상광고 실행
+      await AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917'); // Test ID, Replace with your-admob-unit-id
+      await AdMobRewarded.requestAdAsync();
+      await AdMobRewarded.showAdAsync();
 
       FIRST_PHOTO = '';
       SECOND_PHOTO = '';
