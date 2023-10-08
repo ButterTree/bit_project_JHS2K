@@ -5,7 +5,7 @@ backports.lzma==0.0.14
 blurhash==1.1.4
 boost==0.1
 cached-property==1.5.2
-certifi==2020.11.8
+certifi==2023.7.22
 chardet==3.0.4
 click==7.1.2
 cmake==3.18.2.post1
